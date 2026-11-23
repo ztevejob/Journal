@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Daily Work Journal &amp; Activity Log</title>
+    <title>Daily Work Journal &amp; Activity Log — MAP TECH</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Inter & JetBrains Mono -->
@@ -21,20 +21,21 @@
                         mono: ['JetBrains Mono', 'monospace'],
                     },
                     colors: {
-                        apple: {
-                            bg: '#f5f5f7',
+                        map: {
+                            bg: '#f8f7f7',
                             card: '#ffffff',
-                            ink: '#1d1d1f',
-                            muted: '#6e6e73',
-                            subtle: '#86868b',
-                            border: '#d2d2d7',
-                            blue: '#0071e3',
-                            blueHover: '#0077ed',
+                            ink: '#1c1917',
+                            muted: '#57534e',
+                            subtle: '#78716c',
+                            border: '#e7e5e4',
+                            red: '#d91c24',
+                            redDark: '#991b1b',
+                            crimson: '#7f1d1d',
                         }
                     },
                     boxShadow: {
-                        'apple-card': '0 2px 14px rgba(0, 0, 0, 0.04)',
-                        'apple-hover': '0 8px 24px rgba(0, 0, 0, 0.08)',
+                        'map-card': '0 2px 14px rgba(127, 29, 29, 0.05)',
+                        'map-hover': '0 10px 26px rgba(185, 28, 28, 0.12)',
                     }
                 }
             }
@@ -42,28 +43,39 @@
     </script>
     <style>
         body {
-            background-color: #f5f5f7;
-            color: #1d1d1f;
+            background-color: #f8f7f7;
+            background-image: linear-gradient(180deg, rgba(217, 28, 36, 0.06) 0%, rgba(248, 247, 247, 1) 260px);
+            color: #1c1917;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
-        .apple-nav {
-            background: rgba(255, 255, 255, 0.82);
-            backdrop-filter: saturate(180%) blur(20px);
-            -webkit-backdrop-filter: saturate(180%) blur(20px);
+        .map-gradient-bg {
+            background: linear-gradient(135deg, #e11d2e 0%, #b91c1c 55%, #7f1d1d 100%);
         }
 
-        .apple-dock {
+        .map-gradient-text {
+            background: linear-gradient(135deg, #d91c24 0%, #7f1d1d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .map-nav {
             background: rgba(255, 255, 255, 0.88);
             backdrop-filter: saturate(180%) blur(20px);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
         }
 
-        .apple-card {
+        .map-dock {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+        }
+
+        .map-card {
             background: #ffffff;
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(185, 28, 28, 0.10);
+            box-shadow: 0 2px 12px rgba(127, 29, 29, 0.04);
         }
 
         ::-webkit-scrollbar {
@@ -71,14 +83,14 @@
             height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #f5f5f7;
+            background: #f8f7f7;
         }
         ::-webkit-scrollbar-thumb {
-            background: #c7c7cc;
+            background: #d6d3d1;
             border-radius: 9999px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #aeaeb2;
+            background: #a8a29e;
         }
 
         input[type="date"]::-webkit-calendar-picker-indicator {
@@ -89,124 +101,205 @@
         .task-card {
             transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
         }
+
+        @media print {
+            body {
+                background: #ffffff !important;
+                color: #1c1917 !important;
+                padding-bottom: 0 !important;
+            }
+            nav, .no-print, #toast-container {
+                display: none !important;
+            }
+            .map-card {
+                box-shadow: none !important;
+                border: 1px solid #d6d3d1 !important;
+                break-inside: avoid;
+            }
+        }
     </style>
 </head>
-<body class="min-h-screen pb-24 md:pb-12 selection:bg-apple-blue/15 selection:text-apple-blue">
+<body class="min-h-screen pb-24 md:pb-12 selection:bg-map-red/15 selection:text-map-redDark">
 
     <!-- Toast Container -->
     <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col gap-2 pointer-events-none max-w-sm w-full px-4 sm:px-0"></div>
 
-    <!-- Sticky Apple-Style Translucent Top Navigation Bar -->
-    <nav class="sticky top-0 z-40 apple-nav border-b border-black/[0.08]">
+    <!-- Sticky MAP-Themed Translucent Top Navigation Bar -->
+    <nav class="sticky top-0 z-40 map-nav border-b border-map-red/15">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3">
             <!-- Brand -->
             <div class="flex items-center gap-2.5 shrink-0">
-                <div class="w-8 h-8 rounded-full bg-apple-ink text-white flex items-center justify-center">
+                <div class="w-8 h-8 rounded-full map-gradient-bg text-white flex items-center justify-center shadow-sm">
                     <i data-lucide="layers" class="w-4 h-4"></i>
                 </div>
                 <div class="flex items-baseline gap-2">
-                    <h1 class="font-semibold text-apple-ink text-sm sm:text-base tracking-tight">Daily Work Journal</h1>
-                    <span class="hidden sm:inline text-[11px] text-apple-subtle font-medium">Submit Log</span>
+                    <span class="font-bold text-map-ink text-sm sm:text-base tracking-tight">Daily Work Journal</span>
+                    <span class="hidden sm:inline text-[11px] font-bold map-gradient-text">MAP TECH</span>
                 </div>
             </div>
 
             <!-- Desktop Top Segmented Menu Links -->
-            <div class="hidden md:flex items-center gap-1 bg-apple-bg p-1 rounded-full border border-black/[0.06]">
-                <button onclick="switchView('input')" id="nav-desk-input" class="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all bg-apple-ink text-white shadow-sm">
+            <div class="hidden md:flex items-center gap-1 bg-map-bg p-1 rounded-full border border-map-red/15">
+                <button onclick="switchView('input')" id="nav-desk-input" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all map-gradient-bg text-white shadow-sm">
                     <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                     <span>Input Aktivitas</span>
                 </button>
-                <button onclick="switchView('today')" id="nav-desk-today" class="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium text-apple-muted hover:text-apple-ink transition-all">
+                <button onclick="switchView('today')" id="nav-desk-today" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-map-muted hover:text-map-ink transition-all">
                     <i data-lucide="calendar-check" class="w-3.5 h-3.5"></i>
                     <span>Kegiatan Hari Ini</span>
                 </button>
-                <button onclick="switchView('matrix')" id="nav-desk-matrix" class="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium text-apple-muted hover:text-apple-ink transition-all">
-                    <i data-lucide="grid-3x3" class="w-3.5 h-3.5"></i>
-                    <span>Matriks Bulanan</span>
+                <button onclick="switchView('calendar')" id="nav-desk-calendar" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-map-muted hover:text-map-ink transition-all">
+                    <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                    <span>Kalender</span>
+                </button>
+                <button onclick="switchView('workload')" id="nav-desk-workload" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-map-muted hover:text-map-ink transition-all">
+                    <i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i>
+                    <span>Summary</span>
                 </button>
             </div>
 
-            <!-- Top Apple Pill Action Buttons -->
+            <!-- Top Action Buttons -->
             <div class="flex items-center gap-2 shrink-0">
-                <button onclick="syncLogsFromSheets(true)" id="btn-sync-sheets" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-apple-blue hover:bg-apple-blue/5 border border-apple-blue transition-colors">
+                <button onclick="syncLogsFromSheets(true)" id="btn-sync-sheets" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold text-map-red hover:bg-map-red/5 border border-map-red transition-colors">
                     <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
                     <span>Sync Sheets</span>
                 </button>
-                <button onclick="openWhatsAppModal()" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium text-white bg-apple-blue hover:bg-apple-blueHover transition-colors">
-                    <i data-lucide="message-square-text" class="w-3.5 h-3.5"></i>
-                    <span>Laporan WA</span>
+                <button onclick="openExportModal()" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold text-white map-gradient-bg hover:opacity-95 transition-opacity shadow-sm">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    <span>Export</span>
                 </button>
             </div>
         </div>
 
         <!-- Live Percentage Loading Bar Gauge -->
-        <div id="sync-gauge-container" class="hidden bg-white/95 border-t border-black/[0.06] px-4 sm:px-6 lg:px-8 py-2">
+        <div id="sync-gauge-container" class="hidden bg-white/95 border-t border-map-red/15 px-4 sm:px-6 lg:px-8 py-2">
             <div class="max-w-6xl mx-auto space-y-1.5">
                 <div class="flex items-center justify-between text-[11px] font-medium">
-                    <span id="sync-gauge-label" class="text-apple-ink flex items-center gap-1.5">
-                        <i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-apple-blue"></i>
+                    <span id="sync-gauge-label" class="text-map-ink flex items-center gap-1.5">
+                        <i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-map-red"></i>
                         <span>Menyinkronkan data dari Google Sheets...</span>
                     </span>
-                    <span id="sync-gauge-percent" class="font-mono font-semibold text-apple-blue">0%</span>
+                    <span id="sync-gauge-percent" class="font-mono font-semibold text-map-red">0%</span>
                 </div>
-                <div class="w-full h-1.5 bg-apple-bg rounded-full overflow-hidden">
-                    <div id="sync-gauge-bar" class="h-full w-0 bg-apple-blue transition-all duration-200 ease-out rounded-full"></div>
+                <div class="w-full h-1.5 bg-map-bg rounded-full overflow-hidden">
+                    <div id="sync-gauge-bar" class="h-full w-0 map-gradient-bg transition-all duration-200 ease-out rounded-full"></div>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Modal: WhatsApp Summary Preview -->
-    <div id="wa-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-lg overflow-hidden flex flex-col max-h-[88vh] shadow-2xl border border-black/10">
-            <div class="px-6 py-4 border-b border-black/[0.06] flex items-center justify-between">
+    <!-- Modal: Export Data Center (Excel, PDF, CSV, TSV) -->
+    <div id="export-modal" class="fixed inset-0 bg-black/45 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden flex flex-col shadow-2xl border border-map-red/15">
+            <div class="px-6 py-4 border-b border-map-border flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-full bg-apple-ink text-white flex items-center justify-center">
-                        <i data-lucide="message-square-text" class="w-4 h-4"></i>
+                    <div class="w-8 h-8 rounded-full map-gradient-bg text-white flex items-center justify-center">
+                        <i data-lucide="download" class="w-4 h-4"></i>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-apple-ink text-sm">Ringkasan Laporan WhatsApp</h3>
-                        <p class="text-[11px] text-apple-muted">Terklasifikasi otomatis per lokasi &amp; Task 1–9</p>
+                        <h3 class="font-bold text-map-ink text-sm">Export Laporan Jurnal</h3>
+                        <p id="export-modal-sub" class="text-[11px] text-map-muted">Unduh Excel, PDF, atau CSV</p>
                     </div>
                 </div>
-                <button onclick="closeModal('wa-modal')" class="p-1.5 text-apple-muted hover:text-apple-ink hover:bg-apple-bg rounded-full transition-colors">
+                <button onclick="closeModal('export-modal')" class="p-1.5 text-map-muted hover:text-map-ink hover:bg-map-bg rounded-full transition-colors">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
-            <div class="p-6 overflow-y-auto flex-1 bg-apple-bg/50">
-                <textarea id="wa-report-text" readonly class="w-full h-72 p-4 text-xs sm:text-sm font-mono bg-white border border-black/10 rounded-2xl text-apple-ink focus:outline-none resize-none leading-relaxed"></textarea>
-            </div>
-            <div class="px-6 py-4 border-t border-black/[0.06] bg-white flex items-center justify-end gap-2.5">
-                <button onclick="closeModal('wa-modal')" class="px-4 py-2 text-xs font-medium text-apple-ink hover:bg-apple-bg rounded-full border border-apple-border transition-colors">
-                    Tutup
+
+            <div class="p-6 space-y-3 bg-map-bg/60">
+                <!-- Export Monthly Excel (.xls) -->
+                <button type="button" onclick="exportMonthlyExcel()" class="w-full flex items-center justify-between p-4 rounded-2xl bg-white border border-map-border hover:border-map-red transition-all text-left shadow-sm group">
+                    <div class="space-y-0.5">
+                        <p class="text-xs sm:text-sm font-semibold text-map-ink group-hover:text-map-red transition-colors">Export ke Excel (.xls) — Log &amp; Summary</p>
+                        <p class="text-[11px] text-map-muted">Rekap bulanan siap dibuka langsung di Microsoft Excel / Sheets</p>
+                    </div>
+                    <i data-lucide="file-spreadsheet" class="w-5 h-5 text-map-red shrink-0"></i>
                 </button>
-                <button onclick="copyWhatsAppText()" class="inline-flex items-center gap-2 px-5 py-2 text-xs font-medium text-white bg-apple-blue hover:bg-apple-blueHover rounded-full transition-colors">
-                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                    Salin Laporan WA
+
+                <!-- Export Monthly PDF (Print View) -->
+                <button type="button" onclick="exportMonthlyPDF()" class="w-full flex items-center justify-between p-4 rounded-2xl bg-white border border-map-border hover:border-map-red transition-all text-left shadow-sm group">
+                    <div class="space-y-0.5">
+                        <p class="text-xs sm:text-sm font-semibold text-map-ink group-hover:text-map-red transition-colors">Export ke PDF (Cetak / Save as PDF)</p>
+                        <p class="text-[11px] text-map-muted">Buka tampilan laporan cetak bersih untuk disimpan sebagai PDF</p>
+                    </div>
+                    <i data-lucide="file-text" class="w-5 h-5 text-map-redDark shrink-0"></i>
+                </button>
+
+                <!-- Export Monthly CSV -->
+                <button type="button" onclick="exportMonthlyCSV()" class="w-full flex items-center justify-between p-4 rounded-2xl bg-white border border-map-border hover:border-map-red transition-all text-left shadow-sm group">
+                    <div class="space-y-0.5">
+                        <p class="text-xs sm:text-sm font-semibold text-map-ink group-hover:text-map-red transition-colors">Download CSV Bulan Ini (Format Submit)</p>
+                        <p class="text-[11px] text-map-muted">Kolom A–H: TimeStamp, Tanggal, Nama Trainer HO, Task, Aktivitas, Lokasi, Status, Foto</p>
+                    </div>
+                    <i data-lucide="table" class="w-5 h-5 text-map-ink shrink-0"></i>
+                </button>
+
+                <!-- Copy Today TSV -->
+                <button type="button" onclick="copySheetsTSV(); closeModal('export-modal');" class="w-full flex items-center justify-between p-4 rounded-2xl bg-white border border-map-border hover:border-map-red transition-all text-left shadow-sm group">
+                    <div class="space-y-0.5">
+                        <p class="text-xs sm:text-sm font-semibold text-map-ink group-hover:text-map-red transition-colors">Salin Baris Tanggal Terpilih (TSV)</p>
+                        <p class="text-[11px] text-map-muted">Urutan A–H siap Ctrl+V di sel Google Sheets / Excel</p>
+                    </div>
+                    <i data-lucide="clipboard-copy" class="w-5 h-5 text-map-muted shrink-0"></i>
+                </button>
+            </div>
+
+            <div class="px-6 py-3.5 border-t border-map-border bg-white flex justify-end">
+                <button onclick="closeModal('export-modal')" class="px-4 py-1.5 text-xs font-medium text-map-ink hover:bg-map-bg rounded-full border border-map-border transition-colors">
+                    Tutup
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Modal: Image Preview Lightbox -->
-    <div id="photo-modal" class="fixed inset-0 bg-black/50 backdrop-blur-md z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] shadow-2xl border border-black/10">
-            <div class="px-6 py-4 border-b border-black/[0.06] flex items-center justify-between">
+    <!-- Modal: Calendar Day / Task Detail Drawer -->
+    <div id="calendar-detail-modal" class="fixed inset-0 bg-black/45 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[85vh] shadow-2xl border border-map-red/15">
+            <div class="px-6 py-4 border-b border-map-border flex items-center justify-between gap-3">
                 <div class="min-w-0">
-                    <h3 id="photo-modal-title" class="font-semibold text-apple-ink text-sm truncate">Preview Foto Terkompresi</h3>
-                    <p id="photo-modal-meta" class="text-[11px] font-mono text-apple-muted">1080px • JPEG Optimized</p>
+                    <h3 id="calendar-day-detail-title" class="font-bold text-map-ink text-base truncate">Detail Tanggal: Sen, 23 Nov 2026</h3>
+                    <p id="calendar-day-detail-sub" class="text-xs text-map-muted">0 aktivitas tercatat</p>
                 </div>
-                <div class="flex items-center gap-2">
-                    <a id="photo-modal-download" download="compressed-photo.jpg" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium text-white bg-apple-blue hover:bg-apple-blueHover transition-colors">
-                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                        Unduh
-                    </a>
-                    <button onclick="closeModal('photo-modal')" class="p-1.5 text-apple-muted hover:text-apple-ink hover:bg-apple-bg rounded-full transition-colors">
+                <div class="flex items-center gap-2 shrink-0">
+                    <button type="button" id="btn-reset-day-focus" onclick="clearFocusedCalendarLog()" class="hidden px-3 py-1.5 rounded-full text-xs font-semibold text-map-red bg-map-red/5 border border-map-red/30 hover:bg-map-red/10 transition-colors">
+                        Semua Task Hari Ini
+                    </button>
+                    <button type="button" onclick="closeModal('calendar-detail-modal'); switchView('input');" class="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full text-xs font-semibold text-white map-gradient-bg hover:opacity-95 transition-opacity">
+                        <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                        <span>Tambah</span>
+                    </button>
+                    <button onclick="closeModal('calendar-detail-modal')" class="p-1.5 text-map-muted hover:text-map-ink hover:bg-map-bg rounded-full transition-colors">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
             </div>
-            <div class="p-6 bg-apple-bg flex items-center justify-center overflow-auto flex-1">
+            <div class="p-5 sm:p-6 overflow-y-auto flex-1 bg-map-bg/60">
+                <div id="calendar-day-detail-list" class="grid grid-cols-1 gap-3">
+                    <!-- Rendered via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Image Preview Lightbox -->
+    <div id="photo-modal" class="fixed inset-0 bg-black/55 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] shadow-2xl border border-map-red/15">
+            <div class="px-6 py-4 border-b border-map-border flex items-center justify-between">
+                <div class="min-w-0">
+                    <h3 id="photo-modal-title" class="font-semibold text-map-ink text-sm truncate">Preview Foto Terkompresi</h3>
+                    <p id="photo-modal-meta" class="text-[11px] font-mono text-map-muted">1080px • JPEG Optimized</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <a id="photo-modal-download" download="compressed-photo.jpg" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold text-white map-gradient-bg hover:opacity-95 transition-opacity">
+                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                        Unduh
+                    </a>
+                    <button onclick="closeModal('photo-modal')" class="p-1.5 text-map-muted hover:text-map-ink hover:bg-map-bg rounded-full transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="p-6 bg-map-bg flex items-center justify-center overflow-auto flex-1">
                 <img id="photo-modal-img" src="" alt="Preview" class="max-h-[70vh] w-auto rounded-2xl object-contain shadow-md">
             </div>
         </div>
@@ -216,39 +309,54 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 lg:pt-8">
         <main class="w-full space-y-6">
 
-            <!-- Apple-Style Clean Hero & Date Context Header -->
-            <header class="apple-card rounded-3xl p-5 sm:p-7">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
-                    <div class="space-y-1.5">
+            <!-- Clean MAP-Themed Hero, MAP TECH Logo Above Title, Trainer Selector & Date Context Header -->
+            <header class="map-card rounded-3xl p-5 sm:p-6">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <div class="space-y-2">
+                        <!-- MAP TECH Logo Placed Cleanly Above Main Title -->
+                        <div class="inline-flex items-center gap-2.5 bg-white border border-map-red/15 rounded-2xl px-3 py-1.5 shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 34" class="h-5 sm:h-6 w-auto block" role="img" aria-label="MAP TECH">
+                                <text x="0" y="25" font-family="Georgia, 'Times New Roman', serif" font-size="25" font-weight="700" letter-spacing="1.2" fill="#d91c24">MAP</text>
+                                <path d="M22 25 Q43 13 66 23" fill="none" stroke="#e11d2e" stroke-width="2.1" stroke-linecap="round"/>
+                                <text x="84" y="25" font-family="'Inter', -apple-system, BlinkMacSystemFont, sans-serif" font-size="22" font-weight="900" letter-spacing="2.8" fill="#1c1917">TECH</text>
+                            </svg>
+                        </div>
+
                         <div class="flex flex-wrap items-center gap-2.5">
-                            <h2 id="formatted-date-title" class="text-2xl sm:text-3xl font-bold text-apple-ink tracking-tight">Sen, 23 Nov 2026</h2>
-                            <span id="webhook-status-pill" class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-apple-bg text-apple-muted border border-black/[0.08]">
+                            <h2 id="formatted-date-title" class="text-xl sm:text-2xl font-bold text-map-ink tracking-tight">Sen, 23 Nov 2026</h2>
+                            <span id="webhook-status-pill" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-map-red/10 text-map-redDark border border-map-red/20">
                                 Sheets Connected
                             </span>
                         </div>
-                        <p id="header-log-stats" class="text-xs sm:text-sm text-apple-muted">0 log tersimpan pada tanggal ini</p>
+                        <p id="header-log-stats" class="text-xs text-map-muted">0 log tersimpan pada tanggal ini</p>
                     </div>
 
-                    <div class="flex flex-wrap items-center gap-2.5">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <!-- Trainer Selector Pill -->
+                        <div class="flex items-center gap-1.5 bg-map-bg border border-map-red/20 rounded-full px-3 py-1">
+                            <i data-lucide="user-check" class="w-3.5 h-3.5 text-map-red shrink-0"></i>
+                            <label for="trainer-select" class="text-[11px] font-semibold text-map-muted">Trainer:</label>
+                            <select id="trainer-select" onchange="onTrainerChange(this.value)"
+                                class="bg-transparent text-xs font-bold text-map-ink focus:outline-none cursor-pointer">
+                                <!-- Rendered via JS -->
+                            </select>
+                        </div>
+
                         <!-- Date Switcher Pill -->
-                        <div class="flex items-center bg-apple-bg border border-black/[0.08] rounded-full p-1">
-                            <button onclick="shiftDate(-1)" title="Hari Sebelumnya" class="p-1.5 text-apple-muted hover:text-apple-ink hover:bg-white rounded-full transition-colors">
+                        <div class="flex items-center bg-map-bg border border-map-border rounded-full p-1">
+                            <button onclick="shiftDate(-1)" title="Hari Sebelumnya" class="p-1.5 text-map-muted hover:text-map-ink hover:bg-white rounded-full transition-colors">
                                 <i data-lucide="chevron-left" class="w-4 h-4"></i>
                             </button>
-                            <input type="date" id="date-picker" class="bg-transparent text-xs font-mono font-medium text-apple-ink px-2 py-1 focus:outline-none">
-                            <button onclick="shiftDate(1)" title="Hari Berikutnya" class="p-1.5 text-apple-muted hover:text-apple-ink hover:bg-white rounded-full transition-colors">
+                            <input type="date" id="date-picker" class="bg-transparent text-xs font-mono font-medium text-map-ink px-2 py-1 focus:outline-none">
+                            <button onclick="shiftDate(1)" title="Hari Berikutnya" class="p-1.5 text-map-muted hover:text-map-ink hover:bg-white rounded-full transition-colors">
                                 <i data-lucide="chevron-right" class="w-4 h-4"></i>
                             </button>
                         </div>
 
-                        <!-- Quick Export Pills -->
-                        <button onclick="openWhatsAppModal()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium text-white bg-apple-blue hover:bg-apple-blueHover transition-colors">
-                            <i data-lucide="message-square-text" class="w-3.5 h-3.5"></i>
-                            <span>Salin WA</span>
-                        </button>
-                        <button onclick="copySheetsTSV()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium text-apple-blue hover:bg-apple-blue/5 border border-apple-blue transition-colors">
-                            <i data-lucide="clipboard-copy" class="w-3.5 h-3.5"></i>
-                            <span>Salin TSV</span>
+                        <!-- Quick Export Pill -->
+                        <button onclick="openExportModal()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-white map-gradient-bg hover:opacity-95 transition-opacity shadow-sm">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                            <span>Export Excel / PDF</span>
                         </button>
                     </div>
                 </div>
@@ -259,21 +367,21 @@
             <!-- ========================================================= -->
             <section id="view-input" class="space-y-5">
                 <!-- Default Location & Status Card -->
-                <div class="apple-card rounded-3xl p-5 sm:p-6 space-y-4">
+                <div class="map-card rounded-3xl p-5 sm:p-6 space-y-4">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
-                            <h3 class="text-sm sm:text-base font-semibold text-apple-ink flex items-center gap-2">
-                                <i data-lucide="map-pin" class="w-4 h-4 text-apple-ink"></i>
+                            <h3 class="text-sm sm:text-base font-bold text-map-ink flex items-center gap-2">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-map-red"></i>
                                 <span>Lokasi Default Sesi Ini &amp; Status</span>
                             </h3>
-                            <p class="text-xs text-apple-muted mt-0.5">Ketik kode atau nama toko dari sheet Master karyawan (Kolom B), lalu tiap kartu Task tetap bisa diatur terpisah.</p>
+                            <p class="text-xs text-map-muted mt-0.5">Ketik kode atau nama toko dari sheet Master karyawan (Kolom B), lalu tiap kartu Task tetap bisa diatur terpisah.</p>
                         </div>
 
-                        <!-- Apple Segmented Status Control -->
-                        <div class="flex items-center gap-1 bg-apple-bg p-1 rounded-full border border-black/[0.06] self-start">
-                            <button type="button" data-status="Done" onclick="setDefaultStatus('Done')" class="status-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-apple-ink text-white shadow-sm transition-all">Done</button>
-                            <button type="button" data-status="Progress" onclick="setDefaultStatus('Progress')" class="status-btn px-3.5 py-1.5 rounded-full text-xs font-medium text-apple-muted hover:text-apple-ink transition-all">Progress</button>
-                            <button type="button" data-status="Follow Up" onclick="setDefaultStatus('Follow Up')" class="status-btn px-3.5 py-1.5 rounded-full text-xs font-medium text-apple-muted hover:text-apple-ink transition-all">Follow Up</button>
+                        <!-- MAP Segmented Status Control -->
+                        <div class="flex items-center gap-1 bg-map-bg p-1 rounded-full border border-map-red/15 self-start">
+                            <button type="button" data-status="Done" onclick="setDefaultStatus('Done')" class="status-btn px-3.5 py-1.5 rounded-full text-xs font-semibold map-gradient-bg text-white shadow-sm transition-all">Done</button>
+                            <button type="button" data-status="Progress" onclick="setDefaultStatus('Progress')" class="status-btn px-3.5 py-1.5 rounded-full text-xs font-medium text-map-muted hover:text-map-ink transition-all">Progress</button>
+                            <button type="button" data-status="Follow Up" onclick="setDefaultStatus('Follow Up')" class="status-btn px-3.5 py-1.5 rounded-full text-xs font-medium text-map-muted hover:text-map-ink transition-all">Follow Up</button>
                         </div>
                     </div>
 
@@ -281,16 +389,16 @@
                     <div class="space-y-3">
                         <div class="flex flex-col sm:flex-row sm:items-center gap-2.5">
                             <div class="relative w-full sm:w-80">
-                                <i data-lucide="search" class="w-3.5 h-3.5 text-apple-subtle absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                                <i data-lucide="search" class="w-3.5 h-3.5 text-map-subtle absolute left-3.5 top-1/2 -translate-y-1/2"></i>
                                 <input type="text" id="store-search-input" list="master-store-datalist"
                                     placeholder="Ketik kode atau nama toko dari Master..."
                                     oninput="onStoreSearchInput(this.value)"
                                     onchange="onStoreSearchInput(this.value)"
-                                    class="w-full bg-apple-bg border border-black/[0.08] rounded-full pl-9 pr-8 py-2 text-xs text-apple-ink placeholder:text-apple-subtle focus:outline-none focus:bg-white focus:border-apple-blue">
+                                    class="w-full bg-map-bg border border-map-border rounded-full pl-9 pr-8 py-2 text-xs text-map-ink placeholder:text-map-subtle focus:outline-none focus:bg-white focus:border-map-red">
                                 <button type="button" onclick="clearStoreSearchInput()" title="Reset ke Umum / HO"
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-apple-muted hover:text-apple-ink text-sm">×</button>
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-map-muted hover:text-map-ink text-sm">×</button>
                             </div>
-                            <span id="master-store-count" class="text-xs text-apple-muted">Memuat daftar Store dari Master karyawan...</span>
+                            <span id="master-store-count" class="text-xs text-map-muted">Memuat daftar Store dari Master karyawan...</span>
                         </div>
                         <datalist id="master-store-datalist"></datalist>
                     </div>
@@ -302,19 +410,19 @@
                 </div>
 
                 <!-- Bulk Photo Uploader + Social Media Auto-Compressor -->
-                <div class="apple-card rounded-3xl p-5 sm:p-6 space-y-4">
+                <div class="map-card rounded-3xl p-5 sm:p-6 space-y-4">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
-                            <h3 class="text-sm sm:text-base font-semibold text-apple-ink flex items-center gap-2">
-                                <i data-lucide="images" class="w-4 h-4 text-apple-ink"></i>
+                            <h3 class="text-sm sm:text-base font-bold text-map-ink flex items-center gap-2">
+                                <i data-lucide="images" class="w-4 h-4 text-map-red"></i>
                                 <span>Lampiran Bulk Foto (Auto-Resize)</span>
                             </h3>
-                            <p class="text-xs text-apple-muted mt-0.5">Otomatis menurunkan ukuran &amp; resolusi sebelum disimpan ke Google Drive &amp; tab Submit.</p>
+                            <p class="text-xs text-map-muted mt-0.5">Otomatis menurunkan ukuran &amp; resolusi sebelum disimpan ke Google Drive &amp; tab Submit.</p>
                         </div>
 
                         <div class="flex items-center gap-2">
-                            <label for="compress-preset" class="text-xs text-apple-muted">Kualitas:</label>
-                            <select id="compress-preset" onchange="reprocessQueuedPhotos()" class="bg-apple-bg border border-black/10 rounded-full px-3.5 py-1.5 text-xs font-medium text-apple-ink focus:outline-none focus:border-apple-blue">
+                            <label for="compress-preset" class="text-xs text-map-muted">Kualitas:</label>
+                            <select id="compress-preset" onchange="reprocessQueuedPhotos()" class="bg-map-bg border border-map-border rounded-full px-3.5 py-1.5 text-xs font-medium text-map-ink focus:outline-none focus:border-map-red">
                                 <option value="social">Social Standard (1080px • 75% JPEG)</option>
                                 <option value="detail">Detail / Teks Jelas (1440px • 82% JPEG)</option>
                             </select>
@@ -323,13 +431,13 @@
 
                     <!-- Dropzone -->
                     <label id="photo-dropzone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)"
-                        class="flex flex-col items-center justify-center gap-2 border border-dashed border-apple-border hover:border-apple-blue bg-apple-bg/60 hover:bg-apple-blue/[0.03] rounded-2xl p-6 cursor-pointer transition-all text-center">
-                        <div class="w-10 h-10 rounded-full bg-white border border-black/10 flex items-center justify-center text-apple-ink shadow-sm">
+                        class="flex flex-col items-center justify-center gap-2 border border-dashed border-map-red/30 hover:border-map-red bg-map-bg/70 hover:bg-map-red/[0.03] rounded-2xl p-6 cursor-pointer transition-all text-center">
+                        <div class="w-10 h-10 rounded-full bg-white border border-map-red/20 flex items-center justify-center text-map-red shadow-sm">
                             <i data-lucide="upload-cloud" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <p class="text-xs sm:text-sm font-semibold text-apple-ink">Klik untuk pilih banyak foto sekaligus atau tarik &amp; lepas di sini</p>
-                            <p class="text-[11px] text-apple-muted mt-0.5">Mendukung JPG, PNG, WEBP • Kompresi berjalan otomatis di perangkat Anda</p>
+                            <p class="text-xs sm:text-sm font-semibold text-map-ink">Klik untuk pilih banyak foto sekaligus atau tarik &amp; lepas di sini</p>
+                            <p class="text-[11px] text-map-muted mt-0.5">Mendukung JPG, PNG, WEBP • Kompresi berjalan otomatis di perangkat Anda</p>
                         </div>
                         <input type="file" id="bulk-photo-input" accept="image/*" multiple class="hidden" onchange="handleFilesSelected(this.files)">
                     </label>
@@ -337,7 +445,7 @@
                     <!-- Compressed Photo Queue Preview -->
                     <div id="photo-queue-wrapper" class="hidden space-y-3">
                         <div class="flex items-center justify-between text-xs">
-                            <span id="photo-savings-summary" class="font-mono font-medium text-apple-ink">0 foto siap</span>
+                            <span id="photo-savings-summary" class="font-mono font-semibold text-map-redDark">0 foto siap</span>
                             <button type="button" onclick="clearQueuedPhotos()" class="text-red-600 hover:underline text-xs font-medium">Hapus Semua Foto</button>
                         </div>
                         <div id="photo-preview-grid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
@@ -347,22 +455,22 @@
                 </div>
 
                 <!-- Bottom Submit Action Bar -->
-                <div class="apple-card rounded-3xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="map-card rounded-3xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-full bg-apple-ink text-white flex items-center justify-center shrink-0">
+                        <div class="w-9 h-9 rounded-full map-gradient-bg text-white flex items-center justify-center shrink-0">
                             <i data-lucide="check" class="w-4 h-4"></i>
                         </div>
                         <div>
-                            <p id="ready-tasks-summary" class="text-sm font-semibold text-apple-ink">0 Task siap disimpan</p>
-                            <p class="text-xs text-apple-muted">Setiap Task terisi disimpan sebagai 1 baris di tab Submit</p>
+                            <p id="ready-tasks-summary" class="text-sm font-bold text-map-ink">0 Task siap disimpan</p>
+                            <p id="submit-trainer-hint" class="text-xs text-map-muted">Trainer aktif: Novi Riyanto • Disimpan ke Kolom C (Nama Trainer HO) di tab Submit</p>
                         </div>
                     </div>
 
                     <div class="flex items-center gap-2.5">
-                        <button type="button" onclick="resetDraftTasks(); clearQueuedPhotos(); renderBentoGrid();" class="px-4 py-2.5 rounded-full text-xs font-medium text-apple-ink hover:bg-apple-bg border border-apple-border transition-colors">
+                        <button type="button" onclick="resetDraftTasks(); clearQueuedPhotos(); renderBentoGrid();" class="px-4 py-2.5 rounded-full text-xs font-medium text-map-ink hover:bg-map-bg border border-map-border transition-colors">
                             Reset Form
                         </button>
-                        <button type="button" id="btn-submit-log" onclick="submitActivityLog()" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-xs sm:text-sm font-medium text-white bg-apple-blue hover:bg-apple-blueHover transition-colors">
+                        <button type="button" id="btn-submit-log" onclick="submitActivityLog()" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold text-white map-gradient-bg hover:opacity-95 transition-opacity shadow-sm">
                             <i data-lucide="arrow-up-circle" class="w-4 h-4"></i>
                             <span>Simpan &amp; Kirim ke Sheets</span>
                         </button>
@@ -374,54 +482,54 @@
             <!-- VIEW 2: KEGIATAN HARI INI (FILTERABLE SCHEDULE FEED)      -->
             <!-- ========================================================= -->
             <section id="view-today" class="hidden space-y-5">
-                <div class="apple-card rounded-3xl p-5 sm:p-6">
+                <div class="map-card rounded-3xl p-5 sm:p-6">
                     <div class="flex flex-col lg:flex-row gap-6">
                         <!-- Left Filter Panel -->
-                        <aside class="w-full lg:w-64 shrink-0 space-y-5 lg:border-r lg:border-black/[0.08] lg:pr-6">
+                        <aside class="w-full lg:w-64 shrink-0 space-y-5 lg:border-r lg:border-map-border lg:pr-6">
                             <div class="flex items-center justify-between">
-                                <h3 class="text-xs font-semibold uppercase tracking-wider text-apple-muted">Filter Kegiatan</h3>
-                                <button type="button" onclick="resetFeedFilters()" class="text-xs font-medium text-apple-blue hover:underline">Reset</button>
+                                <h3 class="text-xs font-semibold uppercase tracking-wider text-map-muted">Filter Kegiatan</h3>
+                                <button type="button" onclick="resetFeedFilters()" class="text-xs font-semibold text-map-red hover:underline">Reset</button>
                             </div>
 
                             <!-- Date Scope -->
                             <div class="space-y-2">
-                                <p class="text-xs font-semibold text-apple-ink">Rentang Waktu</p>
-                                <label class="flex items-center gap-2 text-xs text-apple-ink cursor-pointer py-0.5">
-                                    <input type="radio" name="feed-scope" value="today" checked onchange="renderActivityFeed()" class="accent-black">
+                                <p class="text-xs font-semibold text-map-ink">Rentang Waktu</p>
+                                <label class="flex items-center gap-2 text-xs text-map-ink cursor-pointer py-0.5">
+                                    <input type="radio" name="feed-scope" value="today" checked onchange="renderActivityFeed()" class="accent-red-700">
                                     <span>Tanggal Terpilih</span>
                                 </label>
-                                <label class="flex items-center gap-2 text-xs text-apple-ink cursor-pointer py-0.5">
-                                    <input type="radio" name="feed-scope" value="week" onchange="renderActivityFeed()" class="accent-black">
+                                <label class="flex items-center gap-2 text-xs text-map-ink cursor-pointer py-0.5">
+                                    <input type="radio" name="feed-scope" value="week" onchange="renderActivityFeed()" class="accent-red-700">
                                     <span>Minggu Ini</span>
                                 </label>
-                                <label class="flex items-center gap-2 text-xs text-apple-ink cursor-pointer py-0.5">
-                                    <input type="radio" name="feed-scope" value="month" onchange="renderActivityFeed()" class="accent-black">
+                                <label class="flex items-center gap-2 text-xs text-map-ink cursor-pointer py-0.5">
+                                    <input type="radio" name="feed-scope" value="month" onchange="renderActivityFeed()" class="accent-red-700">
                                     <span>Bulan Ini</span>
                                 </label>
                             </div>
 
                             <!-- Status & Photo Filter -->
-                            <div class="space-y-2.5 pt-3 border-t border-black/[0.08]">
-                                <p class="text-xs font-semibold text-apple-ink">Status &amp; Lampiran</p>
-                                <select id="feed-status-filter" onchange="renderActivityFeed()" class="w-full bg-apple-bg border border-black/10 rounded-xl px-3 py-2 text-xs font-medium text-apple-ink focus:outline-none">
+                            <div class="space-y-2.5 pt-3 border-t border-map-border">
+                                <p class="text-xs font-semibold text-map-ink">Status &amp; Lampiran</p>
+                                <select id="feed-status-filter" onchange="renderActivityFeed()" class="w-full bg-map-bg border border-map-border rounded-xl px-3 py-2 text-xs font-medium text-map-ink focus:outline-none">
                                     <option value="ALL">Semua Status</option>
                                     <option value="Done">Done</option>
                                     <option value="Progress">Progress</option>
                                     <option value="Follow Up">Follow Up</option>
                                 </select>
-                                <label class="flex items-center gap-2 text-xs text-apple-ink cursor-pointer pt-1">
-                                    <input type="checkbox" id="feed-has-photo" onchange="renderActivityFeed()" class="accent-black rounded">
+                                <label class="flex items-center gap-2 text-xs text-map-ink cursor-pointer pt-1">
+                                    <input type="checkbox" id="feed-has-photo" onchange="renderActivityFeed()" class="accent-red-700 rounded">
                                     <span>Hanya yang ada foto</span>
                                 </label>
                             </div>
 
                             <!-- Task Categories -->
-                            <div class="space-y-2 pt-3 border-t border-black/[0.08]">
+                            <div class="space-y-2 pt-3 border-t border-map-border">
                                 <div class="flex items-center justify-between">
-                                    <p class="text-xs font-semibold text-apple-ink">Kategori Task</p>
+                                    <p class="text-xs font-semibold text-map-ink">Kategori Task</p>
                                     <div class="flex gap-2.5 text-[11px]">
-                                        <button type="button" onclick="toggleAllFeedTasks(true)" class="text-apple-blue font-medium hover:underline">Semua</button>
-                                        <button type="button" onclick="toggleAllFeedTasks(false)" class="text-apple-muted hover:underline">Kosong</button>
+                                        <button type="button" onclick="toggleAllFeedTasks(true)" class="text-map-red font-semibold hover:underline">Semua</button>
+                                        <button type="button" onclick="toggleAllFeedTasks(false)" class="text-map-muted hover:underline">Kosong</button>
                                     </div>
                                 </div>
                                 <div id="feed-task-checkboxes" class="space-y-1 text-xs max-h-56 overflow-y-auto pr-1">
@@ -435,18 +543,18 @@
                             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                 <div>
                                     <div class="flex items-center gap-2.5">
-                                        <h3 class="text-lg sm:text-xl font-bold text-apple-ink tracking-tight">Kegiatan Hari Ini</h3>
-                                        <span id="today-scope-badge" class="text-[11px] font-medium px-3 py-0.5 rounded-full bg-apple-bg text-apple-ink border border-black/[0.08]">Sen, 23 Nov 2026</span>
+                                        <h3 class="text-lg sm:text-xl font-bold text-map-ink tracking-tight">Kegiatan Hari Ini</h3>
+                                        <span id="today-scope-badge" class="text-[11px] font-semibold px-3 py-0.5 rounded-full bg-map-red/10 text-map-redDark border border-map-red/20">Sen, 23 Nov 2026</span>
                                     </div>
-                                    <p id="today-subtitle" class="text-xs text-apple-muted mt-0.5">0 baris log sesuai filter</p>
+                                    <p id="today-subtitle" class="text-xs text-map-muted mt-0.5">0 baris log sesuai filter</p>
                                 </div>
 
-                                <!-- Apple Pill Search Input -->
+                                <!-- Search Input -->
                                 <div class="relative w-full sm:w-64">
-                                    <i data-lucide="search" class="w-4 h-4 text-apple-subtle absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                                    <i data-lucide="search" class="w-4 h-4 text-map-subtle absolute left-3.5 top-1/2 -translate-y-1/2"></i>
                                     <input type="text" id="feed-search-input" oninput="renderActivityFeed()" placeholder="Cari aktivitas / toko..."
-                                        class="w-full bg-apple-bg border border-black/[0.08] rounded-full pl-9 pr-8 py-2 text-xs text-apple-ink placeholder:text-apple-subtle focus:outline-none focus:border-apple-blue">
-                                    <button type="button" id="feed-search-clear" onclick="clearFeedSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-apple-muted hover:text-apple-ink text-sm">×</button>
+                                        class="w-full bg-map-bg border border-map-border rounded-full pl-9 pr-8 py-2 text-xs text-map-ink placeholder:text-map-subtle focus:outline-none focus:border-map-red">
+                                    <button type="button" id="feed-search-clear" onclick="clearFeedSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-map-muted hover:text-map-ink text-sm">×</button>
                                 </div>
                             </div>
 
@@ -456,10 +564,10 @@
                             </div>
 
                             <!-- Empty State -->
-                            <div id="feed-empty-state" class="hidden rounded-2xl border border-dashed border-apple-border bg-apple-bg/50 p-12 text-center space-y-2">
-                                <i data-lucide="calendar-x" class="w-8 h-8 text-apple-subtle mx-auto"></i>
-                                <p class="text-sm font-semibold text-apple-ink">Belum ada kegiatan yang sesuai filter</p>
-                                <p class="text-xs text-apple-muted">Klik tombol Sync Sheets di atas atau tambahkan log baru melalui menu Input Aktivitas.</p>
+                            <div id="feed-empty-state" class="hidden rounded-2xl border border-dashed border-map-border bg-map-bg/60 p-12 text-center space-y-2">
+                                <i data-lucide="calendar-x" class="w-8 h-8 text-map-subtle mx-auto"></i>
+                                <p class="text-sm font-semibold text-map-ink">Belum ada kegiatan yang sesuai filter</p>
+                                <p class="text-xs text-map-muted">Klik tombol Sync Sheets di atas atau tambahkan log baru melalui menu Input Aktivitas.</p>
                             </div>
                         </div>
                     </div>
@@ -467,170 +575,244 @@
             </section>
 
             <!-- ========================================================= -->
-            <!-- VIEW 3: MATRIKS BULANAN (BEBAN KERJA + 01-31 SUMMARY)     -->
+            <!-- VIEW 3: KALENDER BULANAN (STANDALONE VIEW)                -->
             <!-- ========================================================= -->
-            <section id="view-matrix" class="hidden space-y-5">
-                <!-- Monthly Workload Summary Card -->
-                <div class="apple-card rounded-3xl p-5 sm:p-6 space-y-5">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <div>
-                            <h3 id="workload-month-title" class="text-lg sm:text-xl font-bold text-apple-ink tracking-tight">Beban Kerja Sebulan — November 2026</h3>
-                            <p class="text-xs text-apple-muted mt-0.5">Ringkasan kepadatan aktivitas, distribusi Task 1–9, dan sebaran kunjungan toko</p>
+            <section id="view-calendar" class="hidden space-y-4">
+                <!-- Month Switcher Header -->
+                <div class="map-card rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <h3 id="calendar-month-title" class="text-base sm:text-lg font-bold text-map-ink tracking-tight">
+                            Kalender — November 2026
+                        </h3>
+                        <p class="text-xs text-map-muted mt-0.5">Klik tanggal atau label Task berwarna di kalender untuk melihat rincian aktivitas</p>
+                    </div>
+
+                    <div class="flex items-center gap-2 self-start sm:self-auto">
+                        <div class="flex items-center bg-map-bg border border-map-border rounded-full p-1">
+                            <button type="button" onclick="shiftMonth(-1)" title="Bulan Sebelumnya" class="p-1.5 text-map-muted hover:text-map-ink hover:bg-white rounded-full transition-colors">
+                                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                            </button>
+                            <span id="calendar-month-pill" class="px-3 text-xs font-semibold text-map-ink">Nov 2026</span>
+                            <button type="button" onclick="shiftMonth(1)" title="Bulan Berikutnya" class="p-1.5 text-map-muted hover:text-map-ink hover:bg-white rounded-full transition-colors">
+                                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            </button>
                         </div>
-                        <span id="workload-peak-badge" class="text-[11px] font-medium px-3 py-1 rounded-full bg-apple-bg text-apple-ink border border-black/[0.08] self-start sm:self-auto">
-                            Hari Terpadat: -
-                        </span>
+
+                        <button onclick="openExportModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold text-white map-gradient-bg hover:opacity-95 transition-opacity">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                            <span>Export</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Distribusi Porsi per Task 1–9 Placed Directly Above Calendar -->
+                <div class="map-card rounded-3xl p-4 sm:p-5 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-xs font-semibold uppercase tracking-wider text-map-muted">Distribusi Porsi per Task 1–9</h4>
+                        <span class="text-[11px] text-map-subtle">Urut terbanyak</span>
+                    </div>
+                    <div id="calendar-task-distribution" class="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-2">
+                        <!-- Rendered via JS -->
+                    </div>
+                </div>
+
+                <!-- 7-Column Calendar Grid (Senin - Minggu) -->
+                <div class="map-card rounded-3xl p-4 sm:p-5">
+                    <div class="rounded-2xl border border-map-border overflow-hidden bg-white">
+                        <div class="grid grid-cols-7 bg-map-bg border-b border-map-border text-center text-[11px] font-semibold text-map-muted py-2">
+                            <div>Sen</div>
+                            <div>Sel</div>
+                            <div>Rab</div>
+                            <div>Kam</div>
+                            <div>Jum</div>
+                            <div class="text-map-subtle">Sab</div>
+                            <div class="text-map-red">Min</div>
+                        </div>
+                        <div id="calendar-days-grid" class="grid grid-cols-7 divide-x divide-y divide-map-border">
+                            <!-- Rendered via JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================= -->
+            <!-- VIEW 4: SUMMARY SEBULAN (ALL TRAINER + FILTER)            -->
+            <!-- ========================================================= -->
+            <section id="view-workload" class="hidden space-y-5">
+                <div class="map-card rounded-3xl p-5 sm:p-6 space-y-5">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <h3 id="workload-month-title" class="text-base sm:text-lg font-bold text-map-ink tracking-tight">Summary — November 2026</h3>
+                            <p id="workload-scope-desc" class="text-xs text-map-muted">Ringkasan keseluruhan data All Trainer bulan berjalan</p>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+                            <select id="summary-trainer-filter" onchange="onSummaryTrainerFilterChange(this.value)"
+                                class="bg-map-bg border border-map-red/20 rounded-full px-3.5 py-1.5 text-xs font-semibold text-map-ink focus:outline-none cursor-pointer">
+                                <option value="ALL">All Trainer (Keseluruhan)</option>
+                            </select>
+                            <span id="workload-peak-badge" class="text-[11px] font-semibold px-3 py-1.5 rounded-full bg-map-red/10 text-map-redDark border border-map-red/20">
+                                Hari Terpadat: -
+                            </span>
+                            <div class="flex items-center bg-map-bg border border-map-border rounded-full p-1">
+                                <button type="button" onclick="shiftMonth(-1)" title="Bulan Sebelumnya" class="p-1.5 text-map-muted hover:text-map-ink hover:bg-white rounded-full transition-colors">
+                                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                                </button>
+                                <span id="workload-month-pill" class="px-3 text-xs font-semibold text-map-ink">Nov 2026</span>
+                                <button type="button" onclick="shiftMonth(1)" title="Bulan Berikutnya" class="p-1.5 text-map-muted hover:text-map-ink hover:bg-white rounded-full transition-colors">
+                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- 4 KPI Cards -->
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-                        <div class="rounded-2xl bg-apple-bg/80 border border-black/[0.06] p-4 space-y-1">
-                            <p class="text-[11px] font-medium text-apple-muted">Total Aktivitas</p>
-                            <p id="kpi-total-activities" class="text-2xl font-bold text-apple-ink tracking-tight">0</p>
-                            <p id="kpi-total-sub" class="text-[11px] text-apple-subtle">0 baris log bulan ini</p>
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div class="rounded-2xl bg-map-bg/90 border border-map-red/10 p-3.5 space-y-0.5">
+                            <p class="text-[11px] font-medium text-map-muted">Total Aktivitas</p>
+                            <p id="kpi-total-activities" class="text-xl sm:text-2xl font-bold map-gradient-text tracking-tight">0</p>
+                            <p id="kpi-total-sub" class="text-[11px] text-map-subtle">0 baris log bulan ini</p>
                         </div>
-                        <div class="rounded-2xl bg-apple-bg/80 border border-black/[0.06] p-4 space-y-1">
-                            <p class="text-[11px] font-medium text-apple-muted">Hari Aktif Terisi</p>
-                            <p id="kpi-active-days" class="text-2xl font-bold text-apple-ink tracking-tight">0 hari</p>
-                            <p id="kpi-days-sub" class="text-[11px] text-apple-subtle">Dari 30 hari kalender</p>
+                        <div class="rounded-2xl bg-map-bg/90 border border-map-red/10 p-3.5 space-y-0.5">
+                            <p class="text-[11px] font-medium text-map-muted">Hari Aktif Terisi</p>
+                            <p id="kpi-active-days" class="text-xl sm:text-2xl font-bold text-map-ink tracking-tight">0 hari</p>
+                            <p id="kpi-days-sub" class="text-[11px] text-map-subtle">Dari 30 hari kalender</p>
                         </div>
-                        <div class="rounded-2xl bg-apple-bg/80 border border-black/[0.06] p-4 space-y-1">
-                            <p class="text-[11px] font-medium text-apple-muted">Rata-rata / Hari Aktif</p>
-                            <p id="kpi-avg-per-day" class="text-2xl font-bold text-apple-ink tracking-tight">0.0</p>
-                            <p id="kpi-avg-sub" class="text-[11px] text-apple-subtle">Task per hari kerja</p>
+                        <div class="rounded-2xl bg-map-bg/90 border border-map-red/10 p-3.5 space-y-0.5">
+                            <p class="text-[11px] font-medium text-map-muted">Rata-rata / Hari Aktif</p>
+                            <p id="kpi-avg-per-day" class="text-xl sm:text-2xl font-bold text-map-ink tracking-tight">0.0</p>
+                            <p id="kpi-avg-sub" class="text-[11px] text-map-subtle">Task per hari kerja</p>
                         </div>
-                        <div class="rounded-2xl bg-apple-bg/80 border border-black/[0.06] p-4 space-y-1">
-                            <p class="text-[11px] font-medium text-apple-muted">Toko vs Umum / HO</p>
-                            <p id="kpi-store-ratio" class="text-2xl font-bold text-apple-ink tracking-tight">0% / 0%</p>
-                            <p id="kpi-store-sub" class="text-[11px] text-apple-subtle">0 toko · 0 umum</p>
+                        <div class="rounded-2xl bg-map-bg/90 border border-map-red/10 p-3.5 space-y-0.5">
+                            <p class="text-[11px] font-medium text-map-muted">Toko vs Umum / HO</p>
+                            <p id="kpi-store-ratio" class="text-xl sm:text-2xl font-bold text-map-ink tracking-tight">0% / 0%</p>
+                            <p id="kpi-store-sub" class="text-[11px] text-map-subtle">0 toko · 0 umum</p>
+                        </div>
+                    </div>
+
+                    <!-- Rekapitulasi Keseluruhan All Trainer -->
+                    <div class="rounded-2xl border border-map-border bg-white p-4 space-y-3">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                            <div>
+                                <h4 class="text-xs font-semibold uppercase tracking-wider text-map-muted">Rekapitulasi Keseluruhan All Trainer</h4>
+                                <p class="text-[11px] text-map-subtle">Perbandingan beban kerja seluruh trainer HO pada bulan terpilih (klik baris untuk memfilter)</p>
+                            </div>
+                            <span id="all-trainer-total-badge" class="text-[11px] font-mono font-semibold text-map-red">0 trainer aktif</span>
+                        </div>
+
+                        <div class="overflow-x-auto rounded-xl border border-map-border">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="border-b border-map-border bg-map-bg text-map-ink font-semibold">
+                                        <th class="py-2.5 px-3">Nama Trainer HO</th>
+                                        <th class="py-2.5 px-3 text-right">Aktivitas</th>
+                                        <th class="py-2.5 px-3 text-right">Hari Aktif</th>
+                                        <th class="py-2.5 px-3 text-right">Toko / HO</th>
+                                        <th class="py-2.5 px-3">Task Dominan</th>
+                                        <th class="py-2.5 px-3 text-right">Porsi Tim</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="all-trainer-summary-body" class="divide-y divide-map-border">
+                                    <!-- Rendered via JS -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
                     <!-- Task Distribution & Store Ranking -->
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-1">
-                        <!-- Left 2 Cols: Task 1-9 Workload Bars -->
-                        <div class="lg:col-span-2 rounded-2xl border border-black/[0.06] bg-white p-4 sm:p-5 space-y-3">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <div class="lg:col-span-2 rounded-2xl border border-map-border bg-white p-4 space-y-2.5">
                             <div class="flex items-center justify-between">
-                                <h4 class="text-xs font-semibold uppercase tracking-wider text-apple-muted">Distribusi Porsi per Task 1–9</h4>
-                                <span class="text-[11px] text-apple-subtle">Urut terbanyak</span>
+                                <h4 class="text-xs font-semibold uppercase tracking-wider text-map-muted">Distribusi Porsi per Task 1–9</h4>
+                                <span id="workload-task-mode" class="text-[11px] text-map-subtle">All Trainer</span>
                             </div>
-                            <div id="workload-task-bars" class="space-y-2.5">
+                            <div id="workload-task-bars" class="space-y-2">
                                 <!-- Rendered via JS -->
                             </div>
                         </div>
 
-                        <!-- Right 1 Col: Store Visit / Location Breakdown -->
-                        <div class="rounded-2xl border border-black/[0.06] bg-white p-4 sm:p-5 space-y-3">
+                        <div class="rounded-2xl border border-map-border bg-white p-4 space-y-2.5">
                             <div class="flex items-center justify-between">
-                                <h4 class="text-xs font-semibold uppercase tracking-wider text-apple-muted">Sebaran Lokasi / Toko</h4>
-                                <span id="workload-store-count" class="text-[11px] font-mono text-apple-subtle">0 lokasi</span>
+                                <h4 class="text-xs font-semibold uppercase tracking-wider text-map-muted">Sebaran Lokasi / Toko</h4>
+                                <span id="workload-store-count" class="text-[11px] font-mono text-map-subtle">0 lokasi</span>
                             </div>
-                            <div id="workload-store-list" class="space-y-2 max-h-72 overflow-y-auto pr-1">
+                            <div id="workload-store-list" class="space-y-2 max-h-64 overflow-y-auto pr-1">
                                 <!-- Rendered via JS -->
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Daily Matrix Table (01-31) -->
-                <div class="apple-card rounded-3xl p-5 sm:p-6 space-y-4">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div>
-                            <h3 id="matrix-month-title" class="text-lg sm:text-xl font-bold text-apple-ink tracking-tight flex items-center gap-2">
-                                <span>Matriks Bulanan — November 2026</span>
-                            </h3>
-                            <p class="text-xs text-apple-muted mt-0.5">Rekap harian per kategori Task 1–9 berdasarkan data dari tab Submit</p>
-                        </div>
-                        <button onclick="copyMonthlyMatrixTSV()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium text-apple-blue hover:bg-apple-blue/5 border border-apple-blue transition-colors self-start sm:self-auto">
-                            <i data-lucide="clipboard-copy" class="w-3.5 h-3.5"></i>
-                            <span>Salin Matriks Bulan (TSV)</span>
-                        </button>
-                    </div>
-
-                    <div class="overflow-x-auto rounded-2xl border border-black/[0.08] bg-white">
-                        <table class="w-full text-left border-collapse text-xs">
-                            <thead>
-                                <tr class="border-b border-black/[0.08] bg-apple-bg text-apple-ink font-semibold">
-                                    <th class="py-3 px-3 sticky left-0 bg-apple-bg z-10">Hari</th>
-                                    <th class="py-3 px-3 sticky left-12 bg-apple-bg z-10">Tgl</th>
-                                    <th class="py-3 px-3 min-w-[140px]">Task 1 - Training</th>
-                                    <th class="py-3 px-3 min-w-[140px]">Task 2 - Roleplay</th>
-                                    <th class="py-3 px-3 min-w-[160px]">Task 3 - DCOTA + Sales Coach</th>
-                                    <th class="py-3 px-3 min-w-[130px]">Task 4 - StreamzAI</th>
-                                    <th class="py-3 px-3 min-w-[140px]">Task 5 - Pemadanan Data</th>
-                                    <th class="py-3 px-3 min-w-[140px]">Task 6 - Develope</th>
-                                    <th class="py-3 px-3 min-w-[120px]">Task 7 - General</th>
-                                    <th class="py-3 px-3 min-w-[130px]">Task 8 - Meeting</th>
-                                    <th class="py-3 px-3 min-w-[140px]">Task 9 - Store Visit</th>
-                                    <th class="py-3 px-3 text-center">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody id="matrix-table-body" class="divide-y divide-black/[0.06]">
-                                <!-- Rendered via JS -->
-                            </tbody>
-                            <tfoot id="matrix-table-foot" class="border-t border-black/15 bg-apple-bg font-mono font-semibold text-apple-ink">
-                                <!-- Rendered via JS -->
-                            </tfoot>
-                        </table>
                     </div>
                 </div>
             </section>
 
             <!-- Footer -->
-            <footer class="pt-3 pb-6 text-center space-y-1 border-t border-black/[0.06]">
-                <p class="text-[11px] font-mono text-apple-muted">Daily Work Journal • Tab: Submit | TimeStamp | Tanggal | Task | Aktivitas | Toko / Lokasi | Status | Foto / Link</p>
-                <p class="text-[11px] text-apple-subtle">Concept &amp; Curation by Novi Riyanto | Developed in collaboration with Gemini AI</p>
+            <footer class="pt-3 pb-6 text-center space-y-1 border-t border-map-border">
+                <p class="text-[11px] font-mono text-map-muted">Daily Work Journal • Tab: Submit | A: TimeStamp | B: Tanggal | C: Nama Trainer HO | D: Task | E: Aktivitas | F: Toko / Lokasi | G: Status | H: Foto / Link</p>
+                <p class="text-[11px] text-map-subtle">Concept &amp; Curation by Novi Riyanto | Developed in collaboration with Gemini AI</p>
             </footer>
 
         </main>
     </div>
 
     <!-- Mobile Floating Bottom Dock -->
-    <nav class="md:hidden fixed bottom-0 inset-x-0 z-40 apple-dock border-t border-black/[0.08] px-2 py-2 flex items-center justify-around">
-        <button onclick="switchView('input')" id="nav-mob-input" class="flex flex-col items-center gap-1 py-1 px-3 rounded-full text-apple-ink font-semibold">
+    <nav class="md:hidden fixed bottom-0 inset-x-0 z-40 map-dock border-t border-map-red/15 px-1.5 py-2 flex items-center justify-around">
+        <button onclick="switchView('input')" id="nav-mob-input" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-full text-map-red font-semibold">
             <i data-lucide="plus-square" class="w-5 h-5"></i>
             <span class="text-[10px]">Input</span>
         </button>
-        <button onclick="switchView('today')" id="nav-mob-today" class="flex flex-col items-center gap-1 py-1 px-3 rounded-full text-apple-muted hover:text-apple-ink">
+        <button onclick="switchView('today')" id="nav-mob-today" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-full text-map-muted hover:text-map-ink">
             <i data-lucide="calendar-check" class="w-5 h-5"></i>
             <span class="text-[10px] font-medium">Hari Ini</span>
         </button>
-        <button onclick="switchView('matrix')" id="nav-mob-matrix" class="flex flex-col items-center gap-1 py-1 px-3 rounded-full text-apple-muted hover:text-apple-ink">
-            <i data-lucide="grid-3x3" class="w-5 h-5"></i>
-            <span class="text-[10px] font-medium">Matriks</span>
+        <button onclick="switchView('calendar')" id="nav-mob-calendar" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-full text-map-muted hover:text-map-ink">
+            <i data-lucide="calendar" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Kalender</span>
         </button>
-        <button onclick="openWhatsAppModal()" class="flex flex-col items-center gap-1 py-1 px-3 rounded-full text-apple-blue">
-            <i data-lucide="message-square-text" class="w-5 h-5"></i>
-            <span class="text-[10px] font-medium">WA</span>
+        <button onclick="switchView('workload')" id="nav-mob-workload" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-full text-map-muted hover:text-map-ink">
+            <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Summary</span>
+        </button>
+        <button onclick="openExportModal()" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-full text-map-redDark">
+            <i data-lucide="download" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Export</span>
         </button>
     </nav>
 
     <script>
         /**
          * Daily Work Journal & Activity Log
-         * Apple-inspired Monochrome Light Edition synced with Google Sheets tab "Submit":
-         * TimeStamp | Tanggal | Task | Aktivitas | Toko / Lokasi | Status | Foto / Link
+         * MAP Red-Gradient Edition synced with Google Sheets tab "Submit" (Columns A..H):
+         * TimeStamp | Tanggal | Nama Trainer HO | Task | Aktivitas | Toko / Lokasi | Status | Foto / Link
          */
 
-        const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzOq-kcjwGIxOh7M9N_FHfiTf6DSkATijEqi7M9X4d_AJflDDAxcsHPaCjdOxRlVpF9lA/exec';
-        const LOGS_STORAGE_KEY = 'dwj_activity_logs_v3';
+        const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzuFKDGmsRefurwS2vF9nm9D80W_qAsuloZO8zrba5kcBIOWAnMUqDn88n-KIAvBXAjCg/exec';
+        const LOGS_STORAGE_KEY = 'dwj_activity_logs_v4';
         const STORES_STORAGE_KEY = 'dwj_master_stores_v1';
+        const TRAINER_STORAGE_KEY = 'dwj_selected_trainer_v1';
+
+        const TRAINERS = [
+            'Novi Riyanto',
+            'Frandy Putra',
+            'Putra Riza Zaliana',
+            'Dharma Wangga',
+            'Nentri Firmadoni'
+        ];
 
         const INDO_DAYS = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
         const INDO_MONTHS_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
         const INDO_MONTHS_FULL = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
         const TASKS = [
-            { id: 't1', shortCode: 'Task 1', label: 'Training', fullName: 'Task 1 - Training', placeholder: 'Materi training, jumlah staff, atau catatan kelas...' },
-            { id: 't2', shortCode: 'Task 2', label: 'Roleplay', fullName: 'Task 2 - Roleplay', placeholder: 'Skenario roleplay (CARES/NPI/Bundle) & nama staff...' },
-            { id: 't3', shortCode: 'Task 3', label: 'DCOTA + Sales Coach', fullName: 'Task 3 - DCOTA + Sales Coach', placeholder: 'Buka akses DCOTA, pengecekan unit demo, atau coaching...' },
-            { id: 't4', shortCode: 'Task 4', label: 'StreamzAI', fullName: 'Task 4 - StreamzAI', placeholder: 'Audit modul StreamzAI, progres penyelesaian staff...' },
-            { id: 't5', shortCode: 'Task 5', label: 'Pemadanan Data', fullName: 'Task 5 - Pemadanan Data', placeholder: 'Sync headcount, data LOB Champion, atau validasi sheet...' },
-            { id: 't6', shortCode: 'Task 6', label: 'Develope', fullName: 'Task 6 - Develope', placeholder: 'Pengembangan dashboard, formula, automasi, atau materi...' },
-            { id: 't7', shortCode: 'Task 7', label: 'General', fullName: 'Task 7 - General', placeholder: 'Administrasi harian, koordinasi operasional, dll...' },
-            { id: 't8', shortCode: 'Task 8', label: 'Meeting', fullName: 'Task 8 - Meeting', placeholder: 'Weekly Connect, briefing NPI, interview kandidat...' },
-            { id: 't9', shortCode: 'Task 9', label: 'Store Visit', fullName: 'Task 9 - Store Visit', placeholder: 'Observasi floor, kesiapan opening, display & grooming...' }
+            { id: 't1', shortCode: 'Task 1', label: 'Training', fullName: 'Task 1 - Training', borderHex: '#dc2626', placeholder: 'Materi training, jumlah staff, atau catatan kelas...' },
+            { id: 't2', shortCode: 'Task 2', label: 'Roleplay', fullName: 'Task 2 - Roleplay', borderHex: '#991b1b', placeholder: 'Skenario roleplay (CARES/NPI/Bundle) & nama staff...' },
+            { id: 't3', shortCode: 'Task 3', label: 'DCOTA + Sales Coach', fullName: 'Task 3 - DCOTA + Sales Coach', borderHex: '#e11d48', placeholder: 'Buka akses DCOTA, pengecekan unit demo, atau coaching...' },
+            { id: 't4', shortCode: 'Task 4', label: 'StreamzAI', fullName: 'Task 4 - StreamzAI', borderHex: '#b91c1c', placeholder: 'Audit modul StreamzAI, progres penyelesaian staff...' },
+            { id: 't5', shortCode: 'Task 5', label: 'Pemadanan Data', fullName: 'Task 5 - Pemadanan Data', borderHex: '#7f1d1d', placeholder: 'Sync headcount, data LOB Champion, atau validasi sheet...' },
+            { id: 't6', shortCode: 'Task 6', label: 'Develope', fullName: 'Task 6 - Develope', borderHex: '#ea580c', placeholder: 'Pengembangan dashboard, formula, automasi, atau materi...' },
+            { id: 't7', shortCode: 'Task 7', label: 'General', fullName: 'Task 7 - General', borderHex: '#57534e', placeholder: 'Administrasi harian, koordinasi operasional, dll...' },
+            { id: 't8', shortCode: 'Task 8', label: 'Meeting', fullName: 'Task 8 - Meeting', borderHex: '#be123c', placeholder: 'Weekly Connect, briefing NPI, interview kandidat...' },
+            { id: 't9', shortCode: 'Task 9', label: 'Store Visit', fullName: 'Task 9 - Store Visit', borderHex: '#9f1239', placeholder: 'Observasi floor, kesiapan opening, display & grooming...' }
         ];
+
         const DEFAULT_STORE_PRESETS = [
             'Umum / HO',
             'Digimap TP3',
@@ -650,12 +832,15 @@
         let STORE_PRESETS = [...DEFAULT_STORE_PRESETS];
         let allLogs = [];
         let selectedDate = '2026-11-23';
+        let selectedTrainer = TRAINERS[0];
+        let summaryTrainerFilter = 'ALL';
         let currentView = 'input';
         let defaultLocation = 'Umum / HO';
         let defaultStatus = 'Done';
         let draftTasks = {};
         let queuedPhotos = [];
         let feedEnabledTasks = new Set(TASKS.map(t => t.id));
+        let focusedCalendarLogId = null;
 
         function parseLocalDate(isoStr) {
             const [y, m, d] = (isoStr || '2026-11-23').split('-').map(Number);
@@ -664,6 +849,57 @@
 
         function getConfiguredWebhookUrl() {
             return WEBHOOK_URL;
+        }
+
+        function renderTrainerSelect() {
+            const sel = document.getElementById('trainer-select');
+            if (sel) {
+                sel.innerHTML = TRAINERS.map(tr =>
+                    `<option value="${escapeAttr(tr)}" ${tr === selectedTrainer ? 'selected' : ''}>${escapeHtml(tr)}</option>`
+                ).join('');
+            }
+            const hint = document.getElementById('submit-trainer-hint');
+            if (hint) {
+                hint.textContent = `Trainer aktif: ${selectedTrainer} • Disimpan ke Kolom C (Nama Trainer HO) di tab Submit`;
+            }
+        }
+
+        function populateSummaryTrainerFilter() {
+            const sel = document.getElementById('summary-trainer-filter');
+            if (!sel) return;
+            const extraTrainers = [...new Set(
+                allLogs
+                    .map(l => (l.trainer || '').trim())
+                    .filter(t => t && !TRAINERS.includes(t))
+            )];
+            const allOptions = ['ALL', ...TRAINERS, ...extraTrainers];
+            if (!allOptions.includes(summaryTrainerFilter)) {
+                summaryTrainerFilter = 'ALL';
+            }
+            sel.innerHTML = allOptions.map(opt => {
+                const label = opt === 'ALL' ? 'All Trainer (Keseluruhan)' : opt;
+                return `<option value="${escapeAttr(opt)}" ${opt === summaryTrainerFilter ? 'selected' : ''}>${escapeHtml(label)}</option>`;
+            }).join('');
+        }
+
+        function onSummaryTrainerFilterChange(val) {
+            summaryTrainerFilter = val || 'ALL';
+            renderMonthlyMatrix();
+        }
+
+        function selectTrainerInSummary(trainerName) {
+            summaryTrainerFilter = (summaryTrainerFilter === trainerName) ? 'ALL' : trainerName;
+            populateSummaryTrainerFilter();
+            renderMonthlyMatrix();
+        }
+
+        function onTrainerChange(val) {
+            if (TRAINERS.includes(val)) {
+                selectedTrainer = val;
+                localStorage.setItem(TRAINER_STORAGE_KEY, val);
+                renderTrainerSelect();
+                showToast(`Trainer aktif diubah ke ${selectedTrainer}`);
+            }
         }
 
         let gaugeTimer = null;
@@ -676,7 +912,7 @@
 
             if (gaugeTimer) clearInterval(gaugeTimer);
             let progress = 8;
-            labelEl.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-apple-blue"></i><span>${escapeHtml(labelText)}</span>`;
+            labelEl.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-map-red"></i><span>${escapeHtml(labelText)}</span>`;
             pctEl.textContent = `${progress}%`;
             barEl.style.width = `${progress}%`;
             container.classList.remove('hidden');
@@ -697,7 +933,7 @@
             const pctEl = document.getElementById('sync-gauge-percent');
             const barEl = document.getElementById('sync-gauge-bar');
             if (labelText && labelEl) {
-                labelEl.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-apple-blue"></i><span>${escapeHtml(labelText)}</span>`;
+                labelEl.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-map-red"></i><span>${escapeHtml(labelText)}</span>`;
                 lucide.createIcons();
             }
             if (pctEl) pctEl.textContent = `${percent}%`;
@@ -715,7 +951,7 @@
             const barEl = document.getElementById('sync-gauge-bar');
             if (!container) return;
 
-            labelEl.innerHTML = `<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-apple-ink"></i><span>${escapeHtml(finalLabel)}</span>`;
+            labelEl.innerHTML = `<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-map-red"></i><span>${escapeHtml(finalLabel)}</span>`;
             pctEl.textContent = '100%';
             barEl.style.width = '100%';
             lucide.createIcons();
@@ -765,6 +1001,10 @@
 
         function loadLocalLogsCache() {
             try {
+                const savedTrainer = localStorage.getItem(TRAINER_STORAGE_KEY);
+                if (savedTrainer && TRAINERS.includes(savedTrainer)) {
+                    selectedTrainer = savedTrainer;
+                }
                 const savedStores = localStorage.getItem(STORES_STORAGE_KEY);
                 if (savedStores) {
                     const parsedStores = JSON.parse(savedStores);
@@ -786,7 +1026,7 @@
         }
 
         /**
-         * Fetch rows from "Submit" and Store list (Col B) from "Master karyawan" via Apps Script doGet
+         * Fetch rows from "Submit" (Cols A..H) and Store list (Col B) from "Master karyawan" via Apps Script doGet
          */
         async function syncLogsFromSheets(showNotification = false) {
             const url = getConfiguredWebhookUrl();
@@ -806,7 +1046,6 @@
                 updateLoadingGauge(72, 'Memproses baris data & daftar Store...');
                 const json = await res.json();
                 if (json && json.status === 'success') {
-                    // Ambil daftar unik dari Kolom B ("Store") pada array json.master ("Master karyawan")
                     let extractedStores = [];
                     if (Array.isArray(json.stores) && json.stores.length > 0) {
                         extractedStores = json.stores.map(s => String(s || '').trim()).filter(Boolean);
@@ -828,6 +1067,7 @@
                             id: r.id || ('sheet_' + i),
                             timestamp: r.timestamp || '',
                             tanggal: String(r.tanggal || '').trim().slice(0, 10),
+                            trainer: (r.trainer || '').trim(),
                             taskId: resolveTaskIdFromName(r.task),
                             task: r.task || 'Task 7 - General',
                             aktivitas: r.aktivitas || '',
@@ -844,7 +1084,7 @@
                     }
 
                     if (currentView === 'today') renderActivityFeed();
-                    else if (currentView === 'matrix') renderMonthlyMatrix();
+                    else if (currentView === 'calendar' || currentView === 'workload') renderMonthlyMatrix();
 
                     finishLoadingGauge(`Selesai (${allLogs.length} baris • ${STORE_PRESETS.length - 1} store)`);
                     if (showNotification) {
@@ -882,7 +1122,7 @@
 
         function updateHeaderStats() {
             const countToday = allLogs.filter(l => l.tanggal === selectedDate).length;
-            document.getElementById('header-log-stats').textContent = `${countToday} log tersimpan pada tanggal ini • Total ${allLogs.length} baris di tab Submit`;
+            document.getElementById('header-log-stats').textContent = `${countToday} log tersimpan pada tanggal ini • Trainer: ${selectedTrainer} • Total ${allLogs.length} baris`;
         }
 
         /**
@@ -890,12 +1130,13 @@
          */
         function setDate(isoStr) {
             selectedDate = isoStr;
+            focusedCalendarLogId = null;
             document.getElementById('date-picker').value = isoStr;
             document.getElementById('formatted-date-title').textContent = formatHeaderDate(isoStr);
             updateHeaderStats();
             if (currentView === 'today') {
                 renderActivityFeed();
-            } else if (currentView === 'matrix') {
+            } else if (currentView === 'calendar' || currentView === 'workload') {
                 renderMonthlyMatrix();
             }
         }
@@ -906,12 +1147,22 @@
             setDate(toIsoDate(dt));
         }
 
+        function shiftMonth(delta) {
+            const dt = parseLocalDate(selectedDate);
+            const targetMonth = dt.getMonth() + delta;
+            const year = dt.getFullYear() + Math.floor(targetMonth / 12);
+            const month = ((targetMonth % 12) + 12) % 12;
+            const maxDay = new Date(year, month + 1, 0).getDate();
+            const day = Math.min(dt.getDate(), maxDay);
+            setDate(toIsoDate(new Date(year, month, day)));
+        }
+
         /**
-         * View Switcher
+         * View Switcher (Input, Today, Calendar, Summary)
          */
         function switchView(view) {
             currentView = view;
-            const views = ['input', 'today', 'matrix'];
+            const views = ['input', 'today', 'calendar', 'workload'];
 
             views.forEach(v => {
                 const sec = document.getElementById(`view-${v}`);
@@ -922,17 +1173,17 @@
 
                 if (v === view) {
                     if (dBtn) {
-                        dBtn.className = 'flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all bg-apple-ink text-white shadow-sm';
+                        dBtn.className = 'flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all map-gradient-bg text-white shadow-sm';
                     }
                     if (mBtn) {
-                        mBtn.className = 'flex flex-col items-center gap-1 py-1 px-3 rounded-full text-apple-ink font-semibold';
+                        mBtn.className = 'flex flex-col items-center gap-1 py-1 px-2.5 rounded-full text-map-red font-semibold';
                     }
                 } else {
                     if (dBtn) {
-                        dBtn.className = 'flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium text-apple-muted hover:text-apple-ink transition-all';
+                        dBtn.className = 'flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-map-muted hover:text-map-ink transition-all';
                     }
                     if (mBtn) {
-                        mBtn.className = 'flex flex-col items-center gap-1 py-1 px-3 rounded-full text-apple-muted hover:text-apple-ink';
+                        mBtn.className = 'flex flex-col items-center gap-1 py-1 px-2.5 rounded-full text-map-muted hover:text-map-ink';
                     }
                 }
             });
@@ -940,14 +1191,14 @@
             if (view === 'today') {
                 renderFeedTaskCheckboxes();
                 renderActivityFeed();
-            } else if (view === 'matrix') {
+            } else if (view === 'calendar' || view === 'workload') {
                 renderMonthlyMatrix();
             }
             lucide.createIcons();
         }
 
         /**
-         * Default Location Pills & Master Store Search
+         * Master Store Search
          */
         function populateMasterStoreDatalist() {
             const dl = document.getElementById('master-store-datalist');
@@ -1003,24 +1254,24 @@
             document.querySelectorAll('.status-btn').forEach(btn => {
                 const st = btn.getAttribute('data-status');
                 if (st === status) {
-                    btn.className = 'status-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-apple-ink text-white shadow-sm transition-all';
+                    btn.className = 'status-btn px-3.5 py-1.5 rounded-full text-xs font-semibold map-gradient-bg text-white shadow-sm transition-all';
                 } else {
-                    btn.className = 'status-btn px-3.5 py-1.5 rounded-full text-xs font-medium text-apple-muted hover:text-apple-ink transition-all';
+                    btn.className = 'status-btn px-3.5 py-1.5 rounded-full text-xs font-medium text-map-muted hover:text-map-ink transition-all';
                 }
             });
         }
 
         /**
-         * 3x3 Bento Grid Rendering (Task 1 - Task 9 — Apple Monochrome Light Theme)
+         * 3x3 Bento Grid Rendering (Task 1 - Task 9 — Distinct Task Border Accents)
          */
         function getMonochromeCardStyles(active) {
             return {
                 card: active
-                    ? 'border-apple-ink bg-white shadow-apple-hover ring-1 ring-apple-ink'
-                    : 'border-black/[0.08] bg-white hover:border-black/25 shadow-apple-card',
+                    ? 'bg-white shadow-map-hover'
+                    : 'bg-white hover:border-map-red/30 shadow-map-card',
                 badge: active
-                    ? 'bg-apple-ink text-white font-semibold'
-                    : 'bg-apple-bg text-apple-ink font-medium border border-black/[0.06]'
+                    ? 'text-white font-semibold'
+                    : 'bg-map-bg text-map-ink font-medium border border-map-border'
             };
         }
 
@@ -1030,26 +1281,22 @@
                 const st = draftTasks[t.id];
                 const styles = getMonochromeCardStyles(st.active);
                 const effectiveLoc = st.locationOverride !== null ? st.locationOverride : defaultLocation;
-
-                const optionsList = [...STORE_PRESETS];
-                if (!optionsList.includes(effectiveLoc)) optionsList.unshift(effectiveLoc);
-                if (!optionsList.includes(defaultLocation)) optionsList.unshift(defaultLocation);
-
-                const locOptionsHtml = optionsList.map(opt =>
-                    `<option value="${escapeAttr(opt)}" ${opt === effectiveLoc ? 'selected' : ''}>${escapeHtml(opt)}</option>`
-                ).join('');
+                const cardInlineBorder = st.active
+                    ? `border-color: ${t.borderHex}; box-shadow: 0 0 0 1.5px ${t.borderHex}, 0 8px 20px rgba(185,28,28,0.08);`
+                    : `border-left: 3.5px solid ${t.borderHex};`;
+                const badgeInlineStyle = st.active ? `background-color: ${t.borderHex};` : '';
 
                 return `
-                    <div id="card-${t.id}" class="task-card rounded-3xl border p-5 flex flex-col justify-between gap-3 ${styles.card}">
+                    <div id="card-${t.id}" style="${cardInlineBorder}" class="task-card rounded-3xl border border-map-border p-5 flex flex-col justify-between gap-3 ${styles.card}">
                         <div onclick="activateTaskCard('${t.id}')" class="flex items-center justify-between gap-2 cursor-pointer select-none">
                             <div class="flex items-center gap-2 min-w-0">
-                                <span id="badge-${t.id}" class="text-[11px] font-mono px-2.5 py-0.5 rounded-full transition-colors ${styles.badge}">
+                                <span id="badge-${t.id}" style="${badgeInlineStyle}" class="text-[11px] font-mono px-2.5 py-0.5 rounded-full transition-colors ${styles.badge}">
                                     ${t.shortCode}
                                 </span>
-                                <h3 class="text-sm font-semibold text-apple-ink truncate">${t.label}</h3>
+                                <h3 class="text-sm font-semibold text-map-ink truncate">${t.label}</h3>
                             </div>
                             <button type="button" id="clear-${t.id}" onclick="event.stopPropagation(); clearTaskCard('${t.id}')" title="Kosongkan"
-                                class="${st.active ? 'flex' : 'hidden'} w-6 h-6 rounded-full items-center justify-center text-apple-muted hover:text-apple-ink hover:bg-apple-bg transition-colors text-base font-medium leading-none">
+                                class="${st.active ? 'flex' : 'hidden'} w-6 h-6 rounded-full items-center justify-center text-map-muted hover:text-map-ink hover:bg-map-bg transition-colors text-base font-medium leading-none">
                                 ×
                             </button>
                         </div>
@@ -1059,18 +1306,18 @@
                             placeholder="${t.placeholder}"
                             onfocus="activateTaskCard('${t.id}', false)"
                             oninput="onTaskTextChange('${t.id}', this)"
-                            class="w-full bg-apple-bg/80 border border-black/[0.06] rounded-2xl px-3.5 py-2.5 text-xs sm:text-sm text-apple-ink placeholder:text-apple-subtle focus:outline-none focus:bg-white focus:border-apple-blue resize-none leading-relaxed">${escapeHtml(st.text)}</textarea>
+                            class="w-full bg-map-bg/80 border border-map-border rounded-2xl px-3.5 py-2.5 text-xs sm:text-sm text-map-ink placeholder:text-map-subtle focus:outline-none focus:bg-white focus:border-map-red resize-none leading-relaxed">${escapeHtml(st.text)}</textarea>
 
                         <div class="flex items-center justify-between gap-2 pt-0.5">
-                            <span class="text-[11px] text-apple-muted flex items-center gap-1 shrink-0">
-                                <i data-lucide="map-pin" class="w-3 h-3 text-apple-subtle"></i> Lokasi:
+                            <span class="text-[11px] text-map-muted flex items-center gap-1 shrink-0">
+                                <i data-lucide="map-pin" class="w-3 h-3 text-map-subtle"></i> Lokasi:
                             </span>
                             <input type="text" list="master-store-datalist"
                                 value="${escapeAttr(effectiveLoc)}"
                                 placeholder="Ketik kode/toko..."
                                 onchange="overrideTaskLocation('${t.id}', this.value)"
                                 onfocus="this.select()"
-                                class="bg-apple-bg border border-black/[0.08] rounded-full px-3 py-1 text-[11px] font-medium text-apple-ink focus:outline-none focus:bg-white focus:border-apple-blue max-w-[185px] truncate">
+                                class="bg-map-bg border border-map-border rounded-full px-3 py-1 text-[11px] font-medium text-map-ink focus:outline-none focus:bg-white focus:border-map-red max-w-[185px] truncate">
                         </div>
                     </div>
                 `;
@@ -1125,15 +1372,20 @@
         }
 
         function syncCardState(taskId) {
+            const t = TASKS.find(x => x.id === taskId);
             const st = draftTasks[taskId];
             const styles = getMonochromeCardStyles(st.active);
             const card = document.getElementById(`card-${taskId}`);
             const badge = document.getElementById(`badge-${taskId}`);
             const clearBtn = document.getElementById(`clear-${taskId}`);
 
-            if (!card || !badge || !clearBtn) return;
-            card.className = `task-card rounded-3xl border p-5 flex flex-col justify-between gap-3 ${styles.card}`;
+            if (!card || !badge || !clearBtn || !t) return;
+            card.className = `task-card rounded-3xl border border-map-border p-5 flex flex-col justify-between gap-3 ${styles.card}`;
+            card.style.cssText = st.active
+                ? `border-color: ${t.borderHex}; box-shadow: 0 0 0 1.5px ${t.borderHex}, 0 8px 20px rgba(185,28,28,0.08);`
+                : `border-left: 3.5px solid ${t.borderHex};`;
             badge.className = `text-[11px] font-mono px-2.5 py-0.5 rounded-full transition-colors ${styles.badge}`;
+            badge.style.backgroundColor = st.active ? t.borderHex : '';
             if (st.active) {
                 clearBtn.classList.remove('hidden');
                 clearBtn.classList.add('flex');
@@ -1163,17 +1415,17 @@
 
         function handleDragOver(e) {
             e.preventDefault();
-            document.getElementById('photo-dropzone').classList.add('border-apple-blue', 'bg-apple-blue/5');
+            document.getElementById('photo-dropzone').classList.add('border-map-red', 'bg-map-red/5');
         }
 
         function handleDragLeave(e) {
             e.preventDefault();
-            document.getElementById('photo-dropzone').classList.remove('border-apple-blue', 'bg-apple-blue/5');
+            document.getElementById('photo-dropzone').classList.remove('border-map-red', 'bg-map-red/5');
         }
 
         function handleDrop(e) {
             e.preventDefault();
-            document.getElementById('photo-dropzone').classList.remove('border-apple-blue', 'bg-apple-blue/5');
+            document.getElementById('photo-dropzone').classList.remove('border-map-red', 'bg-map-red/5');
             if (e.dataTransfer && e.dataTransfer.files) {
                 handleFilesSelected(e.dataTransfer.files);
             }
@@ -1293,17 +1545,17 @@
             grid.innerHTML = queuedPhotos.map((p, idx) => {
                 const pct = p.originalSize > 0 ? Math.max(0, Math.round(((p.originalSize - p.compressedSize) / p.originalSize) * 100)) : 0;
                 return `
-                    <div class="relative group rounded-2xl overflow-hidden border border-black/10 bg-apple-bg">
+                    <div class="relative group rounded-2xl overflow-hidden border border-map-border bg-map-bg">
                         <img src="${p.dataUrl}" alt="${escapeAttr(p.name)}"
                             onclick="openPhotoModal('${p.dataUrl}', '${escapeAttr(p.name)}', '${p.width}×${p.height}px • ${formatBytes(p.compressedSize)}')"
                             class="w-full h-24 object-cover cursor-pointer group-hover:scale-105 transition-transform">
                         <button type="button" onclick="removeQueuedPhoto(${idx})" title="Hapus Foto"
-                            class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-black/75 text-white hover:bg-black flex items-center justify-center text-xs font-semibold">
+                            class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-black/75 text-white hover:bg-map-red flex items-center justify-center text-xs font-semibold">
                             ×
                         </button>
-                        <div class="p-2 text-[10px] font-mono bg-white border-t border-black/[0.06] space-y-0.5">
-                            <p class="text-apple-ink truncate">${escapeHtml(p.name)}</p>
-                            <p class="text-apple-blue font-semibold">${formatBytes(p.originalSize)} → ${formatBytes(p.compressedSize)} (-${pct}%)</p>
+                        <div class="p-2 text-[10px] font-mono bg-white border-t border-map-border space-y-0.5">
+                            <p class="text-map-ink truncate">${escapeHtml(p.name)}</p>
+                            <p class="text-map-red font-semibold">${formatBytes(p.originalSize)} → ${formatBytes(p.compressedSize)} (-${pct}%)</p>
                         </div>
                     </div>
                 `;
@@ -1336,7 +1588,7 @@
 
         /**
          * =========================================================
-         * SUBMIT LOG (ROW PER TASK -> LOCALSTORAGE + GOOGLE SHEETS)
+         * SUBMIT LOG (ROW PER TASK -> LOCALSTORAGE + GOOGLE SHEETS A..H)
          * =========================================================
          */
         async function submitActivityLog() {
@@ -1371,6 +1623,7 @@
                     id: 'log_' + Date.now() + '_' + t.id,
                     timestamp: formatNowTimestamp(),
                     tanggal: selectedDate,
+                    trainer: selectedTrainer,
                     taskId: t.id,
                     task: t.fullName,
                     aktivitas: st.text.trim(),
@@ -1384,7 +1637,7 @@
             });
 
             saveLogsToStorage();
-            startLoadingGauge(`Mengirim ${createdEntries.length} baris log ke Google Sheets...`);
+            startLoadingGauge(`Mengirim ${createdEntries.length} baris log (${selectedTrainer}) ke Sheets...`);
 
             let sentRemoteCount = 0;
             if (webhookUrl) {
@@ -1400,6 +1653,8 @@
                             body: JSON.stringify({
                                 timestamp: entry.timestamp,
                                 tanggal: entry.tanggal,
+                                trainer: entry.trainer,
+                                namaTrainerHO: entry.trainer,
                                 task: entry.task,
                                 aktivitas: entry.aktivitas,
                                 lokasi: entry.lokasi,
@@ -1424,7 +1679,7 @@
             btn.innerHTML = origHtml;
             lucide.createIcons();
 
-            showToast(`${sentRemoteCount} baris log + foto terkirim ke tab Submit!`);
+            showToast(`${sentRemoteCount} baris log (${selectedTrainer}) terkirim ke tab Submit!`);
             setTimeout(() => { syncLogsFromSheets(false); }, 1200);
         }
 
@@ -1438,8 +1693,8 @@
             box.innerHTML = TASKS.map(t => {
                 const checked = feedEnabledTasks.has(t.id) ? 'checked' : '';
                 return `
-                    <label class="flex items-center gap-2 py-1 px-2 rounded-lg hover:bg-apple-bg cursor-pointer text-apple-ink select-none">
-                        <input type="checkbox" ${checked} onchange="toggleFeedTask('${t.id}', this.checked)" class="accent-black rounded">
+                    <label class="flex items-center gap-2 py-1 px-2 rounded-lg hover:bg-map-bg cursor-pointer text-map-ink select-none">
+                        <input type="checkbox" ${checked} onchange="toggleFeedTask('${t.id}', this.checked)" class="accent-red-700 rounded">
                         <span class="truncate">${t.shortCode} · ${t.label}</span>
                     </label>
                 `;
@@ -1512,7 +1767,7 @@
                 if (onlyPhoto && !hasAttachment) return false;
 
                 if (query) {
-                    const hay = `${item.task} ${item.aktivitas} ${item.lokasi} ${item.status} ${item.tanggal}`.toLowerCase();
+                    const hay = `${item.trainer || ''} ${item.task} ${item.aktivitas} ${item.lokasi} ${item.status} ${item.tanggal}`.toLowerCase();
                     if (!hay.includes(query)) return false;
                 }
                 return true;
@@ -1545,16 +1800,19 @@
 
             empty.classList.add('hidden');
             grid.innerHTML = items.map(item => {
+                const taskMeta = TASKS.find(t => t.id === item.taskId) || TASKS[6];
                 const statusBadge = item.status === 'Done'
-                    ? 'bg-apple-ink text-white'
+                    ? 'map-gradient-bg text-white'
                     : item.status === 'Progress'
-                        ? 'bg-apple-blue/10 text-apple-blue border border-apple-blue/30'
-                        : 'bg-apple-bg text-apple-muted border border-black/10';
+                        ? 'bg-map-red/10 text-map-redDark border border-map-red/30'
+                        : 'bg-map-bg text-map-muted border border-map-border';
 
                 const isStore = item.lokasi && item.lokasi !== 'Umum / HO';
                 const locPill = isStore
-                    ? 'bg-apple-ink/5 text-apple-ink font-semibold border-black/15'
-                    : 'bg-apple-bg text-apple-muted border-black/[0.06]';
+                    ? 'bg-map-red/5 text-map-ink font-semibold border-map-red/25'
+                    : 'bg-map-bg text-map-muted border-map-border';
+
+                const trainerLabel = (item.trainer || '').trim() || 'Tanpa Nama';
 
                 const photos = item.photos || [];
                 const driveUrls = (item.fotoLink || '')
@@ -1566,14 +1824,14 @@
                 if (photos.length > 0) {
                     photosHtml = `
                         <div class="pt-1 space-y-1.5">
-                            <span class="text-[11px] font-medium text-apple-muted flex items-center gap-1">
+                            <span class="text-[11px] font-medium text-map-muted flex items-center gap-1">
                                 <i data-lucide="image" class="w-3 h-3"></i> ${photos.length} Foto Terlampir
                             </span>
                             <div class="flex gap-1.5 overflow-x-auto pb-1">
                                 ${photos.map(ph => `
                                     <img src="${ph.dataUrl}" alt="${escapeAttr(ph.name)}"
                                         onclick="openPhotoModal('${ph.dataUrl}', '${escapeAttr(ph.name)}', '${ph.width || ''}×${ph.height || ''}px • ${formatBytes(ph.compressedSize || 0)}')"
-                                        class="w-12 h-12 rounded-xl object-cover border border-black/10 cursor-pointer shrink-0 hover:opacity-85">
+                                        class="w-12 h-12 rounded-xl object-cover border border-map-border cursor-pointer shrink-0 hover:opacity-85">
                                 `).join('')}
                             </div>
                         </div>
@@ -1583,7 +1841,7 @@
                         <div class="pt-1 flex flex-wrap gap-1.5">
                             ${driveUrls.map((u, idx) => `
                                 <a href="${escapeAttr(u)}" target="_blank" rel="noopener noreferrer"
-                                    class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-medium text-apple-blue bg-apple-blue/5 border border-apple-blue/30 hover:bg-apple-blue/10 transition-colors">
+                                    class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-semibold text-map-red bg-map-red/5 border border-map-red/30 hover:bg-map-red/10 transition-colors">
                                     <i data-lucide="external-link" class="w-3 h-3"></i>
                                     <span>Foto Drive #${idx + 1}</span>
                                 </a>
@@ -1593,10 +1851,10 @@
                 }
 
                 return `
-                    <article class="rounded-3xl border border-black/[0.08] bg-white p-5 flex flex-col justify-between gap-3 shadow-apple-card hover:shadow-apple-hover transition-all">
+                    <article style="border-left: 3.5px solid ${taskMeta.borderHex};" class="rounded-3xl border border-map-border bg-white p-5 flex flex-col justify-between gap-3 shadow-map-card hover:shadow-map-hover transition-all">
                         <div class="space-y-3">
                             <div class="flex items-start justify-between gap-2">
-                                <span class="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-apple-bg text-apple-ink border border-black/[0.06]">
+                                <span style="border-color: ${taskMeta.borderHex};" class="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-map-bg text-map-ink border">
                                     ${escapeHtml(item.task)}
                                 </span>
                                 <span class="text-[10px] font-semibold px-2.5 py-0.5 rounded-full ${statusBadge}">
@@ -1605,24 +1863,28 @@
                             </div>
 
                             <div class="flex flex-wrap items-center gap-1.5 text-[11px]">
+                                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-map-bg text-map-ink font-semibold border border-map-border">
+                                    <i data-lucide="user" class="w-3 h-3 text-map-red"></i>
+                                    ${escapeHtml(trainerLabel)}
+                                </span>
                                 <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border ${locPill}">
                                     <i data-lucide="map-pin" class="w-3 h-3"></i>
                                     ${escapeHtml(item.lokasi || 'Umum / HO')}
                                 </span>
-                                <span class="text-apple-subtle font-mono">${escapeHtml(item.tanggal)}</span>
+                                <span class="text-map-subtle font-mono">${escapeHtml(item.tanggal)}</span>
                             </div>
 
-                            <p class="text-xs sm:text-sm text-apple-ink bg-apple-bg/70 rounded-2xl p-3.5 leading-relaxed whitespace-pre-line">
+                            <p class="text-xs sm:text-sm text-map-ink bg-map-bg/75 rounded-2xl p-3.5 leading-relaxed whitespace-pre-line">
                                 ${escapeHtml(item.aktivitas)}
                             </p>
 
                             ${photosHtml}
                         </div>
 
-                        <div class="pt-2.5 border-t border-black/[0.06] flex items-center justify-between text-[11px] text-apple-subtle">
+                        <div class="pt-2.5 border-t border-map-border flex items-center justify-between text-[11px] text-map-subtle">
                             <span class="font-mono">${escapeHtml((item.timestamp.split(' ')[1] || item.timestamp))}</span>
                             <div class="flex items-center gap-1">
-                                <button type="button" onclick="editLogEntry('${item.id}')" class="px-2.5 py-1 rounded-full text-apple-blue font-medium hover:bg-apple-blue/5 transition-colors">
+                                <button type="button" onclick="editLogEntry('${item.id}')" class="px-2.5 py-1 rounded-full text-map-red font-semibold hover:bg-map-red/5 transition-colors">
                                     Edit
                                 </button>
                                 <button type="button" onclick="deleteLogEntry('${item.id}')" class="px-2.5 py-1 rounded-full text-red-600 font-medium hover:bg-red-50 transition-colors">
@@ -1644,6 +1906,11 @@
 
             setDate(entry.tanggal);
             setDefaultStatus(entry.status);
+            if (entry.trainer && TRAINERS.includes(entry.trainer)) {
+                selectedTrainer = entry.trainer;
+                localStorage.setItem(TRAINER_STORAGE_KEY, entry.trainer);
+                renderTrainerSelect();
+            }
             draftTasks[entry.taskId] = {
                 active: true,
                 text: entry.aktivitas,
@@ -1666,9 +1933,30 @@
 
         /**
          * =========================================================
-         * VIEW 3: MONTHLY MATRIX (01-31 TASK 1-9 SUMMARY)
+         * VIEW 3 & 4: INTERACTIVE MONTHLY CALENDAR & SUMMARY (ALL TRAINER)
          * =========================================================
          */
+        function selectCalendarDate(isoStr, logId = null, openPopup = true) {
+            selectedDate = isoStr;
+            focusedCalendarLogId = logId;
+            document.getElementById('date-picker').value = isoStr;
+            document.getElementById('formatted-date-title').textContent = formatHeaderDate(isoStr);
+            updateHeaderStats();
+            renderMonthlyMatrix();
+
+            if (openPopup) {
+                const modal = document.getElementById('calendar-detail-modal');
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                lucide.createIcons();
+            }
+        }
+
+        function clearFocusedCalendarLog() {
+            focusedCalendarLogId = null;
+            renderMonthlyMatrix();
+        }
+
         function getMonthlyMatrixRows() {
             const base = parseLocalDate(selectedDate);
             const year = base.getFullYear();
@@ -1712,40 +2000,223 @@
         }
 
         function renderMonthlyMatrix() {
+            populateSummaryTrainerFilter();
+
             const base = parseLocalDate(selectedDate);
-            const monthLabel = `${INDO_MONTHS_FULL[base.getMonth()]} ${base.getFullYear()}`;
+            const year = base.getFullYear();
+            const month = base.getMonth();
+            const monthLabel = `${INDO_MONTHS_FULL[month]} ${year}`;
+            const shortMonthLabel = `${INDO_MONTHS_SHORT[month]} ${year}`;
             const monthPrefix = selectedDate.slice(0, 7);
 
-            document.getElementById('workload-month-title').textContent = `Beban Kerja Sebulan — ${monthLabel}`;
-            document.getElementById('matrix-month-title').innerHTML = `
-                <span>Matriks Bulanan — ${monthLabel}</span>
-            `;
+            const calTitleEl = document.getElementById('calendar-month-title');
+            if (calTitleEl) calTitleEl.textContent = `Kalender — ${monthLabel}`;
+            const calPillEl = document.getElementById('calendar-month-pill');
+            if (calPillEl) calPillEl.textContent = shortMonthLabel;
+            const workPillEl = document.getElementById('workload-month-pill');
+            if (workPillEl) workPillEl.textContent = shortMonthLabel;
+            const workTitleEl = document.getElementById('workload-month-title');
+            if (workTitleEl) workTitleEl.textContent = `Summary — ${monthLabel}`;
 
             const rows = getMonthlyMatrixRows();
-            const monthLogs = allLogs.filter(l => (l.tanggal || '').startsWith(monthPrefix));
+            const allMonthLogs = allLogs.filter(l => (l.tanggal || '').startsWith(monthPrefix));
+            const scopedMonthLogs = summaryTrainerFilter === 'ALL'
+                ? allMonthLogs
+                : allMonthLogs.filter(l => ((l.trainer || '').trim() || 'Tanpa Nama') === summaryTrainerFilter);
 
-            // 1. Compute Monthly Workload KPIs
-            const totalActivities = monthLogs.length;
-            const activeDaySet = new Set(monthLogs.map(l => l.tanggal).filter(Boolean));
+            const scopeDescEl = document.getElementById('workload-scope-desc');
+            if (scopeDescEl) {
+                scopeDescEl.textContent = summaryTrainerFilter === 'ALL'
+                    ? 'Ringkasan keseluruhan data All Trainer bulan berjalan'
+                    : `Fokus ringkasan trainer: ${summaryTrainerFilter} (dari total ${allMonthLogs.length} log All Trainer)`;
+            }
+            const taskModeEl = document.getElementById('workload-task-mode');
+            if (taskModeEl) {
+                taskModeEl.textContent = summaryTrainerFilter === 'ALL' ? 'All Trainer' : summaryTrainerFilter;
+            }
+
+            const totalActivities = scopedMonthLogs.length;
+            const taskStats = TASKS.map(t => {
+                const count = scopedMonthLogs.filter(l => l.taskId === t.id).length;
+                const days = new Set(scopedMonthLogs.filter(l => l.taskId === t.id).map(l => l.tanggal)).size;
+                const pct = totalActivities > 0 ? Math.round((count / totalActivities) * 100) : 0;
+                return { ...t, count, days, pct };
+            }).sort((a, b) => b.count - a.count);
+
+            const maxTaskCount = Math.max(1, ...taskStats.map(s => s.count));
+
+            // 1. Render "DISTRIBUSI PORSI PER TASK 1–9" Placed Directly Above Calendar
+            document.getElementById('calendar-task-distribution').innerHTML = taskStats.map(st => {
+                const barWidth = st.count > 0 ? Math.max(4, Math.round((st.count / maxTaskCount) * 100)) : 0;
+                return `
+                    <div class="space-y-1 py-0.5">
+                        <div class="flex items-center justify-between text-[11px]">
+                            <span class="font-medium text-map-ink truncate pr-2 flex items-center gap-1.5">
+                                <span style="background-color: ${st.borderHex};" class="w-2 h-2 rounded-full shrink-0"></span>
+                                <span>${escapeHtml(st.fullName)}</span>
+                            </span>
+                            <span class="font-mono text-[10px] text-map-muted shrink-0">
+                                <strong class="text-map-ink">${st.count}</strong> (${st.days} hari) · ${st.pct}%
+                            </span>
+                        </div>
+                        <div class="w-full h-1.5 bg-map-bg rounded-full overflow-hidden">
+                            <div class="h-full rounded-full transition-all duration-300" style="width: ${barWidth}%; background-color: ${st.count > 0 ? st.borderHex : 'transparent'};"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // 2. Render 7-Column Monday-First Calendar Grid
+            const firstDayOfMonth = new Date(year, month, 1).getDay();
+            const leadingEmptyDays = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const totalCells = Math.ceil((leadingEmptyDays + daysInMonth) / 7) * 7;
+
+            let gridHtml = '';
+            for (let idx = 0; idx < totalCells; idx++) {
+                const dayNumber = idx - leadingEmptyDays + 1;
+                if (dayNumber < 1 || dayNumber > daysInMonth) {
+                    gridHtml += `<div class="min-h-[82px] sm:min-h-[96px] bg-map-bg/50 p-1.5"></div>`;
+                    continue;
+                }
+
+                const dt = new Date(year, month, dayNumber);
+                const iso = toIsoDate(dt);
+                const isSelected = iso === selectedDate;
+                const isSunday = dt.getDay() === 0;
+
+                const dayLogs = allMonthLogs.filter(l => l.tanggal === iso);
+                const hasItems = dayLogs.length > 0;
+                const cellBg = isSelected
+                    ? 'bg-map-red/[0.04] ring-2 ring-inset ring-map-red'
+                    : hasItems
+                        ? 'bg-white hover:bg-map-bg/50'
+                        : 'bg-white/80 hover:bg-map-bg/50';
+
+                const taskPillsHtml = dayLogs.map(log => {
+                    const tMeta = TASKS.find(x => x.id === log.taskId) || TASKS[6];
+                    const isFocused = focusedCalendarLogId === log.id;
+                    const shortLabel = `${tMeta.shortCode}: ${tMeta.label}`;
+                    const pillStyle = isFocused
+                        ? `border-color: ${tMeta.borderHex}; background-color: ${tMeta.borderHex}; color: #ffffff;`
+                        : `border-color: ${tMeta.borderHex}; background-color: #ffffff; color: #1c1917;`;
+
+                    return `
+                        <button type="button"
+                            onclick="event.stopPropagation(); selectCalendarDate('${iso}', '${escapeAttr(log.id)}', true)"
+                            style="${pillStyle}"
+                            title="${escapeAttr((log.trainer ? '[' + log.trainer + '] ' : '') + log.task + ' — ' + log.aktivitas)}"
+                            class="w-full text-left text-[10px] leading-tight px-1.5 py-0.5 rounded-md border-2 truncate font-medium transition-transform active:scale-95 hover:opacity-90">
+                            ${escapeHtml(shortLabel)}
+                        </button>
+                    `;
+                }).join('');
+
+                gridHtml += `
+                    <div onclick="selectCalendarDate('${iso}', null, true)"
+                        class="min-h-[82px] sm:min-h-[96px] p-1.5 text-left flex flex-col justify-between gap-1 transition-all cursor-pointer ${cellBg}">
+                        <div class="flex items-center justify-between w-full">
+                            <span class="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-mono ${
+                                isSelected
+                                    ? 'map-gradient-bg text-white font-bold'
+                                    : hasItems
+                                        ? 'bg-map-bg text-map-ink font-semibold'
+                                        : isSunday
+                                            ? 'text-map-red font-medium'
+                                            : 'text-map-ink font-medium'
+                            }">
+                                ${dayNumber}
+                            </span>
+                            ${hasItems ? `<span class="text-[10px] font-mono font-semibold text-map-muted">${dayLogs.length}×</span>` : ''}
+                        </div>
+                        <div class="w-full space-y-1 max-h-[64px] overflow-y-auto pr-0.5">
+                            ${taskPillsHtml}
+                        </div>
+                    </div>
+                `;
+            }
+            document.getElementById('calendar-days-grid').innerHTML = gridHtml;
+
+            // 3. Populate Calendar Detail Modal Content
+            const allLogsOnSelectedDate = allMonthLogs.filter(l => l.tanggal === selectedDate);
+            const focusedLog = focusedCalendarLogId
+                ? allLogsOnSelectedDate.find(l => l.id === focusedCalendarLogId)
+                : null;
+            const displayLogs = focusedLog ? [focusedLog] : allLogsOnSelectedDate;
+
+            const resetFocusBtn = document.getElementById('btn-reset-day-focus');
+            if (resetFocusBtn) {
+                resetFocusBtn.classList.toggle('hidden', !focusedLog || allLogsOnSelectedDate.length <= 1);
+            }
+
+            document.getElementById('calendar-day-detail-title').textContent = focusedLog
+                ? `${formatHeaderDate(selectedDate)} · ${focusedLog.task}`
+                : `Detail Tanggal: ${formatHeaderDate(selectedDate)}`;
+            document.getElementById('calendar-day-detail-sub').textContent = focusedLog
+                ? `Menampilkan 1 task terpilih dari ${allLogsOnSelectedDate.length} aktivitas hari ini`
+                : `${allLogsOnSelectedDate.length} aktivitas tercatat pada tanggal ini`;
+
+            const detailListEl = document.getElementById('calendar-day-detail-list');
+            if (displayLogs.length === 0) {
+                detailListEl.innerHTML = `<p class="text-xs text-map-subtle py-4 text-center">Belum ada catatan pada tanggal ini. Klik tombol Tambah di kanan atas untuk mencatat.</p>`;
+            } else {
+                detailListEl.innerHTML = displayLogs.map(item => {
+                    const tMeta = TASKS.find(x => x.id === item.taskId) || TASKS[6];
+                    const driveUrls = (item.fotoLink || '')
+                        .split(/[\n,]+/)
+                        .map(s => s.trim())
+                        .filter(s => s.startsWith('http'));
+
+                    const driveLinksHtml = driveUrls.length > 0 ? `
+                        <div class="pt-1 flex flex-wrap gap-1.5">
+                            ${driveUrls.map((u, i) => `
+                                <a href="${escapeAttr(u)}" target="_blank" rel="noopener noreferrer"
+                                    class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-map-red bg-map-red/5 border border-map-red/30 hover:bg-map-red/10">
+                                    <i data-lucide="external-link" class="w-3 h-3"></i>
+                                    <span>Foto Drive #${i + 1}</span>
+                                </a>
+                            `).join('')}
+                        </div>
+                    ` : '';
+
+                    return `
+                        <div style="border-color: ${tMeta.borderHex};" class="rounded-2xl bg-white border-2 p-4 space-y-2 shadow-sm">
+                            <div class="flex items-center justify-between gap-2">
+                                <span style="background-color: ${tMeta.borderHex};" class="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full text-white">${escapeHtml(item.task)}</span>
+                                <span class="text-[10px] font-medium px-2.5 py-0.5 rounded-full bg-map-bg text-map-ink border border-map-border">${escapeHtml(item.status)}</span>
+                            </div>
+                            <p class="text-[11px] font-medium text-map-muted flex items-center gap-1.5 flex-wrap">
+                                <span class="inline-flex items-center gap-1"><i data-lucide="user" class="w-3 h-3 text-map-red"></i> ${escapeHtml((item.trainer || '').trim() || 'Tanpa Nama')}</span>
+                                <span>•</span>
+                                <span class="inline-flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> ${escapeHtml(item.lokasi || 'Umum / HO')}</span>
+                            </p>
+                            <p class="text-xs sm:text-sm text-map-ink leading-relaxed whitespace-pre-line bg-map-bg/65 rounded-xl p-3">${escapeHtml(item.aktivitas)}</p>
+                            ${driveLinksHtml}
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // 4. Compute Monthly Summary KPIs (Scoped by Trainer Filter or All Trainer)
+            const activeDaySet = new Set(scopedMonthLogs.map(l => l.tanggal).filter(Boolean));
             const activeDaysCount = activeDaySet.size;
             const avgPerDay = activeDaysCount > 0 ? (totalActivities / activeDaysCount).toFixed(1) : '0.0';
 
-            const storeLogsCount = monthLogs.filter(l => l.lokasi && l.lokasi !== 'Umum / HO').length;
+            const storeLogsCount = scopedMonthLogs.filter(l => l.lokasi && l.lokasi !== 'Umum / HO').length;
             const generalLogsCount = totalActivities - storeLogsCount;
             const storePct = totalActivities > 0 ? Math.round((storeLogsCount / totalActivities) * 100) : 0;
             const generalPct = totalActivities > 0 ? (100 - storePct) : 0;
 
             document.getElementById('kpi-total-activities').textContent = totalActivities;
-            document.getElementById('kpi-total-sub').textContent = `${totalActivities} baris log di tab Submit`;
+            document.getElementById('kpi-total-sub').textContent = `${totalActivities} baris log (${summaryTrainerFilter === 'ALL' ? 'All Trainer' : summaryTrainerFilter})`;
             document.getElementById('kpi-active-days').textContent = `${activeDaysCount} hari`;
             document.getElementById('kpi-days-sub').textContent = `Dari ${rows.length} hari kalender`;
             document.getElementById('kpi-avg-per-day').textContent = avgPerDay;
             document.getElementById('kpi-store-ratio').textContent = `${storePct}% / ${generalPct}%`;
             document.getElementById('kpi-store-sub').textContent = `${storeLogsCount} toko · ${generalLogsCount} umum`;
 
-            // Peak Workload Day
             const countsByDate = {};
-            monthLogs.forEach(l => {
+            scopedMonthLogs.forEach(l => {
                 if (!l.tanggal) return;
                 countsByDate[l.tanggal] = (countsByDate[l.tanggal] || 0) + 1;
             });
@@ -1761,35 +2232,85 @@
                 ? `Hari Terpadat: ${formatHeaderDate(peakDate)} (${peakCount} task)`
                 : 'Hari Terpadat: Belum ada data';
 
-            // 2. Render Task 1-9 Horizontal Distribution Bars
-            const taskStats = TASKS.map(t => {
-                const count = monthLogs.filter(l => l.taskId === t.id).length;
-                const days = new Set(monthLogs.filter(l => l.taskId === t.id).map(l => l.tanggal)).size;
-                const pct = totalActivities > 0 ? Math.round((count / totalActivities) * 100) : 0;
-                return { ...t, count, days, pct };
-            }).sort((a, b) => b.count - a.count);
+            // 5. Render All-Trainer Comparison Table for Selected Month
+            const trainerNamesSet = new Set(TRAINERS);
+            allMonthLogs.forEach(l => {
+                const trName = (l.trainer || '').trim() || 'Tanpa Nama';
+                trainerNamesSet.add(trName);
+            });
+            const allTrainersTotal = allMonthLogs.length;
 
-            const maxTaskCount = Math.max(1, ...taskStats.map(s => s.count));
+            const trainerRows = Array.from(trainerNamesSet).map(name => {
+                const logs = allMonthLogs.filter(l => ((l.trainer || '').trim() || 'Tanpa Nama') === name);
+                const count = logs.length;
+                const days = new Set(logs.map(l => l.tanggal).filter(Boolean)).size;
+                const storeCnt = logs.filter(l => l.lokasi && l.lokasi !== 'Umum / HO').length;
+                const hoCnt = count - storeCnt;
+
+                const tCounts = {};
+                logs.forEach(l => {
+                    tCounts[l.task] = (tCounts[l.task] || 0) + 1;
+                });
+                const topTaskEntry = Object.entries(tCounts).sort((a, b) => b[1] - a[1])[0];
+                const topTaskLabel = topTaskEntry ? `${topTaskEntry[0]} (${topTaskEntry[1]})` : '-';
+                const sharePct = allTrainersTotal > 0 ? Math.round((count / allTrainersTotal) * 100) : 0;
+
+                return { name, count, days, storeCnt, hoCnt, topTaskLabel, sharePct };
+            }).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+
+            const activeTrainerCount = trainerRows.filter(r => r.count > 0).length;
+            const trainerBadgeEl = document.getElementById('all-trainer-total-badge');
+            if (trainerBadgeEl) {
+                trainerBadgeEl.textContent = `${activeTrainerCount}/${trainerRows.length} trainer aktif • ${allTrainersTotal} total log`;
+            }
+
+            const trainerTableBody = document.getElementById('all-trainer-summary-body');
+            if (trainerTableBody) {
+                trainerTableBody.innerHTML = trainerRows.map(tr => {
+                    const isSelectedFilter = summaryTrainerFilter === tr.name;
+                    return `
+                        <tr onclick="selectTrainerInSummary('${escapeAttr(tr.name)}')"
+                            class="cursor-pointer transition-colors ${isSelectedFilter ? 'bg-map-red/10 font-semibold' : 'hover:bg-map-bg/70'}">
+                            <td class="py-2.5 px-3 text-map-ink">
+                                <span class="inline-flex items-center gap-1.5">
+                                    <span>${escapeHtml(tr.name)}</span>
+                                    ${isSelectedFilter ? '<span class="text-[10px] px-2 py-0.5 rounded-full map-gradient-bg text-white">Dipilih</span>' : ''}
+                                </span>
+                            </td>
+                            <td class="py-2.5 px-3 text-right font-mono font-semibold text-map-ink">${tr.count}</td>
+                            <td class="py-2.5 px-3 text-right font-mono text-map-muted">${tr.days} hr</td>
+                            <td class="py-2.5 px-3 text-right font-mono text-map-muted">${tr.storeCnt} / ${tr.hoCnt}</td>
+                            <td class="py-2.5 px-3 text-map-ink truncate max-w-[200px]">${escapeHtml(tr.topTaskLabel)}</td>
+                            <td class="py-2.5 px-3 text-right font-mono font-semibold text-map-red">${tr.sharePct}%</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            // 6. Render Task 1-9 Horizontal Distribution Bars in Summary Tab
             document.getElementById('workload-task-bars').innerHTML = taskStats.map(st => {
                 const barWidth = st.count > 0 ? Math.max(4, Math.round((st.count / maxTaskCount) * 100)) : 0;
                 return `
                     <div class="space-y-1">
                         <div class="flex items-center justify-between text-xs">
-                            <span class="font-medium text-apple-ink truncate pr-2">${escapeHtml(st.fullName)}</span>
-                            <span class="font-mono text-[11px] text-apple-muted shrink-0">
-                                <strong class="text-apple-ink">${st.count}</strong> aktivitas (${st.days} hari) · ${st.pct}%
+                            <span class="font-medium text-map-ink truncate pr-2 flex items-center gap-1.5">
+                                <span style="background-color: ${st.borderHex};" class="w-2 h-2 rounded-full shrink-0"></span>
+                                <span>${escapeHtml(st.fullName)}</span>
+                            </span>
+                            <span class="font-mono text-[11px] text-map-muted shrink-0">
+                                <strong class="text-map-ink">${st.count}</strong> aktivitas (${st.days} hari) · ${st.pct}%
                             </span>
                         </div>
-                        <div class="w-full h-2 bg-apple-bg rounded-full overflow-hidden">
-                            <div class="h-full rounded-full transition-all duration-300 ${st.count > 0 ? 'bg-apple-ink' : 'bg-transparent'}" style="width: ${barWidth}%"></div>
+                        <div class="w-full h-1.5 bg-map-bg rounded-full overflow-hidden">
+                            <div class="h-full rounded-full transition-all duration-300" style="width: ${barWidth}%; background-color: ${st.count > 0 ? st.borderHex : 'transparent'};"></div>
                         </div>
                     </div>
                 `;
             }).join('');
 
-            // 3. Render Store / Location Breakdown Ranking
+            // 7. Render Store / Location Breakdown Ranking
             const locMap = {};
-            monthLogs.forEach(l => {
+            scopedMonthLogs.forEach(l => {
                 const loc = (l.lokasi || 'Umum / HO').trim();
                 if (!locMap[loc]) locMap[loc] = { count: 0, dates: new Set() };
                 locMap[loc].count++;
@@ -1801,18 +2322,18 @@
 
             const storeListEl = document.getElementById('workload-store-list');
             if (locEntries.length === 0) {
-                storeListEl.innerHTML = `<p class="text-xs text-apple-subtle py-6 text-center">Belum ada aktivitas pada bulan ini.</p>`;
+                storeListEl.innerHTML = `<p class="text-xs text-map-subtle py-6 text-center">Belum ada aktivitas pada bulan ini.</p>`;
             } else {
                 storeListEl.innerHTML = locEntries.map(([locName, info]) => {
                     const isGeneral = locName === 'Umum / HO';
                     return `
-                        <div class="flex items-center justify-between gap-2 p-2.5 rounded-2xl bg-apple-bg/75 border border-black/[0.05]">
+                        <div class="flex items-center justify-between gap-2 p-2.5 rounded-2xl bg-map-bg/80 border border-map-border">
                             <div class="min-w-0">
-                                <p class="text-xs font-semibold text-apple-ink truncate">${escapeHtml(locName)}</p>
-                                <p class="text-[11px] text-apple-muted">${info.dates.size} hari kunjungan/kerja</p>
+                                <p class="text-xs font-semibold text-map-ink truncate">${escapeHtml(locName)}</p>
+                                <p class="text-[11px] text-map-muted">${info.dates.size} hari kunjungan/kerja</p>
                             </div>
                             <span class="shrink-0 text-[11px] font-mono font-semibold px-2.5 py-1 rounded-full ${
-                                isGeneral ? 'bg-white text-apple-muted border border-black/10' : 'bg-apple-ink text-white'
+                                isGeneral ? 'bg-white text-map-muted border border-map-border' : 'map-gradient-bg text-white'
                             }">
                                 ${info.count}×
                             </span>
@@ -1821,123 +2342,157 @@
                 }).join('');
             }
 
-            // 4. Render 01-31 Daily Matrix Table
-            const tbody = document.getElementById('matrix-table-body');
-            const tfoot = document.getElementById('matrix-table-foot');
-
-            tbody.innerHTML = rows.map(r => {
-                const isSelected = r.iso === selectedDate;
-                const rowBg = isSelected
-                    ? 'bg-apple-blue/[0.06]'
-                    : r.isWeekend
-                        ? 'bg-apple-bg/60 text-apple-muted'
-                        : 'hover:bg-apple-bg/40';
-
-                const dayColor = r.dayName === 'Min'
-                    ? 'text-red-600 font-semibold'
-                    : r.dayName === 'Sab'
-                        ? 'text-apple-muted font-semibold'
-                        : 'text-apple-ink';
-
-                const cellsHtml = TASKS.map(t => {
-                    const val = r.taskCells[t.id];
-                    return `<td class="py-2.5 px-3 align-top text-apple-ink leading-snug max-w-[220px]">${val ? escapeHtml(val) : '<span class="text-black/20">-</span>'}</td>`;
-                }).join('');
-
-                return `
-                    <tr class="${rowBg}">
-                        <td class="py-2.5 px-3 font-mono sticky left-0 bg-white/95 ${dayColor}">${r.dayName}</td>
-                        <td class="py-2.5 px-3 font-mono font-semibold text-apple-ink sticky left-12 bg-white/95">${r.dayNum}</td>
-                        ${cellsHtml}
-                        <td class="py-2.5 px-3 font-mono font-bold text-center ${r.totalActive > 0 ? 'text-apple-blue' : 'text-black/25'}">${r.totalActive}</td>
-                    </tr>
-                `;
-            }).join('');
-
-            const taskDayCounts = TASKS.map(t => rows.filter(r => r.taskCells[t.id] !== '').length);
-            const grandTotalDays = rows.reduce((sum, r) => sum + r.totalActive, 0);
-
-            tfoot.innerHTML = `
-                <tr>
-                    <td colspan="2" class="py-2.5 px-3 text-apple-ink sticky left-0 bg-apple-bg z-10">Total Hari</td>
-                    ${taskDayCounts.map(cnt => `<td class="py-2.5 px-3">${cnt} hr</td>`).join('')}
-                    <td class="py-2.5 px-3 text-center text-apple-blue">${grandTotalDays}</td>
-                </tr>
-            `;
-
             lucide.createIcons();
-        }
-
-        function copyMonthlyMatrixTSV() {
-            const rows = getMonthlyMatrixRows();
-            const header = ['Hari', 'Tanggal', ...TASKS.map(t => t.fullName), 'Total Task'].join('\t');
-            const bodyLines = rows.map(r => {
-                const cleanCells = TASKS.map(t => (r.taskCells[t.id] || '').replace(/\r?\n+/g, ' '));
-                return [r.dayName, r.dayNum, ...cleanCells, r.totalActive].join('\t');
-            });
-            copyToClipboard([header, ...bodyLines].join('\n'), 'Matriks bulanan (TSV) disalin! Siap di-paste ke Google Sheets.');
         }
 
         /**
          * =========================================================
-         * EXPORTS: WHATSAPP REPORT & GOOGLE SHEETS TSV
+         * EXPORTS: EXCEL (.XLS), PDF (PRINT), CSV & GOOGLE SHEETS TSV
          * =========================================================
          */
-        function buildWhatsAppSummary() {
-            const dayLogs = allLogs.filter(l => l.tanggal === selectedDate);
-            let out = `*DAILY WORK JOURNAL*\n`;
-            out += `📅 ${formatHeaderDate(selectedDate)}\n`;
-            out += `━━━━━━━━━━━━━━━━━━━━\n`;
-
-            if (dayLogs.length === 0) {
-                out += `_Belum ada log aktivitas pada tanggal ini._`;
-                return out;
-            }
-
-            const groups = {};
-            dayLogs.forEach(l => {
-                const loc = l.lokasi || 'Umum / HO';
-                if (!groups[loc]) groups[loc] = [];
-                groups[loc].push(l);
-            });
-
-            const locKeys = Object.keys(groups).sort((a, b) => {
-                if (a === 'Umum / HO') return 1;
-                if (b === 'Umum / HO') return -1;
-                return a.localeCompare(b);
-            });
-
-            locKeys.forEach(loc => {
-                out += `\n📍 *${loc}*\n`;
-                groups[loc].forEach(item => {
-                    const photoNote = (item.photos && item.photos.length > 0)
-                        ? ` _(${item.photos.length} foto)_`
-                        : (item.fotoLink && item.fotoLink.trim() ? ` _(ada foto)_` : '');
-                    out += `• *[${item.task}]* ${item.aktivitas} — _(${item.status})_${photoNote}\n`;
-                });
-            });
-
-            return out.trim();
-        }
-
-        function openWhatsAppModal() {
-            document.getElementById('wa-report-text').value = buildWhatsAppSummary();
-            const m = document.getElementById('wa-modal');
+        function openExportModal() {
+            const base = parseLocalDate(selectedDate);
+            const monthLabel = `${INDO_MONTHS_FULL[base.getMonth()]} ${base.getFullYear()}`;
+            document.getElementById('export-modal-sub').textContent = `Periode: ${monthLabel} • Trainer: ${selectedTrainer}`;
+            const m = document.getElementById('export-modal');
             m.classList.remove('hidden');
             m.classList.add('flex');
             lucide.createIcons();
         }
 
-        function copyWhatsAppText() {
-            const ta = document.getElementById('wa-report-text');
-            ta.select();
-            ta.setSelectionRange(0, 99999);
-            try {
-                document.execCommand('copy');
-                showToast('Laporan WhatsApp disalin!');
-            } catch (e) {
-                showToast('Gagal menyalin laporan.', 'error');
+        function escapeCsvCell(val) {
+            const str = String(val == null ? '' : val);
+            if (/[",\r\n]/.test(str)) {
+                return `"${str.replace(/"/g, '""')}"`;
             }
+            return str;
+        }
+
+        function triggerFileDownload(content, mimeType, filename) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function exportMonthlyExcel() {
+            const monthPrefix = selectedDate.slice(0, 7);
+            const base = parseLocalDate(selectedDate);
+            const monthLabel = `${INDO_MONTHS_FULL[base.getMonth()]} ${base.getFullYear()}`;
+            const monthLogs = allLogs
+                .filter(l => (l.tanggal || '').startsWith(monthPrefix))
+                .slice()
+                .reverse();
+
+            if (monthLogs.length === 0) {
+                showToast('Belum ada data pada bulan ini untuk di-export ke Excel.', 'error');
+                return;
+            }
+
+            const totalActivities = monthLogs.length;
+            const summaryRowsHtml = TASKS.map(t => {
+                const cnt = monthLogs.filter(l => l.taskId === t.id).length;
+                const days = new Set(monthLogs.filter(l => l.taskId === t.id).map(l => l.tanggal)).size;
+                const pct = totalActivities > 0 ? Math.round((cnt / totalActivities) * 100) : 0;
+                return `<tr><td>${escapeHtml(t.fullName)}</td><td>${cnt}</td><td>${days}</td><td>${pct}%</td></tr>`;
+            }).join('');
+
+            const logRowsHtml = monthLogs.map(item => {
+                const photoCell = item.fotoLink
+                    ? item.fotoLink.replace(/\r?\n+/g, ', ')
+                    : ((item.photos && item.photos.length > 0) ? `${item.photos.length} foto` : '');
+                return `
+                    <tr>
+                        <td>${escapeHtml(item.timestamp)}</td>
+                        <td>${escapeHtml(item.tanggal)}</td>
+                        <td>${escapeHtml((item.trainer || '').trim() || selectedTrainer)}</td>
+                        <td>${escapeHtml(item.task)}</td>
+                        <td>${escapeHtml(item.aktivitas)}</td>
+                        <td>${escapeHtml(item.lokasi || 'Umum / HO')}</td>
+                        <td>${escapeHtml(item.status)}</td>
+                        <td>${escapeHtml(photoCell)}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            const excelHtml = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+                <head><meta charset="UTF-8"></head>
+                <body>
+                    <h3>Daily Work Journal — ${escapeHtml(monthLabel)} (All Trainer)</h3>
+                    <table border="1">
+                        <thead>
+                            <tr style="background:#991b1b;color:#ffffff;">
+                                <th>Kategori Task</th><th>Jumlah Aktivitas</th><th>Hari Aktif</th><th>Porsi (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>${summaryRowsHtml}</tbody>
+                    </table>
+                    <br>
+                    <table border="1">
+                        <thead>
+                            <tr style="background:#7f1d1d;color:#ffffff;">
+                                <th>TimeStamp</th><th>Tanggal</th><th>Nama Trainer HO</th><th>Task</th><th>Aktivitas</th><th>Toko / Lokasi</th><th>Status</th><th>Foto / Link</th>
+                            </tr>
+                        </thead>
+                        <tbody>${logRowsHtml}</tbody>
+                    </table>
+                </body>
+                </html>
+            `;
+
+            triggerFileDownload('\uFEFF' + excelHtml, 'application/vnd.ms-excel;charset=utf-8;', `Daily-Work-Journal-${monthPrefix}.xls`);
+            closeModal('export-modal');
+            showToast(`File Excel Daily-Work-Journal-${monthPrefix}.xls berhasil diunduh!`);
+        }
+
+        function exportMonthlyPDF() {
+            closeModal('export-modal');
+            switchView('workload');
+            renderMonthlyMatrix();
+            showToast('Membuka tampilan cetak — pilih "Save as PDF" pada dialog print.');
+            setTimeout(() => {
+                window.print();
+            }, 350);
+        }
+
+        function exportMonthlyCSV() {
+            const monthPrefix = selectedDate.slice(0, 7);
+            const monthLogs = allLogs
+                .filter(l => (l.tanggal || '').startsWith(monthPrefix))
+                .slice()
+                .reverse();
+
+            if (monthLogs.length === 0) {
+                showToast('Belum ada data pada bulan ini untuk diunduh.', 'error');
+                return;
+            }
+
+            const header = ['TimeStamp', 'Tanggal', 'Nama Trainer HO', 'Task', 'Aktivitas', 'Toko / Lokasi', 'Status', 'Foto / Link'];
+            const rows = monthLogs.map(item => {
+                const photoCell = item.fotoLink
+                    ? item.fotoLink.replace(/\r?\n+/g, ', ')
+                    : ((item.photos && item.photos.length > 0) ? `${item.photos.length} foto` : '');
+                return [
+                    item.timestamp,
+                    item.tanggal,
+                    (item.trainer || '').trim() || selectedTrainer,
+                    item.task,
+                    item.aktivitas,
+                    item.lokasi || 'Umum / HO',
+                    item.status,
+                    photoCell
+                ].map(escapeCsvCell).join(',');
+            });
+
+            triggerFileDownload('\uFEFF' + [header.join(','), ...rows].join('\n'), 'text/csv;charset=utf-8;', `Journal-Submit-${monthPrefix}.csv`);
+            closeModal('export-modal');
+            showToast(`File Journal-Submit-${monthPrefix}.csv berhasil diunduh!`);
         }
 
         function copySheetsTSV() {
@@ -1955,6 +2510,7 @@
                 return [
                     item.timestamp,
                     item.tanggal,
+                    (item.trainer || '').trim() || selectedTrainer,
                     item.task,
                     cleanAct,
                     item.lokasi || 'Umum / HO',
@@ -1963,7 +2519,7 @@
                 ].join('\t');
             });
 
-            copyToClipboard(lines.join('\n'), `${lines.length} baris Sheets (TSV) disalin! Tinggal Ctrl+V di sel A2.`);
+            copyToClipboard(lines.join('\n'), `${lines.length} baris Sheets (A–H TSV) disalin! Tinggal Ctrl+V di sel A2.`);
         }
 
         /**
@@ -2012,11 +2568,11 @@
             el.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-2xl shadow-lg border text-xs sm:text-sm font-medium transition-all duration-300 transform -translate-y-2 opacity-0 backdrop-blur-md ${
                 isErr
                     ? 'bg-red-50/95 text-red-900 border-red-200'
-                    : 'bg-white/95 text-apple-ink border-black/10'
+                    : 'bg-white/95 text-map-ink border-map-red/20'
             }`;
 
             el.innerHTML = `
-                <i data-lucide="${isErr ? 'alert-circle' : 'check-circle-2'}" class="w-4 h-4 ${isErr ? 'text-red-600' : 'text-apple-blue'} shrink-0"></i>
+                <i data-lucide="${isErr ? 'alert-circle' : 'check-circle-2'}" class="w-4 h-4 ${isErr ? 'text-red-600' : 'text-map-red'} shrink-0"></i>
                 <span>${escapeHtml(msg)}</span>
             `;
 
@@ -2035,7 +2591,7 @@
             if (e.target.value) setDate(e.target.value);
         });
 
-        ['wa-modal', 'photo-modal'].forEach(id => {
+        ['export-modal', 'calendar-detail-modal', 'photo-modal'].forEach(id => {
             document.getElementById(id).addEventListener('click', function (e) {
                 if (e.target === this) closeModal(id);
             });
@@ -2043,6 +2599,8 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             loadLocalLogsCache();
+            renderTrainerSelect();
+            populateSummaryTrainerFilter();
             resetDraftTasks();
             setDate(toIsoDate(new Date()));
             renderStorePills();
