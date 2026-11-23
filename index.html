@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Daily Work Journal &amp; Activity Log — MAP TECH</title>
+    <title>Daily Work Journal &amp; Activity Log</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Inter & JetBrains Mono -->
@@ -132,10 +132,7 @@
                 <div class="w-8 h-8 rounded-full map-gradient-bg text-white flex items-center justify-center shadow-sm">
                     <i data-lucide="layers" class="w-4 h-4"></i>
                 </div>
-                <div class="flex items-baseline gap-2">
-                    <span class="font-bold text-map-ink text-sm sm:text-base tracking-tight">Daily Work Journal</span>
-                    <span class="hidden sm:inline text-[11px] font-bold map-gradient-text">MAP TECH</span>
-                </div>
+                <span class="font-bold text-map-ink text-sm sm:text-base tracking-tight">Daily Work Journal</span>
             </div>
 
             <!-- Desktop Top Segmented Menu Links -->
@@ -158,13 +155,13 @@
                 </button>
             </div>
 
-            <!-- Top Action Buttons -->
+            <!-- Top Action Buttons (Single Export Action) -->
             <div class="flex items-center gap-2 shrink-0">
                 <button onclick="syncLogsFromSheets(true)" id="btn-sync-sheets" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold text-map-red hover:bg-map-red/5 border border-map-red transition-colors">
                     <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
                     <span>Sync Sheets</span>
                 </button>
-                <button onclick="openExportModal()" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold text-white map-gradient-bg hover:opacity-95 transition-opacity shadow-sm">
+                <button onclick="openExportModal()" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold text-white map-gradient-bg hover:opacity-95 transition-opacity shadow-sm">
                     <i data-lucide="download" class="w-3.5 h-3.5"></i>
                     <span>Export</span>
                 </button>
@@ -309,19 +306,10 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 lg:pt-8">
         <main class="w-full space-y-6">
 
-            <!-- Clean MAP-Themed Hero, MAP TECH Logo Above Title, Trainer Selector & Date Context Header -->
+            <!-- Clean MAP-Themed Date Context Header -->
             <header class="map-card rounded-3xl p-5 sm:p-6">
-                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                    <div class="space-y-2">
-                        <!-- MAP TECH Logo Placed Cleanly Above Main Title -->
-                        <div class="inline-flex items-center gap-2.5 bg-white border border-map-red/15 rounded-2xl px-3 py-1.5 shadow-sm">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 34" class="h-5 sm:h-6 w-auto block" role="img" aria-label="MAP TECH">
-                                <text x="0" y="25" font-family="Georgia, 'Times New Roman', serif" font-size="25" font-weight="700" letter-spacing="1.2" fill="#d91c24">MAP</text>
-                                <path d="M22 25 Q43 13 66 23" fill="none" stroke="#e11d2e" stroke-width="2.1" stroke-linecap="round"/>
-                                <text x="84" y="25" font-family="'Inter', -apple-system, BlinkMacSystemFont, sans-serif" font-size="22" font-weight="900" letter-spacing="2.8" fill="#1c1917">TECH</text>
-                            </svg>
-                        </div>
-
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="space-y-1.5">
                         <div class="flex flex-wrap items-center gap-2.5">
                             <h2 id="formatted-date-title" class="text-xl sm:text-2xl font-bold text-map-ink tracking-tight">Sen, 23 Nov 2026</h2>
                             <span id="webhook-status-pill" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-map-red/10 text-map-redDark border border-map-red/20">
@@ -331,32 +319,14 @@
                         <p id="header-log-stats" class="text-xs text-map-muted">0 log tersimpan pada tanggal ini</p>
                     </div>
 
-                    <div class="flex flex-wrap items-center gap-2">
-                        <!-- Trainer Selector Pill -->
-                        <div class="flex items-center gap-1.5 bg-map-bg border border-map-red/20 rounded-full px-3 py-1">
-                            <i data-lucide="user-check" class="w-3.5 h-3.5 text-map-red shrink-0"></i>
-                            <label for="trainer-select" class="text-[11px] font-semibold text-map-muted">Trainer:</label>
-                            <select id="trainer-select" onchange="onTrainerChange(this.value)"
-                                class="bg-transparent text-xs font-bold text-map-ink focus:outline-none cursor-pointer">
-                                <!-- Rendered via JS -->
-                            </select>
-                        </div>
-
-                        <!-- Date Switcher Pill -->
-                        <div class="flex items-center bg-map-bg border border-map-border rounded-full p-1">
-                            <button onclick="shiftDate(-1)" title="Hari Sebelumnya" class="p-1.5 text-map-muted hover:text-map-ink hover:bg-white rounded-full transition-colors">
-                                <i data-lucide="chevron-left" class="w-4 h-4"></i>
-                            </button>
-                            <input type="date" id="date-picker" class="bg-transparent text-xs font-mono font-medium text-map-ink px-2 py-1 focus:outline-none">
-                            <button onclick="shiftDate(1)" title="Hari Berikutnya" class="p-1.5 text-map-muted hover:text-map-ink hover:bg-white rounded-full transition-colors">
-                                <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                            </button>
-                        </div>
-
-                        <!-- Quick Export Pill -->
-                        <button onclick="openExportModal()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-white map-gradient-bg hover:opacity-95 transition-opacity shadow-sm">
-                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                            <span>Export Excel / PDF</span>
+                    <!-- Date Switcher Pill -->
+                    <div class="flex items-center bg-map-bg border border-map-border rounded-full p-1 self-start sm:self-auto">
+                        <button onclick="shiftDate(-1)" title="Hari Sebelumnya" class="p-1.5 text-map-muted hover:text-map-ink hover:bg-white rounded-full transition-colors">
+                            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                        </button>
+                        <input type="date" id="date-picker" class="bg-transparent text-xs font-mono font-medium text-map-ink px-2 py-1 focus:outline-none">
+                        <button onclick="shiftDate(1)" title="Hari Berikutnya" class="p-1.5 text-map-muted hover:text-map-ink hover:bg-white rounded-full transition-colors">
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
                         </button>
                     </div>
                 </div>
@@ -366,6 +336,20 @@
             <!-- VIEW 1: INPUT AKTIVITAS (TASK 1-9 + PER-TASK LOCATION)    -->
             <!-- ========================================================= -->
             <section id="view-input" class="space-y-5">
+                <!-- Trainer Selector Card -->
+                <div class="map-card rounded-3xl p-5 sm:p-6 space-y-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                        <h3 class="text-sm font-bold text-map-ink flex items-center gap-2">
+                            <i data-lucide="user-check" class="w-4 h-4 text-map-red"></i>
+                            <span>Nama Trainer HO</span>
+                        </h3>
+                        <span class="text-[11px] text-map-muted">Tersimpan ke Kolom C tab Submit</span>
+                    </div>
+                    <div id="trainer-pills" class="flex flex-wrap items-center gap-2">
+                        <!-- Rendered via JS -->
+                    </div>
+                </div>
+
                 <!-- Default Location & Status Card -->
                 <div class="map-card rounded-3xl p-5 sm:p-6 space-y-4">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -587,20 +571,13 @@
                         <p class="text-xs text-map-muted mt-0.5">Klik tanggal atau label Task berwarna di kalender untuk melihat rincian aktivitas</p>
                     </div>
 
-                    <div class="flex items-center gap-2 self-start sm:self-auto">
-                        <div class="flex items-center bg-map-bg border border-map-border rounded-full p-1">
-                            <button type="button" onclick="shiftMonth(-1)" title="Bulan Sebelumnya" class="p-1.5 text-map-muted hover:text-map-ink hover:bg-white rounded-full transition-colors">
-                                <i data-lucide="chevron-left" class="w-4 h-4"></i>
-                            </button>
-                            <span id="calendar-month-pill" class="px-3 text-xs font-semibold text-map-ink">Nov 2026</span>
-                            <button type="button" onclick="shiftMonth(1)" title="Bulan Berikutnya" class="p-1.5 text-map-muted hover:text-map-ink hover:bg-white rounded-full transition-colors">
-                                <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                            </button>
-                        </div>
-
-                        <button onclick="openExportModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold text-white map-gradient-bg hover:opacity-95 transition-opacity">
-                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                            <span>Export</span>
+                    <div class="flex items-center bg-map-bg border border-map-border rounded-full p-1 self-start sm:self-auto">
+                        <button type="button" onclick="shiftMonth(-1)" title="Bulan Sebelumnya" class="p-1.5 text-map-muted hover:text-map-ink hover:bg-white rounded-full transition-colors">
+                            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                        </button>
+                        <span id="calendar-month-pill" class="px-3 text-xs font-semibold text-map-ink">Nov 2026</span>
+                        <button type="button" onclick="shiftMonth(1)" title="Bulan Berikutnya" class="p-1.5 text-map-muted hover:text-map-ink hover:bg-white rounded-full transition-colors">
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
                         </button>
                     </div>
                 </div>
@@ -852,11 +829,21 @@
         }
 
         function renderTrainerSelect() {
-            const sel = document.getElementById('trainer-select');
-            if (sel) {
-                sel.innerHTML = TRAINERS.map(tr =>
-                    `<option value="${escapeAttr(tr)}" ${tr === selectedTrainer ? 'selected' : ''}>${escapeHtml(tr)}</option>`
-                ).join('');
+            const container = document.getElementById('trainer-pills');
+            if (container) {
+                container.innerHTML = TRAINERS.map(tr => {
+                    const active = tr === selectedTrainer;
+                    return `
+                        <button type="button" onclick="onTrainerChange('${escapeAttr(tr)}')"
+                            class="px-3.5 py-1.5 rounded-full text-xs transition-all border ${
+                                active
+                                    ? 'map-gradient-bg text-white font-semibold border-transparent shadow-sm'
+                                    : 'bg-map-bg text-map-ink font-medium border-map-border hover:border-map-red/40 hover:bg-white'
+                            }">
+                            ${escapeHtml(tr)}
+                        </button>
+                    `;
+                }).join('');
             }
             const hint = document.getElementById('submit-trainer-hint');
             if (hint) {
