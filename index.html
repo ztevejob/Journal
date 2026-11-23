@@ -225,8 +225,8 @@
                 <!-- Export Monthly CSV -->
                 <button type="button" onclick="exportMonthlyCSV()" class="w-full flex items-center justify-between p-4 rounded-2xl bg-white border border-map-border hover:border-map-red transition-all text-left shadow-sm group">
                     <div class="space-y-0.5">
-                        <p class="text-xs sm:text-sm font-semibold text-map-ink group-hover:text-map-red transition-colors">Download CSV Bulan Ini (Format Submit)</p>
-                        <p class="text-[11px] text-map-muted">Kolom A–H: TimeStamp, Tanggal, Nama Trainer HO, Task, Aktivitas, Lokasi, Status, Foto</p>
+                        <p class="text-xs sm:text-sm font-semibold text-map-ink group-hover:text-map-red transition-colors">Download CSV Bulan Ini</p>
+                        <p class="text-[11px] text-map-muted">Rekap lengkap aktivitas bulanan dalam format CSV</p>
                     </div>
                     <i data-lucide="table" class="w-5 h-5 text-map-ink shrink-0"></i>
                 </button>
@@ -235,7 +235,7 @@
                 <button type="button" onclick="copySheetsTSV(); closeModal('export-modal');" class="w-full flex items-center justify-between p-4 rounded-2xl bg-white border border-map-border hover:border-map-red transition-all text-left shadow-sm group">
                     <div class="space-y-0.5">
                         <p class="text-xs sm:text-sm font-semibold text-map-ink group-hover:text-map-red transition-colors">Salin Baris Tanggal Terpilih (TSV)</p>
-                        <p class="text-[11px] text-map-muted">Urutan A–H siap Ctrl+V di sel Google Sheets / Excel</p>
+                        <p class="text-[11px] text-map-muted">Siap ditempel langsung ke Google Sheets atau Excel</p>
                     </div>
                     <i data-lucide="clipboard-copy" class="w-5 h-5 text-map-muted shrink-0"></i>
                 </button>
@@ -343,7 +343,7 @@
                             <i data-lucide="user-check" class="w-4 h-4 text-map-red"></i>
                             <span>Nama Trainer HO</span>
                         </h3>
-                        <span class="text-[11px] text-map-muted">Tersimpan ke Kolom C tab Submit</span>
+                        <span class="text-[11px] text-map-muted">Pilih trainer yang bertugas</span>
                     </div>
                     <div id="trainer-pills" class="flex flex-wrap items-center gap-2">
                         <!-- Rendered via JS -->
@@ -358,7 +358,7 @@
                                 <i data-lucide="map-pin" class="w-4 h-4 text-map-red"></i>
                                 <span>Lokasi Default Sesi Ini &amp; Status</span>
                             </h3>
-                            <p class="text-xs text-map-muted mt-0.5">Ketik kode atau nama toko dari sheet Master karyawan (Kolom B), lalu tiap kartu Task tetap bisa diatur terpisah.</p>
+                            <p class="text-xs text-map-muted mt-0.5">Ketik kode atau nama toko untuk sesi ini, lalu tiap kartu Task tetap bisa diatur terpisah.</p>
                         </div>
 
                         <!-- MAP Segmented Status Control -->
@@ -382,7 +382,7 @@
                                 <button type="button" onclick="clearStoreSearchInput()" title="Reset ke Umum / HO"
                                     class="absolute right-3 top-1/2 -translate-y-1/2 text-map-muted hover:text-map-ink text-sm">×</button>
                             </div>
-                            <span id="master-store-count" class="text-xs text-map-muted">Memuat daftar Store dari Master karyawan...</span>
+                            <span id="master-store-count" class="text-xs text-map-muted">Memuat daftar toko...</span>
                         </div>
                         <datalist id="master-store-datalist"></datalist>
                     </div>
@@ -401,7 +401,7 @@
                                 <i data-lucide="images" class="w-4 h-4 text-map-red"></i>
                                 <span>Lampiran Bulk Foto (Auto-Resize)</span>
                             </h3>
-                            <p class="text-xs text-map-muted mt-0.5">Otomatis menurunkan ukuran &amp; resolusi sebelum disimpan ke Google Drive &amp; tab Submit.</p>
+                            <p class="text-xs text-map-muted mt-0.5">Otomatis menurunkan ukuran &amp; resolusi sebelum disimpan ke Google Drive.</p>
                         </div>
 
                         <div class="flex items-center gap-2">
@@ -446,7 +446,7 @@
                         </div>
                         <div>
                             <p id="ready-tasks-summary" class="text-sm font-bold text-map-ink">0 Task siap disimpan</p>
-                            <p id="submit-trainer-hint" class="text-xs text-map-muted">Trainer aktif: Novi Riyanto • Disimpan ke Kolom C (Nama Trainer HO) di tab Submit</p>
+                            <p id="submit-trainer-hint" class="text-xs text-map-muted">Trainer aktif: Novi Riyanto</p>
                         </div>
                     </div>
 
@@ -516,7 +516,7 @@
                                         <button type="button" onclick="toggleAllFeedTasks(false)" class="text-map-muted hover:underline">Kosong</button>
                                     </div>
                                 </div>
-                                <div id="feed-task-checkboxes" class="space-y-1 text-xs max-h-56 overflow-y-auto pr-1">
+                                <div id="feed-task-checkboxes" class="flex flex-wrap gap-1.5">
                                     <!-- Rendered via JS -->
                                 </div>
                             </div>
@@ -727,7 +727,7 @@
 
             <!-- Footer -->
             <footer class="pt-3 pb-6 text-center space-y-1 border-t border-map-border">
-                <p class="text-[11px] font-mono text-map-muted">Daily Work Journal • Tab: Submit | A: TimeStamp | B: Tanggal | C: Nama Trainer HO | D: Task | E: Aktivitas | F: Toko / Lokasi | G: Status | H: Foto / Link</p>
+                <p class="text-[11px] font-semibold text-map-muted">Daily Work Journal &amp; Activity Log</p>
                 <p class="text-[11px] text-map-subtle">Concept &amp; Curation by Novi Riyanto | Developed in collaboration with Gemini AI</p>
             </footer>
 
@@ -852,7 +852,7 @@
             }
             const hint = document.getElementById('submit-trainer-hint');
             if (hint) {
-                hint.textContent = `Trainer aktif: ${selectedTrainer} • Disimpan ke Kolom C (Nama Trainer HO) di tab Submit`;
+                hint.textContent = `Trainer aktif: ${selectedTrainer}`;
             }
             populateFeedTrainerFilter();
         }
@@ -1081,11 +1081,11 @@
                 syncBtn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i><span>Syncing...</span>`;
                 lucide.createIcons();
             }
-            startLoadingGauge('Menarik data tab Submit & Master karyawan...');
+            startLoadingGauge('Menarik data terbaru dari Google Sheets...');
 
             try {
                 const res = await fetch(url, { method: 'GET', redirect: 'follow' });
-                updateLoadingGauge(72, 'Memproses baris data & daftar Store...');
+                updateLoadingGauge(72, 'Memproses data aktivitas & daftar toko...');
                 const json = await res.json();
                 if (json && json.status === 'success') {
                     let extractedStores = [];
@@ -1128,14 +1128,14 @@
                     if (currentView === 'today') renderActivityFeed();
                     else if (currentView === 'calendar' || currentView === 'workload') renderMonthlyMatrix();
 
-                    finishLoadingGauge(`Selesai (${allLogs.length} baris • ${STORE_PRESETS.length - 1} store)`);
+                    finishLoadingGauge(`Selesai (${allLogs.length} aktivitas • ${STORE_PRESETS.length - 1} toko)`);
                     if (showNotification) {
-                        showToast(`Sinkronisasi berhasil: ${allLogs.length} baris & ${STORE_PRESETS.length - 1} store dari Master.`);
+                        showToast(`Sinkronisasi berhasil: ${allLogs.length} aktivitas & ${STORE_PRESETS.length - 1} toko dimuat.`);
                     }
                 } else {
-                    finishLoadingGauge('Tab Submit kosong');
+                    finishLoadingGauge('Belum ada data tersimpan');
                     if (showNotification) {
-                        showToast('Tab Submit terbaca, belum ada baris data.', 'error');
+                        showToast('Koneksi berhasil, namun belum ada data aktivitas tersimpan.', 'error');
                     }
                 }
             } catch (err) {
@@ -1740,7 +1740,7 @@
             btn.innerHTML = origHtml;
             lucide.createIcons();
 
-            showToast(`${sentRemoteCount} baris log (${selectedTrainer}) terkirim ke tab Submit!`);
+            showToast(`${sentRemoteCount} aktivitas (${selectedTrainer}) berhasil disimpan!`);
             setTimeout(() => { syncLogsFromSheets(false); }, 1200);
         }
 
@@ -1752,12 +1752,18 @@
         function renderFeedTaskCheckboxes() {
             const box = document.getElementById('feed-task-checkboxes');
             box.innerHTML = TASKS.map(t => {
-                const checked = feedEnabledTasks.has(t.id) ? 'checked' : '';
+                const active = feedEnabledTasks.has(t.id);
                 return `
-                    <label class="flex items-center gap-2 py-1 px-2 rounded-lg hover:bg-map-bg cursor-pointer text-map-ink select-none">
-                        <input type="checkbox" ${checked} onchange="toggleFeedTask('${t.id}', this.checked)" class="accent-red-700 rounded">
-                        <span class="truncate">${t.shortCode} · ${t.label}</span>
-                    </label>
+                    <button type="button" onclick="toggleFeedTask('${t.id}', ${!active})"
+                        title="${escapeAttr(t.fullName)}"
+                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] transition-all border ${
+                            active
+                                ? 'bg-map-red/10 text-map-redDark font-semibold border-map-red/30'
+                                : 'bg-map-bg text-map-muted font-medium border-map-border hover:text-map-ink'
+                        }">
+                        <span class="w-1.5 h-1.5 rounded-full" style="background-color: ${active ? t.borderHex : '#a8a29e'};"></span>
+                        <span>${escapeHtml(t.shortCode)} · ${escapeHtml(t.label)}</span>
+                    </button>
                 `;
             }).join('');
         }
@@ -1765,12 +1771,6 @@
         function toggleFeedTask(taskId, isChecked) {
             if (isChecked) feedEnabledTasks.add(taskId);
             else feedEnabledTasks.delete(taskId);
-            renderActivityFeed();
-        }
-
-        function toggleAllFeedTasks(enable) {
-            if (enable) feedEnabledTasks = new Set(TASKS.map(t => t.id));
-            else feedEnabledTasks.clear();
             renderFeedTaskCheckboxes();
             renderActivityFeed();
         }
@@ -2597,7 +2597,7 @@
                 ].join('\t');
             });
 
-            copyToClipboard(lines.join('\n'), `${lines.length} baris Sheets (A–H TSV) disalin! Tinggal Ctrl+V di sel A2.`);
+            copyToClipboard(lines.join('\n'), `${lines.length} baris data disalin! Siap ditempel ke Google Sheets atau Excel.`);
         }
 
         /**
