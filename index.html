@@ -94,7 +94,67 @@
 <body class="min-h-screen pb-24 lg:pb-10 selection:bg-neon-green/25 selection:text-neon-greenBright">
 
     <!-- Toast Container -->
-    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none max-w-sm w-full px-4 sm:px-0"></div>
+    <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col gap-2 pointer-events-none max-w-sm w-full px-4 sm:px-0"></div>
+
+    <!-- Sticky Top Navigation Bar -->
+    <nav class="sticky top-0 z-40 glass-panel border-b border-white/10 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+            <!-- Brand -->
+            <div class="flex items-center gap-2.5 shrink-0">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-neon-green/20 to-neon-purple/25 border border-neon-green/40 flex items-center justify-center shadow-neon-green">
+                    <i data-lucide="layers" class="w-4 h-4 text-neon-greenBright"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-white text-sm tracking-tight leading-none">Daily Work <span class="text-neon-greenBright">Journal</span></h1>
+                    <span class="text-[10px] font-mono text-slate-400">TAB SUBMIT • BULK PHOTO</span>
+                </div>
+            </div>
+
+            <!-- Desktop Top Menu Links -->
+            <div class="hidden md:flex items-center gap-1.5 bg-void/80 p-1 rounded-xl border border-white/10">
+                <button onclick="switchView('input')" id="nav-desk-input" class="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-neon-green/15 text-neon-greenBright border border-neon-green/35">
+                    <i data-lucide="plus-square" class="w-3.5 h-3.5"></i>
+                    <span>Input Aktivitas</span>
+                </button>
+                <button onclick="switchView('today')" id="nav-desk-today" class="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all border border-transparent">
+                    <i data-lucide="calendar-check" class="w-3.5 h-3.5"></i>
+                    <span>Kegiatan Hari Ini</span>
+                </button>
+                <button onclick="switchView('matrix')" id="nav-desk-matrix" class="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all border border-transparent">
+                    <i data-lucide="grid-3x3" class="w-3.5 h-3.5"></i>
+                    <span>Matriks Bulanan</span>
+                </button>
+            </div>
+
+            <!-- Top Action Buttons -->
+            <div class="flex items-center gap-2 shrink-0">
+                <button onclick="syncLogsFromSheets(true)" id="btn-sync-sheets" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-neon-greenBright bg-neon-green/10 hover:bg-neon-green/20 border border-neon-green/35 transition-colors">
+                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                    <span>Sync Sheets</span>
+                </button>
+                <button onclick="openWhatsAppModal()" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-void bg-neon-green hover:bg-neon-greenBright transition-all shadow-neon-green">
+                    <i data-lucide="message-square-text" class="w-3.5 h-3.5"></i>
+                    <span>Laporan WA</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Live Percentage Loading Bar Gauge -->
+        <div id="sync-gauge-container" class="hidden bg-void/95 border-t border-white/10 px-4 sm:px-6 lg:px-8 py-2">
+            <div class="max-w-7xl mx-auto space-y-1.5">
+                <div class="flex items-center justify-between text-[11px] font-mono">
+                    <span id="sync-gauge-label" class="text-slate-300 flex items-center gap-1.5">
+                        <i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-neon-greenBright"></i>
+                        <span>Menyinkronkan data dari Google Sheets...</span>
+                    </span>
+                    <span id="sync-gauge-percent" class="font-bold text-neon-greenBright">0%</span>
+                </div>
+                <div class="w-full h-2 bg-surface rounded-full overflow-hidden border border-white/10">
+                    <div id="sync-gauge-bar" class="h-full w-0 bg-gradient-to-r from-neon-green via-neon-cyan to-neon-purple transition-all duration-200 ease-out rounded-full shadow-neon-green"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <!-- Modal: WhatsApp Summary Preview -->
     <div id="wa-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
@@ -153,70 +213,8 @@
     </div>
 
     <!-- Main Layout -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 lg:pt-7">
-        <div class="flex flex-col lg:flex-row gap-6">
-
-            <!-- Desktop Glassmorphism Sidebar -->
-            <aside class="hidden lg:flex flex-col justify-between w-64 shrink-0 glass-panel rounded-2xl p-5 h-[calc(100vh-3.5rem)] sticky top-7">
-                <div class="space-y-6">
-                    <!-- Brand -->
-                    <div class="flex items-center gap-3 px-1">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-green/20 to-neon-purple/25 border border-neon-green/40 flex items-center justify-center shadow-neon-green">
-                            <i data-lucide="layers" class="w-5 h-5 text-neon-greenBright"></i>
-                        </div>
-                        <div>
-                            <h1 class="font-bold text-white text-sm tracking-tight leading-tight">Daily Work<br><span class="text-neon-greenBright">Activity Log</span></h1>
-                            <span class="text-[10px] font-mono text-slate-400">SHEETS + BULK PHOTO</span>
-                        </div>
-                    </div>
-
-                    <!-- Primary Views -->
-                    <nav class="space-y-1.5">
-                        <button onclick="switchView('input')" id="nav-desk-input" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-neon-green/15 text-neon-greenBright border border-neon-green/35">
-                            <i data-lucide="plus-square" class="w-4 h-4"></i>
-                            <span>Input Aktivitas</span>
-                        </button>
-                        <button onclick="switchView('today')" id="nav-desk-today" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all border border-transparent">
-                            <i data-lucide="calendar-check" class="w-4 h-4"></i>
-                            <span>Kegiatan Hari Ini</span>
-                        </button>
-                        <button onclick="switchView('matrix')" id="nav-desk-matrix" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all border border-transparent">
-                            <i data-lucide="grid-3x3" class="w-4 h-4"></i>
-                            <span>Matriks Bulanan</span>
-                        </button>
-                        <button onclick="switchView('settings')" id="nav-desk-settings" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all border border-transparent">
-                            <i data-lucide="sheet" class="w-4 h-4"></i>
-                            <span>Pengaturan &amp; Webhook</span>
-                        </button>
-                    </nav>
-
-                    <!-- Sheets Schema Reference -->
-                    <div class="p-3.5 rounded-xl bg-void/85 border border-white/5 space-y-2">
-                        <p class="text-[11px] font-semibold text-neon-purpleBright flex items-center gap-1.5">
-                            <i data-lucide="table-properties" class="w-3.5 h-3.5"></i>
-                            Struktur Kolom Sheets
-                        </p>
-                        <p class="text-[10px] font-mono text-slate-400 leading-relaxed">
-                            TimeStamp | Tanggal | Task | Aktivitas | Toko / Lokasi | Status | Foto / Link
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Quick Export Actions -->
-                <div class="space-y-2 pt-4 border-t border-white/10">
-                    <button onclick="openWhatsAppModal()" class="w-full flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-bold text-void bg-neon-green hover:bg-neon-greenBright transition-all shadow-neon-green">
-                        <i data-lucide="message-square-text" class="w-4 h-4"></i>
-                        Salin Laporan WA
-                    </button>
-                    <button onclick="copySheetsTSV()" class="w-full flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors">
-                        <i data-lucide="clipboard-copy" class="w-3.5 h-3.5 text-neon-purpleBright"></i>
-                        Salin Baris Sheets (TSV)
-                    </button>
-                </div>
-            </aside>
-
-            <!-- Main Workspace -->
-            <main class="flex-1 min-w-0 space-y-5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 lg:pt-6">
+        <main class="w-full space-y-5">
 
                 <!-- Top Context & Date Header -->
                 <header class="glass-panel rounded-2xl p-4 sm:p-5">
@@ -235,11 +233,11 @@
                             <div>
                                 <div class="flex items-center gap-2">
                                     <h2 id="formatted-date-title" class="text-base sm:text-lg font-bold text-white tracking-tight">Sen, 23 Nov 2026</h2>
-                                    <span id="webhook-status-pill" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/5 text-slate-400 border border-white/10">
-                                        Lokal Only
+                                    <span id="webhook-status-pill" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-neon-purple/15 text-neon-purpleBright border border-neon-purple/35">
+                                        Sheets Connected
                                     </span>
                                 </div>
-                                <p id="header-log-stats" class="text-xs font-mono text-neon-greenBright mt-0.5">0 log tersimpan hari ini</p>
+                                <p id="header-log-stats" class="text-xs font-mono text-neon-greenBright mt-0.5">0 log tersimpan pada tanggal ini</p>
                             </div>
                         </div>
 
@@ -306,7 +304,7 @@
                                     <i data-lucide="images" class="w-4 h-4 text-neon-purpleBright"></i>
                                     <span>Lampiran Bulk Foto (Auto-Resize ala Media Sosial)</span>
                                 </h3>
-                                <p class="text-[11px] text-slate-400 mt-0.5">Otomatis menurunkan ukuran &amp; resolusi sebelum disimpan atau diunggah ke Google Drive.</p>
+                                <p class="text-[11px] text-slate-400 mt-0.5">Otomatis menurunkan ukuran &amp; resolusi sebelum disimpan ke Google Drive &amp; tab Submit.</p>
                             </div>
 
                             <div class="flex items-center gap-2">
@@ -351,7 +349,7 @@
                             </div>
                             <div>
                                 <p id="ready-tasks-summary" class="text-xs sm:text-sm font-bold text-white">0 Task siap disimpan</p>
-                                <p class="text-[11px] text-slate-400">Setiap Task terisi disimpan sebagai 1 baris di tabel Sheets</p>
+                                <p class="text-[11px] text-slate-400">Setiap Task terisi disimpan sebagai 1 baris di tab Submit</p>
                             </div>
                         </div>
 
@@ -456,7 +454,7 @@
                                 <div id="feed-empty-state" class="hidden rounded-2xl border border-dashed border-white/10 bg-void/50 p-10 text-center space-y-2">
                                     <i data-lucide="calendar-x" class="w-8 h-8 text-slate-500 mx-auto"></i>
                                     <p class="text-sm font-semibold text-slate-300">Belum ada kegiatan yang sesuai filter</p>
-                                    <p class="text-xs text-slate-500">Ubah rentang tanggal/filter atau tambahkan log baru melalui menu Input Aktivitas.</p>
+                                    <p class="text-xs text-slate-500">Klik tombol Sync Sheets di atas atau tambahkan log baru melalui menu Input Aktivitas.</p>
                                 </div>
                             </div>
                         </div>
@@ -474,7 +472,7 @@
                                     <i data-lucide="grid-3x3" class="w-5 h-5 text-neon-greenBright"></i>
                                     <span>Matriks Bulanan — November 2026</span>
                                 </h3>
-                                <p class="text-xs text-slate-400 mt-0.5">Rekap harian per kategori Task 1–9 berdasarkan tanggal yang dipilih</p>
+                                <p class="text-xs text-slate-400 mt-0.5">Rekap harian per kategori Task 1–9 berdasarkan data dari tab Submit</p>
                             </div>
                             <button onclick="copyMonthlyMatrixTSV()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors self-start sm:self-auto">
                                 <i data-lucide="clipboard-copy" class="w-3.5 h-3.5 text-neon-greenBright"></i>
@@ -511,141 +509,17 @@
                     </div>
                 </section>
 
-                <!-- ========================================================= -->
-                <!-- VIEW 4: PENGATURAN & WEBHOOK (SHEETS + DRIVE APPS SCRIPT) -->
-                <!-- ========================================================= -->
-                <section id="view-settings" class="hidden space-y-4">
-                    <div class="glass-panel rounded-2xl p-4 sm:p-5 space-y-5">
-                        <div>
-                            <h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                                <i data-lucide="sheet" class="w-5 h-5 text-neon-purpleBright"></i>
-                                <span>Integrasi Google Sheets &amp; Google Drive (Bulk Foto)</span>
-                            </h3>
-                            <p class="text-xs text-slate-400 mt-1">Hubungkan aplikasi ini ke Google Apps Script agar setiap submit otomatis menambah baris ke `Log_Harian` dan menyimpan foto terkompresi ke Google Drive.</p>
-                        </div>
-
-                        <!-- Webhook & Folder Form -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-300 mb-1.5">URL Web App Google Apps Script (`doPost`)</label>
-                                <input type="url" id="setting-webhook-url" placeholder="https://script.google.com/macros/s/AKfycb.../exec"
-                                    class="w-full bg-void border border-white/10 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-neon-purple">
-                                <p class="text-[11px] text-slate-500 mt-1">Sudah terpasang otomatis ke endpoint deploy Anda (bisa diubah jika perlu).</p>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Google Drive Folder ID (Opsional untuk Foto)</label>
-                                <input type="text" id="setting-folder-id" placeholder="Contoh: 1A2bC3dE4fG5hI6jK7lM8nO9p..."
-                                    class="w-full bg-void border border-white/10 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-neon-purple">
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap items-center gap-2.5">
-                            <button onclick="saveWebhookSettings()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-void bg-neon-green hover:bg-neon-greenBright transition-all shadow-neon-green">
-                                <i data-lucide="save" class="w-3.5 h-3.5"></i>
-                                Simpan Pengaturan
-                            </button>
-                            <button onclick="testWebhookConnection()" id="btn-test-webhook" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-white bg-neon-purple/20 hover:bg-neon-purple/30 border border-neon-purple/40 transition-colors">
-                                <i data-lucide="radio" class="w-3.5 h-3.5 text-neon-purpleBright"></i>
-                                Test Koneksi
-                            </button>
-                        </div>
-
-                        <!-- Copyable Header Row -->
-                        <div class="bg-void border border-white/10 rounded-xl p-4 space-y-2">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs font-bold text-neon-greenBright">1. Header Google Sheets (Row 1 — Klik Salin lalu Paste di Sel A1)</span>
-                                <button onclick="copySheetHeader()" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold text-slate-200 bg-white/5 hover:bg-white/10">
-                                    <i data-lucide="copy" class="w-3 h-3"></i> Salin Header
-                                </button>
-                            </div>
-                            <code class="block text-xs font-mono text-slate-300 bg-surface px-3 py-2 rounded-lg overflow-x-auto">TimeStamp	Tanggal	Task	Aktivitas	Toko / Lokasi	Status	Foto / Link</code>
-                        </div>
-
-                        <!-- Copyable Apps Script -->
-                        <div class="bg-void border border-white/10 rounded-xl p-4 space-y-2">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs font-bold text-neon-purpleBright">2. Kode Google Apps Script (`Extensions &gt; Apps Script`)</span>
-                                <button onclick="copyAppsScript()" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold text-slate-200 bg-white/5 hover:bg-white/10">
-                                    <i data-lucide="copy" class="w-3 h-3"></i> Salin Skrip
-                                </button>
-                            </div>
-                            <pre id="apps-script-code" class="text-[11px] font-mono text-slate-300 bg-surface p-3.5 rounded-lg overflow-x-auto leading-relaxed">function doPost(e) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName("Log_Harian") || ss.getActiveSheet();
-  var data = JSON.parse(e.postData.contents);
-
-  // Buat header otomatis jika sheet masih kosong
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(["TimeStamp", "Tanggal", "Task", "Aktivitas", "Toko / Lokasi", "Status", "Foto / Link"]);
-  }
-
-  var photoLinks = [];
-  if (data.photos && data.photos.length &gt; 0) {
-    var folder = data.folderId
-      ? DriveApp.getFolderById(data.folderId)
-      : DriveApp.getRootFolder();
-
-    // Buat subfolder per tanggal agar rapi
-    var subFolders = folder.getFoldersByName(data.tanggal);
-    var targetFolder = subFolders.hasNext() ? subFolders.next() : folder.createFolder(data.tanggal);
-
-    data.photos.forEach(function(p, idx) {
-      var base64Data = p.dataUrl.split(",")[1];
-      var blob = Utilities.newBlob(Utilities.base64Decode(base64Data), "image/jpeg", p.name || ("foto_" + (idx + 1) + ".jpg"));
-      var file = targetFolder.createFile(blob);
-      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-      photoLinks.push(file.getUrl());
-    });
-  }
-
-  sheet.appendRow([
-    new Date(),
-    data.tanggal,
-    data.task,
-    data.aktivitas,
-    data.lokasi,
-    data.status,
-    photoLinks.join("\n")
-  ]);
-
-  return ContentService.createTextOutput(JSON.stringify({ status: "success", photosSaved: photoLinks.length }))
-    .setMimeType(ContentService.MimeType.JSON);
-}</pre>
-                        </div>
-
-                        <!-- Backup & Reset Utilities -->
-                        <div class="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
-                            <div class="flex flex-wrap items-center gap-2">
-                                <button onclick="exportBackupJSON()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/10">
-                                    <i data-lucide="download" class="w-3.5 h-3.5 text-neon-greenBright"></i>
-                                    Export Backup JSON
-                                </button>
-                                <label class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/10 cursor-pointer">
-                                    <i data-lucide="upload" class="w-3.5 h-3.5 text-neon-purpleBright"></i>
-                                    Import Backup JSON
-                                    <input type="file" accept="application/json" class="hidden" onchange="importBackupJSON(this.files[0])">
-                                </label>
-                            </div>
-                            <button onclick="resetDemoData()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/25">
-                                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-                                Reset ke Contoh Awal
-                            </button>
-                        </div>
-                    </div>
-                </section>
-
                 <!-- Footer -->
                 <footer class="pt-2 pb-4 text-center space-y-1">
-                    <p class="text-[11px] font-mono text-slate-500">Daily Work Journal • TimeStamp | Tanggal | Task | Aktivitas | Toko / Lokasi | Status | Foto / Link</p>
+                    <p class="text-[11px] font-mono text-slate-500">Daily Work Journal • Tab: Submit | TimeStamp | Tanggal | Task | Aktivitas | Toko / Lokasi | Status | Foto / Link</p>
                     <p class="text-[11px] text-slate-500">Concept &amp; Curation by Novi Riyanto | Developed in collaboration with Gemini AI</p>
                 </footer>
 
-            </main>
-        </div>
+        </main>
     </div>
 
     <!-- Mobile Floating Bottom Dock -->
-    <nav class="lg:hidden fixed bottom-0 inset-x-0 z-40 glass-dock px-2 py-2 flex items-center justify-around">
+    <nav class="md:hidden fixed bottom-0 inset-x-0 z-40 glass-dock px-2 py-2 flex items-center justify-around">
         <button onclick="switchView('input')" id="nav-mob-input" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-neon-greenBright">
             <i data-lucide="plus-square" class="w-5 h-5"></i>
             <span class="text-[10px] font-semibold">Input</span>
@@ -658,10 +532,6 @@
             <i data-lucide="grid-3x3" class="w-5 h-5"></i>
             <span class="text-[10px] font-medium">Matriks</span>
         </button>
-        <button onclick="switchView('settings')" id="nav-mob-settings" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-slate-400 hover:text-white">
-            <i data-lucide="sheet" class="w-5 h-5"></i>
-            <span class="text-[10px] font-medium">Webhook</span>
-        </button>
         <button onclick="openWhatsAppModal()" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-slate-400 hover:text-neon-greenBright">
             <i data-lucide="message-square-text" class="w-5 h-5"></i>
             <span class="text-[10px] font-medium">WA</span>
@@ -671,15 +541,12 @@
     <script>
         /**
          * Daily Work Journal & Activity Log
-         * Aligned with exact Google Sheets columns:
+         * Synced directly with Google Sheets tab "Submit":
          * TimeStamp | Tanggal | Task | Aktivitas | Toko / Lokasi | Status | Foto / Link
-         * Features per-task location override and HTML5 Canvas social-media-style bulk photo compression.
          */
 
-        const DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyhs5mngOvX6It0iApaYt9PzacEoHgdXwnqmngNiUEOfOSEgwX3pTgdUsu3rryhmyIphw/exec';
-        const LOGS_STORAGE_KEY = 'dwj_activity_logs_v2';
-        const WEBHOOK_URL_KEY = 'dwj_webhook_url_v2';
-        const FOLDER_ID_KEY = 'dwj_folder_id_v2';
+        const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzOq-kcjwGIxOh7M9N_FHfiTf6DSkATijEqi7M9X4d_AJflDDAxcsHPaCjdOxRlVpF9lA/exec';
+        const LOGS_STORAGE_KEY = 'dwj_activity_logs_v3';
 
         const INDO_DAYS = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
         const INDO_MONTHS_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
@@ -728,12 +595,68 @@
         }
 
         function getConfiguredWebhookUrl() {
-            const saved = localStorage.getItem(WEBHOOK_URL_KEY);
-            if (saved === null) {
-                localStorage.setItem(WEBHOOK_URL_KEY, DEFAULT_WEBHOOK_URL);
-                return DEFAULT_WEBHOOK_URL;
+            return WEBHOOK_URL;
+        }
+
+        let gaugeTimer = null;
+        function startLoadingGauge(labelText) {
+            const container = document.getElementById('sync-gauge-container');
+            const labelEl = document.getElementById('sync-gauge-label');
+            const pctEl = document.getElementById('sync-gauge-percent');
+            const barEl = document.getElementById('sync-gauge-bar');
+            if (!container) return;
+
+            if (gaugeTimer) clearInterval(gaugeTimer);
+            let progress = 8;
+            labelEl.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-neon-greenBright"></i><span>${escapeHtml(labelText)}</span>`;
+            pctEl.textContent = `${progress}%`;
+            barEl.style.width = `${progress}%`;
+            container.classList.remove('hidden');
+            lucide.createIcons();
+
+            gaugeTimer = setInterval(() => {
+                if (progress < 90) {
+                    const step = progress < 45 ? 7 : (progress < 75 ? 4 : 2);
+                    progress = Math.min(90, progress + step);
+                    pctEl.textContent = `${progress}%`;
+                    barEl.style.width = `${progress}%`;
+                }
+            }, 180);
+        }
+
+        function updateLoadingGauge(percent, labelText) {
+            const labelEl = document.getElementById('sync-gauge-label');
+            const pctEl = document.getElementById('sync-gauge-percent');
+            const barEl = document.getElementById('sync-gauge-bar');
+            if (labelText && labelEl) {
+                labelEl.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-neon-greenBright"></i><span>${escapeHtml(labelText)}</span>`;
+                lucide.createIcons();
             }
-            return saved.trim();
+            if (pctEl) pctEl.textContent = `${percent}%`;
+            if (barEl) barEl.style.width = `${percent}%`;
+        }
+
+        function finishLoadingGauge(finalLabel = 'Sinkronisasi selesai!') {
+            if (gaugeTimer) {
+                clearInterval(gaugeTimer);
+                gaugeTimer = null;
+            }
+            const container = document.getElementById('sync-gauge-container');
+            const labelEl = document.getElementById('sync-gauge-label');
+            const pctEl = document.getElementById('sync-gauge-percent');
+            const barEl = document.getElementById('sync-gauge-bar');
+            if (!container) return;
+
+            labelEl.innerHTML = `<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-neon-greenBright"></i><span>${escapeHtml(finalLabel)}</span>`;
+            pctEl.textContent = '100%';
+            barEl.style.width = '100%';
+            lucide.createIcons();
+
+            setTimeout(() => {
+                container.classList.add('hidden');
+                barEl.style.width = '0%';
+                pctEl.textContent = '0%';
+            }, 900);
         }
 
         function toIsoDate(dt) {
@@ -757,6 +680,14 @@
             return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
         }
 
+        function resolveTaskIdFromName(taskStr) {
+            const raw = String(taskStr || '').toLowerCase();
+            const exact = TASKS.find(t => t.fullName.toLowerCase() === raw);
+            if (exact) return exact.id;
+            const byCode = TASKS.find(t => raw.includes(t.shortCode.toLowerCase()) || raw.includes(t.label.toLowerCase()));
+            return byCode ? byCode.id : 't7';
+        }
+
         function resetDraftTasks() {
             draftTasks = {};
             TASKS.forEach(t => {
@@ -764,90 +695,105 @@
             });
         }
 
-        /**
-         * Seed realistic sample entries for 2026-11-23 showing mixed Digimap TP3 & Umum / HO tasks
-         */
-        function seedSampleLogsIfEmpty() {
+        function loadLocalLogsCache() {
             try {
                 const existing = localStorage.getItem(LOGS_STORAGE_KEY);
                 if (existing) {
-                    allLogs = JSON.parse(existing);
-                    return;
+                    const parsed = JSON.parse(existing);
+                    if (Array.isArray(parsed)) {
+                        allLogs = parsed;
+                    }
                 }
             } catch (e) {
                 console.error(e);
             }
+            updateHeaderStats();
+        }
 
-            allLogs = [
-                {
-                    id: 'seed-1',
-                    timestamp: '2026-11-23 09:45:12',
-                    tanggal: '2026-11-23',
-                    taskId: 't9',
-                    task: 'Task 9 - Store Visit',
-                    aktivitas: 'Visit pagi floor Digimap TP3, cek kerapian meja demo & kesiapan opening tim',
-                    lokasi: 'Digimap TP3',
-                    status: 'Done',
-                    photos: []
-                },
-                {
-                    id: 'seed-2',
-                    timestamp: '2026-11-23 10:30:05',
-                    tanggal: '2026-11-23',
-                    taskId: 't2',
-                    task: 'Task 2 - Roleplay',
-                    aktivitas: 'Roleplay 3 staff materi CARES & penawaran bundle aksesori',
-                    lokasi: 'Digimap TP3',
-                    status: 'Done',
-                    photos: []
-                },
-                {
-                    id: 'seed-3',
-                    timestamp: '2026-11-23 11:15:40',
-                    tanggal: '2026-11-23',
-                    taskId: 't6',
-                    task: 'Task 6 - Develope',
-                    aktivitas: 'Update formula & layout dashboard monitor LOB Champion',
-                    lokasi: 'Umum / HO',
-                    status: 'Progress',
-                    photos: []
-                },
-                {
-                    id: 'seed-4',
-                    timestamp: '2026-11-23 11:35:00',
-                    tanggal: '2026-11-23',
-                    taskId: 't3',
-                    task: 'Task 3 - DCOTA + Sales Coach',
-                    aktivitas: 'Buka akses DCOTA staff baru: zulvaalianti.digimap@gmail.com',
-                    lokasi: 'Umum / HO',
-                    status: 'Done',
-                    photos: []
+        /**
+         * Fetch rows directly from Google Sheets tab "Submit" via Apps Script doGet
+         */
+        async function syncLogsFromSheets(showNotification = false) {
+            const url = getConfiguredWebhookUrl();
+            if (!url) return;
+
+            const syncBtn = document.getElementById('btn-sync-sheets');
+            const origHtml = syncBtn ? syncBtn.innerHTML : '';
+            if (syncBtn) {
+                syncBtn.disabled = true;
+                syncBtn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i><span>Syncing...</span>`;
+                lucide.createIcons();
+            }
+            startLoadingGauge('Menarik data dari tab Submit Google Sheets...');
+
+            try {
+                const res = await fetch(url, { method: 'GET', redirect: 'follow' });
+                updateLoadingGauge(72, 'Memproses baris data dari Google Sheets...');
+                const json = await res.json();
+                if (json && json.status === 'success' && Array.isArray(json.rows)) {
+                    const sheetLogs = json.rows.map((r, i) => ({
+                        id: r.id || ('sheet_' + i),
+                        timestamp: r.timestamp || '',
+                        tanggal: String(r.tanggal || '').trim().slice(0, 10),
+                        taskId: resolveTaskIdFromName(r.task),
+                        task: r.task || 'Task 7 - General',
+                        aktivitas: r.aktivitas || '',
+                        lokasi: r.lokasi || 'Umum / HO',
+                        status: r.status || 'Done',
+                        fotoLink: r.fotoLink || '',
+                        photos: [],
+                        fromSheet: true
+                    })).filter(item => item.tanggal || item.aktivitas);
+
+                    sheetLogs.reverse();
+                    allLogs = sheetLogs;
+                    saveLogsToStorage();
+
+                    if (currentView === 'today') renderActivityFeed();
+                    else if (currentView === 'matrix') renderMonthlyMatrix();
+
+                    finishLoadingGauge(`Selesai (${allLogs.length} baris dimuat)`);
+                    if (showNotification) {
+                        showToast(`Sinkronisasi berhasil: ${allLogs.length} baris terbaca dari tab Submit.`);
+                    }
+                } else {
+                    finishLoadingGauge('Tab Submit kosong');
+                    if (showNotification) {
+                        showToast('Tab Submit terbaca, belum ada baris data.', 'error');
+                    }
                 }
-            ];
-            saveLogsToStorage();
+            } catch (err) {
+                console.error('Gagal membaca data dari Google Sheets:', err);
+                finishLoadingGauge('Gagal menyinkronkan data');
+                if (showNotification) {
+                    showToast('Gagal membaca data dari Sheets. Periksa izin akses Web App (Anyone).', 'error');
+                }
+            } finally {
+                if (syncBtn) {
+                    syncBtn.disabled = false;
+                    syncBtn.innerHTML = origHtml;
+                    lucide.createIcons();
+                }
+            }
         }
 
         function saveLogsToStorage() {
             try {
                 localStorage.setItem(LOGS_STORAGE_KEY, JSON.stringify(allLogs));
             } catch (e) {
-                showToast('Penyimpanan penuh. Hapus sebagian foto lama atau export backup.', 'error');
+                showToast('Penyimpanan lokal penuh.', 'error');
             }
             updateHeaderStats();
         }
 
         function updateHeaderStats() {
             const countToday = allLogs.filter(l => l.tanggal === selectedDate).length;
-            document.getElementById('header-log-stats').textContent = `${countToday} log tersimpan pada tanggal ini`;
+            document.getElementById('header-log-stats').textContent = `${countToday} log tersimpan pada tanggal ini (Total: ${allLogs.length} baris)`;
 
-            const url = getConfiguredWebhookUrl();
             const pill = document.getElementById('webhook-status-pill');
-            if (url) {
+            if (pill) {
                 pill.textContent = 'Sheets Connected';
                 pill.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-neon-purple/15 text-neon-purpleBright border border-neon-purple/35';
-            } else {
-                pill.textContent = 'Lokal Only';
-                pill.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/5 text-slate-400 border border-white/10';
             }
         }
 
@@ -877,27 +823,29 @@
          */
         function switchView(view) {
             currentView = view;
-            const views = ['input', 'today', 'matrix', 'settings'];
+            const views = ['input', 'today', 'matrix'];
 
             views.forEach(v => {
-                document.getElementById(`view-${v}`).classList.toggle('hidden', v !== view);
+                const sec = document.getElementById(`view-${v}`);
+                if (sec) sec.classList.toggle('hidden', v !== view);
 
                 const dBtn = document.getElementById(`nav-desk-${v}`);
                 const mBtn = document.getElementById(`nav-mob-${v}`);
 
                 if (v === view) {
-                    const isSettings = v === 'settings';
-                    dBtn.className = `w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                        isSettings
-                            ? 'bg-neon-purple/15 text-neon-purpleBright border border-neon-purple/35'
-                            : 'bg-neon-green/15 text-neon-greenBright border border-neon-green/35'
-                    }`;
-                    mBtn.className = `flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl ${
-                        isSettings ? 'text-neon-purpleBright' : 'text-neon-greenBright'
-                    }`;
+                    if (dBtn) {
+                        dBtn.className = 'flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-neon-green/15 text-neon-greenBright border border-neon-green/35';
+                    }
+                    if (mBtn) {
+                        mBtn.className = 'flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-neon-greenBright';
+                    }
                 } else {
-                    dBtn.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all border border-transparent';
-                    mBtn.className = 'flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-slate-400 hover:text-white';
+                    if (dBtn) {
+                        dBtn.className = 'flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all border border-transparent';
+                    }
+                    if (mBtn) {
+                        mBtn.className = 'flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-slate-400 hover:text-white';
+                    }
                 }
             });
 
@@ -906,9 +854,6 @@
                 renderActivityFeed();
             } else if (view === 'matrix') {
                 renderMonthlyMatrix();
-            } else if (view === 'settings') {
-                document.getElementById('setting-webhook-url').value = getConfiguredWebhookUrl();
-                document.getElementById('setting-folder-id').value = localStorage.getItem(FOLDER_ID_KEY) || '';
             }
             lucide.createIcons();
         }
@@ -1016,7 +961,6 @@
                 const styles = getThemeStyles(t.theme, st.active);
                 const effectiveLoc = st.locationOverride !== null ? st.locationOverride : defaultLocation;
 
-                // Build select options including custom location if set
                 const optionsList = [...STORE_PRESETS];
                 if (!optionsList.includes(effectiveLoc)) optionsList.unshift(effectiveLoc);
                 if (!optionsList.includes(defaultLocation)) optionsList.unshift(defaultLocation);
@@ -1233,7 +1177,6 @@
                         ctx.drawImage(img, 0, 0, w, h);
 
                         const dataUrl = canvas.toDataURL('image/jpeg', quality);
-                        // Estimate byte size from base64 payload
                         const base64Len = dataUrl.length - 'data:image/jpeg;base64,'.length;
                         const approxBytes = Math.round((base64Len * 3) / 4);
 
@@ -1334,7 +1277,6 @@
             lucide.createIcons();
 
             const webhookUrl = getConfiguredWebhookUrl();
-            const folderId = (localStorage.getItem(FOLDER_ID_KEY) || '').trim();
             const batchPhotos = queuedPhotos.map(p => ({
                 name: p.name,
                 width: p.width,
@@ -1347,7 +1289,6 @@
             filledTasks.forEach((t, index) => {
                 const st = draftTasks[t.id];
                 const lokasi = st.locationOverride !== null ? st.locationOverride : defaultLocation;
-                // Attach queued photos to the first submitted task row (or store-specific task first)
                 const attachedPhotos = (index === 0) ? batchPhotos : [];
 
                 const entry = {
@@ -1359,6 +1300,7 @@
                     aktivitas: st.text.trim(),
                     lokasi: lokasi,
                     status: defaultStatus,
+                    fotoLink: '',
                     photos: attachedPhotos
                 };
                 createdEntries.push(entry);
@@ -1366,11 +1308,14 @@
             });
 
             saveLogsToStorage();
+            startLoadingGauge(`Mengirim ${createdEntries.length} baris log ke Google Sheets...`);
 
-            // Send sequentially to Google Apps Script Webhook if configured
             let sentRemoteCount = 0;
             if (webhookUrl) {
-                for (const entry of createdEntries) {
+                for (let idx = 0; idx < createdEntries.length; idx++) {
+                    const entry = createdEntries[idx];
+                    const stepPct = Math.round(((idx + 0.5) / createdEntries.length) * 85);
+                    updateLoadingGauge(stepPct, `Mengirim (${idx + 1}/${createdEntries.length}): ${entry.task}...`);
                     try {
                         await fetch(webhookUrl, {
                             method: 'POST',
@@ -1383,7 +1328,6 @@
                                 aktivitas: entry.aktivitas,
                                 lokasi: entry.lokasi,
                                 status: entry.status,
-                                folderId: folderId,
                                 photos: entry.photos
                             })
                         });
@@ -1394,7 +1338,8 @@
                 }
             }
 
-            // Clear draft inputs & photo queue
+            finishLoadingGauge(`${sentRemoteCount} baris log terkirim!`);
+
             resetDraftTasks();
             clearQueuedPhotos();
             renderBentoGrid();
@@ -1403,11 +1348,246 @@
             btn.innerHTML = origHtml;
             lucide.createIcons();
 
-            if (webhookUrl) {
-                showToast(`${sentRemoteCount} baris log + foto terkirim ke Google Sheets!`);
-            } else {
-                showToast(`${createdEntries.length} baris log tersimpan! (Atur Webhook untuk kirim otomatis ke Sheets)`);
+            showToast(`${sentRemoteCount} baris log + foto terkirim ke tab Submit!`);
+            setTimeout(() => { syncLogsFromSheets(false); }, 1200);
+        }
+
+        /**
+         * =========================================================
+         * VIEW 2: KEGIATAN HARI INI (SCHEDULE FEED + FILTERS)
+         * =========================================================
+         */
+        function renderFeedTaskCheckboxes() {
+            const box = document.getElementById('feed-task-checkboxes');
+            box.innerHTML = TASKS.map(t => {
+                const checked = feedEnabledTasks.has(t.id) ? 'checked' : '';
+                return `
+                    <label class="flex items-center gap-2 py-1 px-2 rounded-lg hover:bg-white/5 cursor-pointer text-slate-300 select-none">
+                        <input type="checkbox" ${checked} onchange="toggleFeedTask('${t.id}', this.checked)" class="accent-emerald-400 rounded">
+                        <span class="truncate">${t.shortCode} · ${t.label}</span>
+                    </label>
+                `;
+            }).join('');
+        }
+
+        function toggleFeedTask(taskId, isChecked) {
+            if (isChecked) feedEnabledTasks.add(taskId);
+            else feedEnabledTasks.delete(taskId);
+            renderActivityFeed();
+        }
+
+        function toggleAllFeedTasks(enable) {
+            if (enable) feedEnabledTasks = new Set(TASKS.map(t => t.id));
+            else feedEnabledTasks.clear();
+            renderFeedTaskCheckboxes();
+            renderActivityFeed();
+        }
+
+        function resetFeedFilters() {
+            const radio = document.querySelector('input[name="feed-scope"][value="today"]');
+            if (radio) radio.checked = true;
+            document.getElementById('feed-status-filter').value = 'ALL';
+            document.getElementById('feed-has-photo').checked = false;
+            document.getElementById('feed-search-input').value = '';
+            feedEnabledTasks = new Set(TASKS.map(t => t.id));
+            renderFeedTaskCheckboxes();
+            renderActivityFeed();
+        }
+
+        function clearFeedSearch() {
+            document.getElementById('feed-search-input').value = '';
+            renderActivityFeed();
+        }
+
+        function getFilteredLogs() {
+            const scopeEl = document.querySelector('input[name="feed-scope"]:checked');
+            const scope = scopeEl ? scopeEl.value : 'today';
+            const statusFilter = document.getElementById('feed-status-filter').value;
+            const onlyPhoto = document.getElementById('feed-has-photo').checked;
+            const query = (document.getElementById('feed-search-input').value || '').trim().toLowerCase();
+
+            document.getElementById('feed-search-clear').classList.toggle('hidden', query.length === 0);
+
+            const baseDt = parseLocalDate(selectedDate);
+            let allowedDates = null;
+
+            if (scope === 'today') {
+                allowedDates = new Set([selectedDate]);
+            } else if (scope === 'week') {
+                allowedDates = new Set();
+                const day = baseDt.getDay();
+                const diffMon = day === 0 ? -6 : 1 - day;
+                const mon = new Date(baseDt.getFullYear(), baseDt.getMonth(), baseDt.getDate() + diffMon);
+                for (let i = 0; i < 7; i++) {
+                    allowedDates.add(toIsoDate(new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + i)));
+                }
             }
+
+            return allLogs.filter(item => {
+                if (scope === 'month') {
+                    if (!item.tanggal.startsWith(selectedDate.slice(0, 7))) return false;
+                } else if (allowedDates && !allowedDates.has(item.tanggal)) {
+                    return false;
+                }
+
+                if (!feedEnabledTasks.has(item.taskId)) return false;
+                if (statusFilter !== 'ALL' && item.status !== statusFilter) return false;
+                const hasAttachment = (item.photos && item.photos.length > 0) || Boolean(item.fotoLink && item.fotoLink.trim());
+                if (onlyPhoto && !hasAttachment) return false;
+
+                if (query) {
+                    const hay = `${item.task} ${item.aktivitas} ${item.lokasi} ${item.status} ${item.tanggal}`.toLowerCase();
+                    if (!hay.includes(query)) return false;
+                }
+                return true;
+            });
+        }
+
+        function renderActivityFeed() {
+            const scopeEl = document.querySelector('input[name="feed-scope"]:checked');
+            const scope = scopeEl ? scopeEl.value : 'today';
+            const items = getFilteredLogs();
+
+            const scopeTextMap = {
+                today: formatHeaderDate(selectedDate),
+                week: 'Minggu Ini',
+                month: `${INDO_MONTHS_FULL[parseLocalDate(selectedDate).getMonth()]} ${parseLocalDate(selectedDate).getFullYear()}`
+            };
+
+            document.getElementById('today-scope-badge').textContent = scopeTextMap[scope];
+            document.getElementById('today-subtitle').textContent = `${items.length} baris log sesuai filter`;
+
+            const grid = document.getElementById('feed-cards-grid');
+            const empty = document.getElementById('feed-empty-state');
+
+            if (items.length === 0) {
+                grid.innerHTML = '';
+                empty.classList.remove('hidden');
+                lucide.createIcons();
+                return;
+            }
+
+            empty.classList.add('hidden');
+            grid.innerHTML = items.map(item => {
+                const taskMeta = TASKS.find(t => t.id === item.taskId) || TASKS[0];
+                const styles = getThemeStyles(taskMeta.theme, false);
+                const statusBadge = item.status === 'Done'
+                    ? 'bg-neon-green/15 text-neon-greenBright border-neon-green/30'
+                    : item.status === 'Progress'
+                        ? 'bg-neon-purple/15 text-neon-purpleBright border-neon-purple/30'
+                        : 'bg-amber-400/15 text-amber-300 border-amber-400/30';
+
+                const isStore = item.lokasi && item.lokasi !== 'Umum / HO';
+                const locPill = isStore
+                    ? 'bg-neon-green/10 text-neon-greenBright border-neon-green/30'
+                    : 'bg-white/5 text-slate-300 border-white/10';
+
+                const photos = item.photos || [];
+                const driveUrls = (item.fotoLink || '')
+                    .split(/[\n,]+/)
+                    .map(s => s.trim())
+                    .filter(s => s.startsWith('http'));
+
+                let photosHtml = '';
+                if (photos.length > 0) {
+                    photosHtml = `
+                        <div class="pt-1 space-y-1.5">
+                            <span class="text-[10px] font-mono text-neon-purpleBright flex items-center gap-1">
+                                <i data-lucide="image" class="w-3 h-3"></i> ${photos.length} Foto Terlampir
+                            </span>
+                            <div class="flex gap-1.5 overflow-x-auto pb-1">
+                                ${photos.map(ph => `
+                                    <img src="${ph.dataUrl}" alt="${escapeAttr(ph.name)}"
+                                        onclick="openPhotoModal('${ph.dataUrl}', '${escapeAttr(ph.name)}', '${ph.width || ''}×${ph.height || ''}px • ${formatBytes(ph.compressedSize || 0)}')"
+                                        class="w-12 h-12 rounded-lg object-cover border border-white/15 cursor-pointer shrink-0 hover:opacity-85">
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else if (driveUrls.length > 0) {
+                    photosHtml = `
+                        <div class="pt-1 flex flex-wrap gap-1.5">
+                            ${driveUrls.map((u, idx) => `
+                                <a href="${escapeAttr(u)}" target="_blank" rel="noopener noreferrer"
+                                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-mono bg-neon-purple/15 text-neon-purpleBright border border-neon-purple/30 hover:bg-neon-purple/25 transition-colors">
+                                    <i data-lucide="external-link" class="w-3 h-3"></i>
+                                    <span>Foto Drive #${idx + 1}</span>
+                                </a>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
+                return `
+                    <article class="rounded-2xl border border-white/10 bg-surface/85 p-4 flex flex-col justify-between gap-3 hover:border-white/25 transition-all">
+                        <div class="space-y-2.5">
+                            <div class="flex items-start justify-between gap-2">
+                                <span class="text-[11px] font-mono px-2 py-0.5 rounded-md ${styles.badge}">
+                                    ${escapeHtml(item.task)}
+                                </span>
+                                <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full border ${statusBadge}">
+                                    ${escapeHtml(item.status)}
+                                </span>
+                            </div>
+
+                            <div class="flex flex-wrap items-center gap-1.5 text-[11px]">
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border font-medium ${locPill}">
+                                    <i data-lucide="map-pin" class="w-3 h-3"></i>
+                                    ${escapeHtml(item.lokasi || 'Umum / HO')}
+                                </span>
+                                <span class="text-slate-500 font-mono">${escapeHtml(item.tanggal)}</span>
+                            </div>
+
+                            <p class="text-xs sm:text-sm text-slate-100 bg-void/80 border border-white/5 rounded-xl p-3 leading-relaxed whitespace-pre-line">
+                                ${escapeHtml(item.aktivitas)}
+                            </p>
+
+                            ${photosHtml}
+                        </div>
+
+                        <div class="pt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-500">
+                            <span class="font-mono">${escapeHtml((item.timestamp.split(' ')[1] || item.timestamp))}</span>
+                            <div class="flex items-center gap-1.5">
+                                <button type="button" onclick="editLogEntry('${item.id}')" class="px-2 py-1 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors">
+                                    Edit
+                                </button>
+                                <button type="button" onclick="deleteLogEntry('${item.id}')" class="px-2 py-1 rounded-lg text-rose-400 hover:bg-rose-500/15 transition-colors">
+                                    Hapus
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        function editLogEntry(logId) {
+            const idx = allLogs.findIndex(l => l.id === logId);
+            if (idx === -1) return;
+            const entry = allLogs[idx];
+
+            setDate(entry.tanggal);
+            setDefaultStatus(entry.status);
+            draftTasks[entry.taskId] = {
+                active: true,
+                text: entry.aktivitas,
+                locationOverride: entry.lokasi
+            };
+
+            allLogs.splice(idx, 1);
+            saveLogsToStorage();
+            renderBentoGrid();
+            switchView('input');
+            showToast('Catatan dimuat ke editor untuk diperbarui.');
+        }
+
+        function deleteLogEntry(logId) {
+            allLogs = allLogs.filter(l => l.id !== logId);
+            saveLogsToStorage();
+            renderActivityFeed();
+            showToast('Log aktivitas dihapus dari tampilan.');
         }
 
         /**
@@ -1524,224 +1704,6 @@
 
         /**
          * =========================================================
-         * VIEW 4: SETTINGS, WEBHOOK TEST & BACKUP
-         * =========================================================
-         */
-        function renderFeedTaskCheckboxes() {
-            const box = document.getElementById('feed-task-checkboxes');
-            box.innerHTML = TASKS.map(t => {
-                const checked = feedEnabledTasks.has(t.id) ? 'checked' : '';
-                return `
-                    <label class="flex items-center gap-2 py-1 px-2 rounded-lg hover:bg-white/5 cursor-pointer text-slate-300 select-none">
-                        <input type="checkbox" ${checked} onchange="toggleFeedTask('${t.id}', this.checked)" class="accent-emerald-400 rounded">
-                        <span class="truncate">${t.shortCode} · ${t.label}</span>
-                    </label>
-                `;
-            }).join('');
-        }
-
-        function toggleFeedTask(taskId, isChecked) {
-            if (isChecked) feedEnabledTasks.add(taskId);
-            else feedEnabledTasks.delete(taskId);
-            renderActivityFeed();
-        }
-
-        function toggleAllFeedTasks(enable) {
-            if (enable) feedEnabledTasks = new Set(TASKS.map(t => t.id));
-            else feedEnabledTasks.clear();
-            renderFeedTaskCheckboxes();
-            renderActivityFeed();
-        }
-
-        function resetFeedFilters() {
-            const radio = document.querySelector('input[name="feed-scope"][value="today"]');
-            if (radio) radio.checked = true;
-            document.getElementById('feed-status-filter').value = 'ALL';
-            document.getElementById('feed-has-photo').checked = false;
-            document.getElementById('feed-search-input').value = '';
-            feedEnabledTasks = new Set(TASKS.map(t => t.id));
-            renderFeedTaskCheckboxes();
-            renderActivityFeed();
-        }
-
-        function clearFeedSearch() {
-            document.getElementById('feed-search-input').value = '';
-            renderActivityFeed();
-        }
-
-        function getFilteredLogs() {
-            const scopeEl = document.querySelector('input[name="feed-scope"]:checked');
-            const scope = scopeEl ? scopeEl.value : 'today';
-            const statusFilter = document.getElementById('feed-status-filter').value;
-            const onlyPhoto = document.getElementById('feed-has-photo').checked;
-            const query = (document.getElementById('feed-search-input').value || '').trim().toLowerCase();
-
-            document.getElementById('feed-search-clear').classList.toggle('hidden', query.length === 0);
-
-            const baseDt = parseLocalDate(selectedDate);
-            let allowedDates = null;
-
-            if (scope === 'today') {
-                allowedDates = new Set([selectedDate]);
-            } else if (scope === 'week') {
-                allowedDates = new Set();
-                const day = baseDt.getDay();
-                const diffMon = day === 0 ? -6 : 1 - day;
-                const mon = new Date(baseDt.getFullYear(), baseDt.getMonth(), baseDt.getDate() + diffMon);
-                for (let i = 0; i < 7; i++) {
-                    allowedDates.add(toIsoDate(new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + i)));
-                }
-            }
-
-            return allLogs.filter(item => {
-                if (scope === 'month') {
-                    if (!item.tanggal.startsWith(selectedDate.slice(0, 7))) return false;
-                } else if (allowedDates && !allowedDates.has(item.tanggal)) {
-                    return false;
-                }
-
-                if (!feedEnabledTasks.has(item.taskId)) return false;
-                if (statusFilter !== 'ALL' && item.status !== statusFilter) return false;
-                if (onlyPhoto && (!item.photos || item.photos.length === 0)) return false;
-
-                if (query) {
-                    const hay = `${item.task} ${item.aktivitas} ${item.lokasi} ${item.status} ${item.tanggal}`.toLowerCase();
-                    if (!hay.includes(query)) return false;
-                }
-                return true;
-            });
-        }
-
-        function renderActivityFeed() {
-            const scopeEl = document.querySelector('input[name="feed-scope"]:checked');
-            const scope = scopeEl ? scopeEl.value : 'today';
-            const items = getFilteredLogs();
-
-            const scopeTextMap = {
-                today: formatHeaderDate(selectedDate),
-                week: 'Minggu Ini',
-                month: `${INDO_MONTHS_FULL[parseLocalDate(selectedDate).getMonth()]} ${parseLocalDate(selectedDate).getFullYear()}`
-            };
-
-            document.getElementById('today-scope-badge').textContent = scopeTextMap[scope];
-            document.getElementById('today-subtitle').textContent = `${items.length} baris log sesuai filter`;
-
-            const grid = document.getElementById('feed-cards-grid');
-            const empty = document.getElementById('feed-empty-state');
-
-            if (items.length === 0) {
-                grid.innerHTML = '';
-                empty.classList.remove('hidden');
-                lucide.createIcons();
-                return;
-            }
-
-            empty.classList.add('hidden');
-            grid.innerHTML = items.map(item => {
-                const taskMeta = TASKS.find(t => t.id === item.taskId) || TASKS[0];
-                const styles = getThemeStyles(taskMeta.theme, false);
-                const statusBadge = item.status === 'Done'
-                    ? 'bg-neon-green/15 text-neon-greenBright border-neon-green/30'
-                    : item.status === 'Progress'
-                        ? 'bg-neon-purple/15 text-neon-purpleBright border-neon-purple/30'
-                        : 'bg-amber-400/15 text-amber-300 border-amber-400/30';
-
-                const isStore = item.lokasi && item.lokasi !== 'Umum / HO';
-                const locPill = isStore
-                    ? 'bg-neon-green/10 text-neon-greenBright border-neon-green/30'
-                    : 'bg-white/5 text-slate-300 border-white/10';
-
-                const photos = item.photos || [];
-                const photosHtml = photos.length > 0 ? `
-                    <div class="pt-1 space-y-1.5">
-                        <span class="text-[10px] font-mono text-neon-purpleBright flex items-center gap-1">
-                            <i data-lucide="image" class="w-3 h-3"></i> ${photos.length} Foto Terlampir
-                        </span>
-                        <div class="flex gap-1.5 overflow-x-auto pb-1">
-                            ${photos.map(ph => `
-                                <img src="${ph.dataUrl}" alt="${escapeAttr(ph.name)}"
-                                    onclick="openPhotoModal('${ph.dataUrl}', '${escapeAttr(ph.name)}', '${ph.width || ''}×${ph.height || ''}px • ${formatBytes(ph.compressedSize || 0)}')"
-                                    class="w-12 h-12 rounded-lg object-cover border border-white/15 cursor-pointer shrink-0 hover:opacity-85">
-                            `).join('')}
-                        </div>
-                    </div>
-                ` : '';
-
-                return `
-                    <article class="rounded-2xl border border-white/10 bg-surface/85 p-4 flex flex-col justify-between gap-3 hover:border-white/25 transition-all">
-                        <div class="space-y-2.5">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="text-[11px] font-mono px-2 py-0.5 rounded-md ${styles.badge}">
-                                    ${escapeHtml(item.task)}
-                                </span>
-                                <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full border ${statusBadge}">
-                                    ${escapeHtml(item.status)}
-                                </span>
-                            </div>
-
-                            <div class="flex flex-wrap items-center gap-1.5 text-[11px]">
-                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border font-medium ${locPill}">
-                                    <i data-lucide="map-pin" class="w-3 h-3"></i>
-                                    ${escapeHtml(item.lokasi || 'Umum / HO')}
-                                </span>
-                                <span class="text-slate-500 font-mono">${escapeHtml(item.tanggal)}</span>
-                            </div>
-
-                            <p class="text-xs sm:text-sm text-slate-100 bg-void/80 border border-white/5 rounded-xl p-3 leading-relaxed whitespace-pre-line">
-                                ${escapeHtml(item.aktivitas)}
-                            </p>
-
-                            ${photosHtml}
-                        </div>
-
-                        <div class="pt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-500">
-                            <span class="font-mono">${escapeHtml(item.timestamp.split(' ')[1] || item.timestamp)}</span>
-                            <div class="flex items-center gap-1.5">
-                                <button type="button" onclick="editLogEntry('${item.id}')" class="px-2 py-1 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors">
-                                    Edit
-                                </button>
-                                <button type="button" onclick="deleteLogEntry('${item.id}')" class="px-2 py-1 rounded-lg text-rose-400 hover:bg-rose-500/15 transition-colors">
-                                    Hapus
-                                </button>
-                            </div>
-                        </div>
-                    </article>
-                `;
-            }).join('');
-
-            lucide.createIcons();
-        }
-
-        function editLogEntry(logId) {
-            const idx = allLogs.findIndex(l => l.id === logId);
-            if (idx === -1) return;
-            const entry = allLogs[idx];
-
-            // Load into draft card and remove old entry so user can re-save cleanly
-            setDate(entry.tanggal);
-            setDefaultStatus(entry.status);
-            draftTasks[entry.taskId] = {
-                active: true,
-                text: entry.aktivitas,
-                locationOverride: entry.lokasi
-            };
-
-            allLogs.splice(idx, 1);
-            saveLogsToStorage();
-            renderBentoGrid();
-            switchView('input');
-            showToast('Catatan dimuat ke editor untuk diperbarui.');
-        }
-
-        function deleteLogEntry(logId) {
-            allLogs = allLogs.filter(l => l.id !== logId);
-            saveLogsToStorage();
-            renderActivityFeed();
-            showToast('Log aktivitas dihapus.');
-        }
-
-        /**
-         * =========================================================
          * EXPORTS: WHATSAPP REPORT & GOOGLE SHEETS TSV
          * =========================================================
          */
@@ -1756,7 +1718,6 @@
                 return out;
             }
 
-            // Group by Location (Stores first, Umum / HO last)
             const groups = {};
             dayLogs.forEach(l => {
                 const loc = l.lokasi || 'Umum / HO';
@@ -1773,7 +1734,9 @@
             locKeys.forEach(loc => {
                 out += `\n📍 *${loc}*\n`;
                 groups[loc].forEach(item => {
-                    const photoNote = (item.photos && item.photos.length > 0) ? ` _(${item.photos.length} foto)_` : '';
+                    const photoNote = (item.photos && item.photos.length > 0)
+                        ? ` _(${item.photos.length} foto)_`
+                        : (item.fotoLink && item.fotoLink.trim() ? ` _(ada foto)_` : '');
                     out += `• *[${item.task}]* ${item.aktivitas} — _(${item.status})_${photoNote}\n`;
                 });
             });
@@ -1808,12 +1771,11 @@
                 return;
             }
 
-            // Columns: TimeStamp | Tanggal | Task | Aktivitas | Toko / Lokasi | Status | Foto / Link
             const lines = dayLogs.map(item => {
                 const cleanAct = item.aktivitas.replace(/\r?\n+/g, '; ');
-                const photoCell = (item.photos && item.photos.length > 0)
-                    ? `${item.photos.length} foto terkompresi`
-                    : '';
+                const photoCell = item.fotoLink
+                    ? item.fotoLink.replace(/\r?\n+/g, ', ')
+                    : ((item.photos && item.photos.length > 0) ? `${item.photos.length} foto terkompresi` : '');
                 return [
                     item.timestamp,
                     item.tanggal,
@@ -1826,107 +1788,6 @@
             });
 
             copyToClipboard(lines.join('\n'), `${lines.length} baris Sheets (TSV) disalin! Tinggal Ctrl+V di sel A2.`);
-        }
-
-        /**
-         * =========================================================
-         * VIEW 3: SETTINGS, WEBHOOK TEST & BACKUP
-         * =========================================================
-         */
-        function saveWebhookSettings() {
-            const url = document.getElementById('setting-webhook-url').value.trim();
-            const folder = document.getElementById('setting-folder-id').value.trim();
-            localStorage.setItem(WEBHOOK_URL_KEY, url);
-            localStorage.setItem(FOLDER_ID_KEY, folder);
-            updateHeaderStats();
-            showToast('Pengaturan Google Sheets & Drive tersimpan!');
-        }
-
-        async function testWebhookConnection() {
-            const url = document.getElementById('setting-webhook-url').value.trim();
-            if (!url) {
-                showToast('Masukkan URL Web App Apps Script terlebih dahulu.', 'error');
-                return;
-            }
-            saveWebhookSettings();
-
-            const btn = document.getElementById('btn-test-webhook');
-            const orig = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i> Menguji...`;
-            lucide.createIcons();
-
-            try {
-                await fetch(url, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        timestamp: formatNowTimestamp(),
-                        tanggal: selectedDate,
-                        task: 'Task 7 - General',
-                        aktivitas: 'Test koneksi dari Daily Work Journal HTML',
-                        lokasi: 'Umum / HO',
-                        status: 'Done',
-                        photos: []
-                    })
-                });
-                showToast('Request test terkirim! Cek baris baru di Google Sheets Anda.');
-            } catch (err) {
-                showToast('Gagal menghubungi URL Webhook.', 'error');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = orig;
-                lucide.createIcons();
-            }
-        }
-
-        function copySheetHeader() {
-            copyToClipboard('TimeStamp\tTanggal\tTask\tAktivitas\tToko / Lokasi\tStatus\tFoto / Link', 'Header 7 kolom disalin! Paste di sel A1 Google Sheets.');
-        }
-
-        function copyAppsScript() {
-            const code = document.getElementById('apps-script-code').textContent;
-            copyToClipboard(code, 'Kode Apps Script berhasil disalin!');
-        }
-
-        function exportBackupJSON() {
-            const dataStr = JSON.stringify(allLogs, null, 2);
-            const blob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `daily-work-journal-backup-${selectedDate}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('File backup JSON berhasil diunduh.');
-        }
-
-        function importBackupJSON(file) {
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const parsed = JSON.parse(e.target.result);
-                    if (Array.isArray(parsed)) {
-                        allLogs = parsed;
-                        saveLogsToStorage();
-                        showToast(`Berhasil mengimpor ${parsed.length} log aktivitas!`);
-                    } else {
-                        showToast('Format file backup tidak valid.', 'error');
-                    }
-                } catch (err) {
-                    showToast('Gagal membaca file JSON.', 'error');
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        function resetDemoData() {
-            localStorage.removeItem(LOGS_STORAGE_KEY);
-            seedSampleLogsIfEmpty();
-            updateHeaderStats();
-            showToast('Data dikembalikan ke contoh awal.');
         }
 
         /**
@@ -2005,13 +1866,13 @@
         });
 
         window.addEventListener('DOMContentLoaded', () => {
-            getConfiguredWebhookUrl();
-            seedSampleLogsIfEmpty();
+            loadLocalLogsCache();
             resetDraftTasks();
-            setDate('2026-11-23');
+            setDate(toIsoDate(new Date()));
             renderStorePills();
             switchView('input');
             lucide.createIcons();
+            syncLogsFromSheets(false);
         });
     </script>
 </body>
