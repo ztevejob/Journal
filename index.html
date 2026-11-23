@@ -277,7 +277,7 @@
                         </div>
                     </div>
 
-                    <!-- Master Store Search Input + Quick Pills -->
+                    <!-- Master Store Search Input -->
                     <div class="space-y-3">
                         <div class="flex flex-col sm:flex-row sm:items-center gap-2.5">
                             <div class="relative w-full sm:w-80">
@@ -467,9 +467,72 @@
             </section>
 
             <!-- ========================================================= -->
-            <!-- VIEW 3: MATRIKS BULANAN (01-31 TASK 1-9 SUMMARY)        -->
+            <!-- VIEW 3: MATRIKS BULANAN (BEBAN KERJA + 01-31 SUMMARY)     -->
             <!-- ========================================================= -->
             <section id="view-matrix" class="hidden space-y-5">
+                <!-- Monthly Workload Summary Card -->
+                <div class="apple-card rounded-3xl p-5 sm:p-6 space-y-5">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <h3 id="workload-month-title" class="text-lg sm:text-xl font-bold text-apple-ink tracking-tight">Beban Kerja Sebulan — November 2026</h3>
+                            <p class="text-xs text-apple-muted mt-0.5">Ringkasan kepadatan aktivitas, distribusi Task 1–9, dan sebaran kunjungan toko</p>
+                        </div>
+                        <span id="workload-peak-badge" class="text-[11px] font-medium px-3 py-1 rounded-full bg-apple-bg text-apple-ink border border-black/[0.08] self-start sm:self-auto">
+                            Hari Terpadat: -
+                        </span>
+                    </div>
+
+                    <!-- 4 KPI Cards -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+                        <div class="rounded-2xl bg-apple-bg/80 border border-black/[0.06] p-4 space-y-1">
+                            <p class="text-[11px] font-medium text-apple-muted">Total Aktivitas</p>
+                            <p id="kpi-total-activities" class="text-2xl font-bold text-apple-ink tracking-tight">0</p>
+                            <p id="kpi-total-sub" class="text-[11px] text-apple-subtle">0 baris log bulan ini</p>
+                        </div>
+                        <div class="rounded-2xl bg-apple-bg/80 border border-black/[0.06] p-4 space-y-1">
+                            <p class="text-[11px] font-medium text-apple-muted">Hari Aktif Terisi</p>
+                            <p id="kpi-active-days" class="text-2xl font-bold text-apple-ink tracking-tight">0 hari</p>
+                            <p id="kpi-days-sub" class="text-[11px] text-apple-subtle">Dari 30 hari kalender</p>
+                        </div>
+                        <div class="rounded-2xl bg-apple-bg/80 border border-black/[0.06] p-4 space-y-1">
+                            <p class="text-[11px] font-medium text-apple-muted">Rata-rata / Hari Aktif</p>
+                            <p id="kpi-avg-per-day" class="text-2xl font-bold text-apple-ink tracking-tight">0.0</p>
+                            <p id="kpi-avg-sub" class="text-[11px] text-apple-subtle">Task per hari kerja</p>
+                        </div>
+                        <div class="rounded-2xl bg-apple-bg/80 border border-black/[0.06] p-4 space-y-1">
+                            <p class="text-[11px] font-medium text-apple-muted">Toko vs Umum / HO</p>
+                            <p id="kpi-store-ratio" class="text-2xl font-bold text-apple-ink tracking-tight">0% / 0%</p>
+                            <p id="kpi-store-sub" class="text-[11px] text-apple-subtle">0 toko · 0 umum</p>
+                        </div>
+                    </div>
+
+                    <!-- Task Distribution & Store Ranking -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-1">
+                        <!-- Left 2 Cols: Task 1-9 Workload Bars -->
+                        <div class="lg:col-span-2 rounded-2xl border border-black/[0.06] bg-white p-4 sm:p-5 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-xs font-semibold uppercase tracking-wider text-apple-muted">Distribusi Porsi per Task 1–9</h4>
+                                <span class="text-[11px] text-apple-subtle">Urut terbanyak</span>
+                            </div>
+                            <div id="workload-task-bars" class="space-y-2.5">
+                                <!-- Rendered via JS -->
+                            </div>
+                        </div>
+
+                        <!-- Right 1 Col: Store Visit / Location Breakdown -->
+                        <div class="rounded-2xl border border-black/[0.06] bg-white p-4 sm:p-5 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-xs font-semibold uppercase tracking-wider text-apple-muted">Sebaran Lokasi / Toko</h4>
+                                <span id="workload-store-count" class="text-[11px] font-mono text-apple-subtle">0 lokasi</span>
+                            </div>
+                            <div id="workload-store-list" class="space-y-2 max-h-72 overflow-y-auto pr-1">
+                                <!-- Rendered via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daily Matrix Table (01-31) -->
                 <div class="apple-card rounded-3xl p-5 sm:p-6 space-y-4">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
@@ -1651,11 +1714,114 @@
         function renderMonthlyMatrix() {
             const base = parseLocalDate(selectedDate);
             const monthLabel = `${INDO_MONTHS_FULL[base.getMonth()]} ${base.getFullYear()}`;
+            const monthPrefix = selectedDate.slice(0, 7);
+
+            document.getElementById('workload-month-title').textContent = `Beban Kerja Sebulan — ${monthLabel}`;
             document.getElementById('matrix-month-title').innerHTML = `
                 <span>Matriks Bulanan — ${monthLabel}</span>
             `;
 
             const rows = getMonthlyMatrixRows();
+            const monthLogs = allLogs.filter(l => (l.tanggal || '').startsWith(monthPrefix));
+
+            // 1. Compute Monthly Workload KPIs
+            const totalActivities = monthLogs.length;
+            const activeDaySet = new Set(monthLogs.map(l => l.tanggal).filter(Boolean));
+            const activeDaysCount = activeDaySet.size;
+            const avgPerDay = activeDaysCount > 0 ? (totalActivities / activeDaysCount).toFixed(1) : '0.0';
+
+            const storeLogsCount = monthLogs.filter(l => l.lokasi && l.lokasi !== 'Umum / HO').length;
+            const generalLogsCount = totalActivities - storeLogsCount;
+            const storePct = totalActivities > 0 ? Math.round((storeLogsCount / totalActivities) * 100) : 0;
+            const generalPct = totalActivities > 0 ? (100 - storePct) : 0;
+
+            document.getElementById('kpi-total-activities').textContent = totalActivities;
+            document.getElementById('kpi-total-sub').textContent = `${totalActivities} baris log di tab Submit`;
+            document.getElementById('kpi-active-days').textContent = `${activeDaysCount} hari`;
+            document.getElementById('kpi-days-sub').textContent = `Dari ${rows.length} hari kalender`;
+            document.getElementById('kpi-avg-per-day').textContent = avgPerDay;
+            document.getElementById('kpi-store-ratio').textContent = `${storePct}% / ${generalPct}%`;
+            document.getElementById('kpi-store-sub').textContent = `${storeLogsCount} toko · ${generalLogsCount} umum`;
+
+            // Peak Workload Day
+            const countsByDate = {};
+            monthLogs.forEach(l => {
+                if (!l.tanggal) return;
+                countsByDate[l.tanggal] = (countsByDate[l.tanggal] || 0) + 1;
+            });
+            let peakDate = '';
+            let peakCount = 0;
+            Object.entries(countsByDate).forEach(([dtStr, cnt]) => {
+                if (cnt > peakCount) {
+                    peakCount = cnt;
+                    peakDate = dtStr;
+                }
+            });
+            document.getElementById('workload-peak-badge').textContent = peakCount > 0
+                ? `Hari Terpadat: ${formatHeaderDate(peakDate)} (${peakCount} task)`
+                : 'Hari Terpadat: Belum ada data';
+
+            // 2. Render Task 1-9 Horizontal Distribution Bars
+            const taskStats = TASKS.map(t => {
+                const count = monthLogs.filter(l => l.taskId === t.id).length;
+                const days = new Set(monthLogs.filter(l => l.taskId === t.id).map(l => l.tanggal)).size;
+                const pct = totalActivities > 0 ? Math.round((count / totalActivities) * 100) : 0;
+                return { ...t, count, days, pct };
+            }).sort((a, b) => b.count - a.count);
+
+            const maxTaskCount = Math.max(1, ...taskStats.map(s => s.count));
+            document.getElementById('workload-task-bars').innerHTML = taskStats.map(st => {
+                const barWidth = st.count > 0 ? Math.max(4, Math.round((st.count / maxTaskCount) * 100)) : 0;
+                return `
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-medium text-apple-ink truncate pr-2">${escapeHtml(st.fullName)}</span>
+                            <span class="font-mono text-[11px] text-apple-muted shrink-0">
+                                <strong class="text-apple-ink">${st.count}</strong> aktivitas (${st.days} hari) · ${st.pct}%
+                            </span>
+                        </div>
+                        <div class="w-full h-2 bg-apple-bg rounded-full overflow-hidden">
+                            <div class="h-full rounded-full transition-all duration-300 ${st.count > 0 ? 'bg-apple-ink' : 'bg-transparent'}" style="width: ${barWidth}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // 3. Render Store / Location Breakdown Ranking
+            const locMap = {};
+            monthLogs.forEach(l => {
+                const loc = (l.lokasi || 'Umum / HO').trim();
+                if (!locMap[loc]) locMap[loc] = { count: 0, dates: new Set() };
+                locMap[loc].count++;
+                if (l.tanggal) locMap[loc].dates.add(l.tanggal);
+            });
+
+            const locEntries = Object.entries(locMap).sort((a, b) => b[1].count - a[1].count);
+            document.getElementById('workload-store-count').textContent = `${locEntries.length} lokasi`;
+
+            const storeListEl = document.getElementById('workload-store-list');
+            if (locEntries.length === 0) {
+                storeListEl.innerHTML = `<p class="text-xs text-apple-subtle py-6 text-center">Belum ada aktivitas pada bulan ini.</p>`;
+            } else {
+                storeListEl.innerHTML = locEntries.map(([locName, info]) => {
+                    const isGeneral = locName === 'Umum / HO';
+                    return `
+                        <div class="flex items-center justify-between gap-2 p-2.5 rounded-2xl bg-apple-bg/75 border border-black/[0.05]">
+                            <div class="min-w-0">
+                                <p class="text-xs font-semibold text-apple-ink truncate">${escapeHtml(locName)}</p>
+                                <p class="text-[11px] text-apple-muted">${info.dates.size} hari kunjungan/kerja</p>
+                            </div>
+                            <span class="shrink-0 text-[11px] font-mono font-semibold px-2.5 py-1 rounded-full ${
+                                isGeneral ? 'bg-white text-apple-muted border border-black/10' : 'bg-apple-ink text-white'
+                            }">
+                                ${info.count}×
+                            </span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // 4. Render 01-31 Daily Matrix Table
             const tbody = document.getElementById('matrix-table-body');
             const tfoot = document.getElementById('matrix-table-foot');
 
