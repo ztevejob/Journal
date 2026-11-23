@@ -22,20 +22,21 @@
                     },
                     colors: {
                         map: {
-                            bg: '#f8f7f7',
-                            card: '#ffffff',
-                            ink: '#1c1917',
-                            muted: '#57534e',
-                            subtle: '#78716c',
-                            border: '#e7e5e4',
-                            red: '#d91c24',
-                            redDark: '#991b1b',
-                            crimson: '#7f1d1d',
+                            bg: '#f7f1e3',
+                            card: '#fffdf9',
+                            ink: '#23170d',
+                            muted: '#5e4835',
+                            subtle: '#8a725c',
+                            border: '#dfd1bc',
+                            red: '#9b1c1c',
+                            redDark: '#6b1212',
+                            crimson: '#4a0d0d',
+                            gold: '#b45309',
                         }
                     },
                     boxShadow: {
-                        'map-card': '0 2px 14px rgba(127, 29, 29, 0.05)',
-                        'map-hover': '0 10px 26px rgba(185, 28, 28, 0.12)',
+                        'map-card': '0 2px 14px rgba(74, 13, 13, 0.06)',
+                        'map-hover': '0 10px 26px rgba(155, 28, 28, 0.14)',
                     }
                 }
             }
@@ -43,39 +44,59 @@
     </script>
     <style>
         body {
-            background-color: #f8f7f7;
-            background-image: linear-gradient(180deg, rgba(217, 28, 36, 0.06) 0%, rgba(248, 247, 247, 1) 260px);
-            color: #1c1917;
+            background-color: #f7f1e3;
+            /* Motif Batik Jawa Klasik (Parang Rusak & Ceplok Sogan) */
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg fill='none' stroke='%2378350f' stroke-opacity='0.085' stroke-width='1.35'%3E%3Cpath d='M-12 24 L24 -12 M0 48 L48 0 M0 96 L96 0 M48 96 L96 48 M72 108 L108 72'/%3E%3Cpath d='M10 38 C18 30, 30 30, 38 22 C46 14, 46 2, 54 -6 M10 86 C18 78, 30 78, 38 70 C46 62, 46 50, 54 42 C62 34, 74 34, 82 26'/%3E%3Ccircle cx='24' cy='24' r='4.5' fill='%239b1c1c' fill-opacity='0.06'/%3E%3Ccircle cx='72' cy='72' r='4.5' fill='%239b1c1c' fill-opacity='0.06'/%3E%3Cpath d='M72 16 L80 24 L72 32 L64 24 Z M24 64 L32 72 L24 80 L16 72 Z'/%3E%3C/g%3E%3C/svg%3E"),
+                linear-gradient(180deg, rgba(155, 28, 28, 0.08) 0%, rgba(247, 241, 227, 0.96) 340px);
+            background-size: 96px 96px, 100% 100%;
+            color: #23170d;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
         .map-gradient-bg {
-            background: linear-gradient(135deg, #e11d2e 0%, #b91c1c 55%, #7f1d1d 100%);
+            background: linear-gradient(135deg, #9b1c1c 0%, #7c2d12 52%, #4a0d0d 100%);
         }
 
         .map-gradient-text {
-            background: linear-gradient(135deg, #d91c24 0%, #7f1d1d 100%);
+            background: linear-gradient(135deg, #9b1c1c 0%, #78350f 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .map-nav {
-            background: rgba(255, 255, 255, 0.88);
+            background: rgba(253, 249, 240, 0.92);
             backdrop-filter: saturate(180%) blur(20px);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
         }
 
         .map-dock {
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(253, 249, 240, 0.95);
             backdrop-filter: saturate(180%) blur(20px);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
         }
 
         .map-card {
-            background: #ffffff;
-            border: 1px solid rgba(185, 28, 28, 0.10);
-            box-shadow: 0 2px 12px rgba(127, 29, 29, 0.04);
+            background: #fffdf9;
+            border: 1px solid rgba(120, 53, 15, 0.18);
+            box-shadow: 0 2px 14px rgba(74, 13, 13, 0.05);
+        }
+
+        .batik-header-card {
+            background-color: #fffdf9;
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%239b1c1c' stroke-opacity='0.09' stroke-width='1.2'%3E%3Cpath d='M0 32 L32 0 L64 32 L32 64 Z'/%3E%3Ccircle cx='32' cy='32' r='10' stroke='%23b45309' stroke-opacity='0.11'/%3E%3Ccircle cx='32' cy='32' r='3' fill='%239b1c1c' fill-opacity='0.09'/%3E%3Ccircle cx='0' cy='0' r='6'/%3E%3Ccircle cx='64' cy='0' r='6'/%3E%3Ccircle cx='0' cy='64' r='6'/%3E%3Ccircle cx='64' cy='64' r='6'/%3E%3C/g%3E%3C/svg%3E");
+            background-size: 64px 64px;
+            border: 1.5px solid rgba(180, 83, 9, 0.28);
+            box-shadow: 0 6px 20px rgba(74, 13, 13, 0.07);
+        }
+
+        .batik-ornament-strip {
+            height: 6px;
+            width: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='6' viewBox='0 0 32 6'%3E%3Cpath d='M0 6 L8 0 L16 6 L24 0 L32 6 Z' fill='%239b1c1c' fill-opacity='0.85'/%3E%3Cpath d='M8 6 L16 1 L24 6 Z' fill='%23d97706' fill-opacity='0.8'/%3E%3C/svg%3E");
+            background-repeat: repeat-x;
         }
 
         ::-webkit-scrollbar {
@@ -83,14 +104,14 @@
             height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #f8f7f7;
+            background: #f7f1e3;
         }
         ::-webkit-scrollbar-thumb {
-            background: #d6d3d1;
+            background: #cbb99e;
             border-radius: 9999px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #a8a29e;
+            background: #9c8669;
         }
 
         input[type="date"]::-webkit-calendar-picker-indicator {
@@ -111,7 +132,7 @@
             nav, .no-print, #toast-container {
                 display: none !important;
             }
-            .map-card {
+            .map-card, .batik-header-card {
                 box-shadow: none !important;
                 border: 1px solid #d6d3d1 !important;
                 break-inside: avoid;
@@ -124,12 +145,13 @@
     <!-- Toast Container -->
     <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col gap-2 pointer-events-none max-w-sm w-full px-4 sm:px-0"></div>
 
-    <!-- Sticky MAP-Themed Translucent Top Navigation Bar -->
-    <nav class="sticky top-0 z-40 map-nav border-b border-map-red/15">
+    <!-- Sticky Batik-Jawa Translucent Top Navigation Bar -->
+    <nav class="sticky top-0 z-40 map-nav border-b border-amber-900/20">
+        <div class="batik-ornament-strip"></div>
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3">
             <!-- Brand -->
             <div class="flex items-center gap-2.5 shrink-0">
-                <div class="w-8 h-8 rounded-full map-gradient-bg text-white flex items-center justify-center shadow-sm">
+                <div class="w-8 h-8 rounded-full map-gradient-bg text-amber-100 border border-amber-400/40 flex items-center justify-center shadow-sm">
                     <i data-lucide="layers" class="w-4 h-4"></i>
                 </div>
                 <span class="font-bold text-map-ink text-sm sm:text-base tracking-tight">Daily Work Journal</span>
@@ -310,8 +332,8 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 lg:pt-8">
         <main class="w-full space-y-6">
 
-            <!-- Clean MAP-Themed Date Context Header -->
-            <header class="map-card rounded-3xl p-5 sm:p-6">
+            <!-- Clean Batik-Themed Date Context Header -->
+            <header class="batik-header-card rounded-3xl p-5 sm:p-6">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div class="space-y-1.5">
                         <div class="flex flex-wrap items-center gap-2.5">
