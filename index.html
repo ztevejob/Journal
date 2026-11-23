@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -9,34 +9,32 @@
     <!-- Google Fonts: Inter & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Inter', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace'],
                     },
                     colors: {
-                        void: '#0b0d13',
-                        surface: '#131722',
-                        surfaceLight: '#191f2e',
-                        neon: {
-                            green: '#22c55e',
-                            greenBright: '#4ade80',
-                            purple: '#a855f7',
-                            purpleBright: '#c084fc',
-                            cyan: '#06b6d4',
+                        apple: {
+                            bg: '#f5f5f7',
+                            card: '#ffffff',
+                            ink: '#1d1d1f',
+                            muted: '#6e6e73',
+                            subtle: '#86868b',
+                            border: '#d2d2d7',
+                            blue: '#0071e3',
+                            blueHover: '#0077ed',
                         }
                     },
                     boxShadow: {
-                        'neon-green': '0 0 24px -6px rgba(34, 197, 94, 0.45)',
-                        'neon-purple': '0 0 24px -6px rgba(168, 85, 247, 0.45)',
-                        'neon-cyan': '0 0 24px -6px rgba(6, 182, 212, 0.4)',
+                        'apple-card': '0 2px 14px rgba(0, 0, 0, 0.04)',
+                        'apple-hover': '0 8px 24px rgba(0, 0, 0, 0.08)',
                     }
                 }
             }
@@ -44,26 +42,28 @@
     </script>
     <style>
         body {
-            background-color: #0b0d13;
-            background-image:
-                radial-gradient(circle at 8% 6%, rgba(34, 197, 94, 0.08) 0%, transparent 35%),
-                radial-gradient(circle at 92% 10%, rgba(168, 85, 247, 0.09) 0%, transparent 38%);
-            background-attachment: fixed;
-            color: #e2e8f0;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        .glass-panel {
-            background: rgba(19, 23, 34, 0.78);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        .apple-nav {
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
         }
 
-        .glass-dock {
-            background: rgba(11, 13, 19, 0.9);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.09);
+        .apple-dock {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+        }
+
+        .apple-card {
+            background: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
         }
 
         ::-webkit-scrollbar {
@@ -71,68 +71,68 @@
             height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #0b0d13;
+            background: #f5f5f7;
         }
         ::-webkit-scrollbar-thumb {
-            background: #22293a;
+            background: #c7c7cc;
             border-radius: 9999px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #333e57;
+            background: #aeaeb2;
         }
 
         input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(1) opacity(0.75);
+            opacity: 0.7;
             cursor: pointer;
         }
 
         .task-card {
-            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
         }
     </style>
 </head>
-<body class="min-h-screen pb-24 lg:pb-10 selection:bg-neon-green/25 selection:text-neon-greenBright">
+<body class="min-h-screen pb-24 md:pb-12 selection:bg-apple-blue/15 selection:text-apple-blue">
 
     <!-- Toast Container -->
     <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col gap-2 pointer-events-none max-w-sm w-full px-4 sm:px-0"></div>
 
-    <!-- Sticky Top Navigation Bar -->
-    <nav class="sticky top-0 z-40 glass-panel border-b border-white/10 backdrop-blur-xl">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+    <!-- Sticky Apple-Style Translucent Top Navigation Bar -->
+    <nav class="sticky top-0 z-40 apple-nav border-b border-black/[0.08]">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3">
             <!-- Brand -->
             <div class="flex items-center gap-2.5 shrink-0">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-neon-green/20 to-neon-purple/25 border border-neon-green/40 flex items-center justify-center shadow-neon-green">
-                    <i data-lucide="layers" class="w-4 h-4 text-neon-greenBright"></i>
+                <div class="w-8 h-8 rounded-full bg-apple-ink text-white flex items-center justify-center">
+                    <i data-lucide="layers" class="w-4 h-4"></i>
                 </div>
-                <div>
-                    <h1 class="font-bold text-white text-sm tracking-tight leading-none">Daily Work <span class="text-neon-greenBright">Journal</span></h1>
-                    <span class="text-[10px] font-mono text-slate-400">TAB SUBMIT • BULK PHOTO</span>
+                <div class="flex items-baseline gap-2">
+                    <h1 class="font-semibold text-apple-ink text-sm sm:text-base tracking-tight">Daily Work Journal</h1>
+                    <span class="hidden sm:inline text-[11px] text-apple-subtle font-medium">Submit Log</span>
                 </div>
             </div>
 
-            <!-- Desktop Top Menu Links -->
-            <div class="hidden md:flex items-center gap-1.5 bg-void/80 p-1 rounded-xl border border-white/10">
-                <button onclick="switchView('input')" id="nav-desk-input" class="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-neon-green/15 text-neon-greenBright border border-neon-green/35">
-                    <i data-lucide="plus-square" class="w-3.5 h-3.5"></i>
+            <!-- Desktop Top Segmented Menu Links -->
+            <div class="hidden md:flex items-center gap-1 bg-apple-bg p-1 rounded-full border border-black/[0.06]">
+                <button onclick="switchView('input')" id="nav-desk-input" class="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all bg-apple-ink text-white shadow-sm">
+                    <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                     <span>Input Aktivitas</span>
                 </button>
-                <button onclick="switchView('today')" id="nav-desk-today" class="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all border border-transparent">
+                <button onclick="switchView('today')" id="nav-desk-today" class="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium text-apple-muted hover:text-apple-ink transition-all">
                     <i data-lucide="calendar-check" class="w-3.5 h-3.5"></i>
                     <span>Kegiatan Hari Ini</span>
                 </button>
-                <button onclick="switchView('matrix')" id="nav-desk-matrix" class="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all border border-transparent">
+                <button onclick="switchView('matrix')" id="nav-desk-matrix" class="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium text-apple-muted hover:text-apple-ink transition-all">
                     <i data-lucide="grid-3x3" class="w-3.5 h-3.5"></i>
                     <span>Matriks Bulanan</span>
                 </button>
             </div>
 
-            <!-- Top Action Buttons -->
+            <!-- Top Apple Pill Action Buttons -->
             <div class="flex items-center gap-2 shrink-0">
-                <button onclick="syncLogsFromSheets(true)" id="btn-sync-sheets" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-neon-greenBright bg-neon-green/10 hover:bg-neon-green/20 border border-neon-green/35 transition-colors">
+                <button onclick="syncLogsFromSheets(true)" id="btn-sync-sheets" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-apple-blue hover:bg-apple-blue/5 border border-apple-blue transition-colors">
                     <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
                     <span>Sync Sheets</span>
                 </button>
-                <button onclick="openWhatsAppModal()" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-void bg-neon-green hover:bg-neon-greenBright transition-all shadow-neon-green">
+                <button onclick="openWhatsAppModal()" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium text-white bg-apple-blue hover:bg-apple-blueHover transition-colors">
                     <i data-lucide="message-square-text" class="w-3.5 h-3.5"></i>
                     <span>Laporan WA</span>
                 </button>
@@ -140,47 +140,47 @@
         </div>
 
         <!-- Live Percentage Loading Bar Gauge -->
-        <div id="sync-gauge-container" class="hidden bg-void/95 border-t border-white/10 px-4 sm:px-6 lg:px-8 py-2">
-            <div class="max-w-7xl mx-auto space-y-1.5">
-                <div class="flex items-center justify-between text-[11px] font-mono">
-                    <span id="sync-gauge-label" class="text-slate-300 flex items-center gap-1.5">
-                        <i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-neon-greenBright"></i>
+        <div id="sync-gauge-container" class="hidden bg-white/95 border-t border-black/[0.06] px-4 sm:px-6 lg:px-8 py-2">
+            <div class="max-w-6xl mx-auto space-y-1.5">
+                <div class="flex items-center justify-between text-[11px] font-medium">
+                    <span id="sync-gauge-label" class="text-apple-ink flex items-center gap-1.5">
+                        <i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-apple-blue"></i>
                         <span>Menyinkronkan data dari Google Sheets...</span>
                     </span>
-                    <span id="sync-gauge-percent" class="font-bold text-neon-greenBright">0%</span>
+                    <span id="sync-gauge-percent" class="font-mono font-semibold text-apple-blue">0%</span>
                 </div>
-                <div class="w-full h-2 bg-surface rounded-full overflow-hidden border border-white/10">
-                    <div id="sync-gauge-bar" class="h-full w-0 bg-gradient-to-r from-neon-green via-neon-cyan to-neon-purple transition-all duration-200 ease-out rounded-full shadow-neon-green"></div>
+                <div class="w-full h-1.5 bg-apple-bg rounded-full overflow-hidden">
+                    <div id="sync-gauge-bar" class="h-full w-0 bg-apple-blue transition-all duration-200 ease-out rounded-full"></div>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- Modal: WhatsApp Summary Preview -->
-    <div id="wa-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="glass-panel rounded-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[88vh] shadow-2xl border border-white/10">
-            <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between bg-void/70">
+    <div id="wa-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-lg overflow-hidden flex flex-col max-h-[88vh] shadow-2xl border border-black/10">
+            <div class="px-6 py-4 border-b border-black/[0.06] flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-lg bg-neon-green/15 border border-neon-green/35 flex items-center justify-center text-neon-greenBright">
+                    <div class="w-8 h-8 rounded-full bg-apple-ink text-white flex items-center justify-center">
                         <i data-lucide="message-square-text" class="w-4 h-4"></i>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-white text-sm">Ringkasan Laporan WhatsApp</h3>
-                        <p class="text-[11px] text-slate-400">Terklasifikasi otomatis per lokasi &amp; Task 1–9</p>
+                        <h3 class="font-semibold text-apple-ink text-sm">Ringkasan Laporan WhatsApp</h3>
+                        <p class="text-[11px] text-apple-muted">Terklasifikasi otomatis per lokasi &amp; Task 1–9</p>
                     </div>
                 </div>
-                <button onclick="closeModal('wa-modal')" class="p-1.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+                <button onclick="closeModal('wa-modal')" class="p-1.5 text-apple-muted hover:text-apple-ink hover:bg-apple-bg rounded-full transition-colors">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
-            <div class="p-5 overflow-y-auto flex-1">
-                <textarea id="wa-report-text" readonly class="w-full h-72 p-3.5 text-xs sm:text-sm font-mono bg-void border border-white/10 rounded-xl text-slate-200 focus:outline-none resize-none leading-relaxed"></textarea>
+            <div class="p-6 overflow-y-auto flex-1 bg-apple-bg/50">
+                <textarea id="wa-report-text" readonly class="w-full h-72 p-4 text-xs sm:text-sm font-mono bg-white border border-black/10 rounded-2xl text-apple-ink focus:outline-none resize-none leading-relaxed"></textarea>
             </div>
-            <div class="px-5 py-3.5 border-t border-white/10 bg-void/70 flex items-center justify-end gap-2.5">
-                <button onclick="closeModal('wa-modal')" class="px-4 py-2 text-xs font-medium text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-colors">
+            <div class="px-6 py-4 border-t border-black/[0.06] bg-white flex items-center justify-end gap-2.5">
+                <button onclick="closeModal('wa-modal')" class="px-4 py-2 text-xs font-medium text-apple-ink hover:bg-apple-bg rounded-full border border-apple-border transition-colors">
                     Tutup
                 </button>
-                <button onclick="copyWhatsAppText()" class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-void bg-neon-green hover:bg-neon-greenBright rounded-xl transition-all shadow-neon-green">
+                <button onclick="copyWhatsAppText()" class="inline-flex items-center gap-2 px-5 py-2 text-xs font-medium text-white bg-apple-blue hover:bg-apple-blueHover rounded-full transition-colors">
                     <i data-lucide="copy" class="w-3.5 h-3.5"></i>
                     Salin Laporan WA
                 </button>
@@ -189,98 +189,84 @@
     </div>
 
     <!-- Modal: Image Preview Lightbox -->
-    <div id="photo-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden items-center justify-center p-4">
-        <div class="glass-panel rounded-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] shadow-2xl border border-white/15">
-            <div class="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-void/80">
+    <div id="photo-modal" class="fixed inset-0 bg-black/50 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] shadow-2xl border border-black/10">
+            <div class="px-6 py-4 border-b border-black/[0.06] flex items-center justify-between">
                 <div class="min-w-0">
-                    <h3 id="photo-modal-title" class="font-semibold text-white text-sm truncate">Preview Foto Terkompresi</h3>
-                    <p id="photo-modal-meta" class="text-[11px] font-mono text-neon-greenBright">1080px • JPEG Optimized</p>
+                    <h3 id="photo-modal-title" class="font-semibold text-apple-ink text-sm truncate">Preview Foto Terkompresi</h3>
+                    <p id="photo-modal-meta" class="text-[11px] font-mono text-apple-muted">1080px • JPEG Optimized</p>
                 </div>
                 <div class="flex items-center gap-2">
-                    <a id="photo-modal-download" download="compressed-photo.jpg" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-void bg-neon-green hover:bg-neon-greenBright transition-colors">
+                    <a id="photo-modal-download" download="compressed-photo.jpg" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium text-white bg-apple-blue hover:bg-apple-blueHover transition-colors">
                         <i data-lucide="download" class="w-3.5 h-3.5"></i>
                         Unduh
                     </a>
-                    <button onclick="closeModal('photo-modal')" class="p-1.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+                    <button onclick="closeModal('photo-modal')" class="p-1.5 text-apple-muted hover:text-apple-ink hover:bg-apple-bg rounded-full transition-colors">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
             </div>
-            <div class="p-4 bg-void/90 flex items-center justify-center overflow-auto flex-1">
-                <img id="photo-modal-img" src="" alt="Preview" class="max-h-[70vh] w-auto rounded-xl object-contain border border-white/10">
+            <div class="p-6 bg-apple-bg flex items-center justify-center overflow-auto flex-1">
+                <img id="photo-modal-img" src="" alt="Preview" class="max-h-[70vh] w-auto rounded-2xl object-contain shadow-md">
             </div>
         </div>
     </div>
 
     <!-- Main Layout -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 lg:pt-6">
-        <main class="w-full space-y-5">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 lg:pt-8">
+        <main class="w-full space-y-6">
 
-                <!-- Top Context & Date Header -->
-                <header class="glass-panel rounded-2xl p-4 sm:p-5">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div class="flex flex-wrap items-center gap-3">
-                            <div class="flex items-center bg-void border border-white/10 rounded-xl p-1">
-                                <button onclick="shiftDate(-1)" title="Hari Sebelumnya" class="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
-                                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
-                                </button>
-                                <input type="date" id="date-picker" class="bg-transparent text-xs sm:text-sm font-mono font-semibold text-white px-2 py-1 focus:outline-none">
-                                <button onclick="shiftDate(1)" title="Hari Berikutnya" class="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
-                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                                </button>
-                            </div>
-
-                            <div>
-                                <div class="flex items-center gap-2">
-                                    <h2 id="formatted-date-title" class="text-base sm:text-lg font-bold text-white tracking-tight">Sen, 23 Nov 2026</h2>
-                                    <span id="webhook-status-pill" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-neon-purple/15 text-neon-purpleBright border border-neon-purple/35">
-                                        Sheets Connected
-                                    </span>
-                                </div>
-                                <p id="header-log-stats" class="text-xs font-mono text-neon-greenBright mt-0.5">0 log tersimpan pada tanggal ini</p>
-                            </div>
+            <!-- Apple-Style Clean Hero & Date Context Header -->
+            <header class="apple-card rounded-3xl p-5 sm:p-7">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
+                    <div class="space-y-1.5">
+                        <div class="flex flex-wrap items-center gap-2.5">
+                            <h2 id="formatted-date-title" class="text-2xl sm:text-3xl font-bold text-apple-ink tracking-tight">Sen, 23 Nov 2026</h2>
+                            <span id="webhook-status-pill" class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-apple-bg text-apple-muted border border-black/[0.08]">
+                                Sheets Connected
+                            </span>
                         </div>
-
-                        <!-- Right Quick Export Buttons -->
-                        <div class="flex flex-wrap items-center gap-2">
-                            <button onclick="openWhatsAppModal()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors">
-                                <i data-lucide="message-square-text" class="w-3.5 h-3.5 text-neon-greenBright"></i>
-                                <span>Salin Laporan WA</span>
-                            </button>
-                            <button onclick="copySheetsTSV()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors">
-                                <i data-lucide="clipboard-copy" class="w-3.5 h-3.5 text-neon-purpleBright"></i>
-                                <span>Salin Baris Sheets (TSV)</span>
-                            </button>
-                        </div>
+                        <p id="header-log-stats" class="text-xs sm:text-sm text-apple-muted">0 log tersimpan pada tanggal ini</p>
                     </div>
-                </header>
 
-                <!-- ========================================================= -->
-                <!-- VIEW 1: INPUT AKTIVITAS (TASK 1-9 + PER-TASK LOCATION)    -->
-                <!-- ========================================================= -->
-                <section id="view-input" class="space-y-4">
-                    <!-- Default Location & Status Bar -->
-                    <div class="glass-panel rounded-2xl p-4 sm:p-5 space-y-3.5">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                            <div>
-                                <h3 class="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
-                                    <i data-lucide="map-pin" class="w-4 h-4 text-neon-greenBright"></i>
-                                    <span>Lokasi Default Sesi Ini &amp; Status</span>
-                                </h3>
-                                <p class="text-[11px] text-slate-400">Setiap kartu Task di bawah tetap bisa diubah lokasinya secara terpisah (misal: TP3 vs Umum / HO).</p>
-                            </div>
-
-                            <!-- Status Selector -->
-                            <div class="flex items-center gap-1.5 bg-void p-1 rounded-xl border border-white/10 self-start">
-                                <button type="button" data-status="Done" onclick="setDefaultStatus('Done')" class="status-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-neon-green text-void transition-all">Done</button>
-                                <button type="button" data-status="Progress" onclick="setDefaultStatus('Progress')" class="status-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all">Progress</button>
-                                <button type="button" data-status="Follow Up" onclick="setDefaultStatus('Follow Up')" class="status-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all">Follow Up</button>
-                            </div>
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <!-- Date Switcher Pill -->
+                        <div class="flex items-center bg-apple-bg border border-black/[0.08] rounded-full p-1">
+                            <button onclick="shiftDate(-1)" title="Hari Sebelumnya" class="p-1.5 text-apple-muted hover:text-apple-ink hover:bg-white rounded-full transition-colors">
+                                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                            </button>
+                            <input type="date" id="date-picker" class="bg-transparent text-xs font-mono font-medium text-apple-ink px-2 py-1 focus:outline-none">
+                            <button onclick="shiftDate(1)" title="Hari Berikutnya" class="p-1.5 text-apple-muted hover:text-apple-ink hover:bg-white rounded-full transition-colors">
+                                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            </button>
                         </div>
 
-                        <!-- Quick Location Pills -->
-                        <div id="store-pills" class="flex flex-wrap items-center gap-1.5">
-                            <!-- Rendered via JS -->
+                        <!-- Quick Export Pills -->
+                        <button onclick="openWhatsAppModal()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium text-white bg-apple-blue hover:bg-apple-blueHover transition-colors">
+                            <i data-lucide="message-square-text" class="w-3.5 h-3.5"></i>
+                            <span>Salin WA</span>
+                        </button>
+                        <button onclick="copySheetsTSV()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium text-apple-blue hover:bg-apple-blue/5 border border-apple-blue transition-colors">
+                        <!-- Quick Location Search / Code Input + Pills -->
+                        <div class="space-y-2">
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+                                <div class="relative w-full sm:w-80">
+                                    <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                                    <input type="text" id="store-search-input" list="master-store-datalist"
+                                        placeholder="Ketik kode atau nama toko dari Master..."
+                                        oninput="onStoreSearchInput(this.value)"
+                                        onchange="onStoreSearchInput(this.value)"
+                                        class="w-full bg-void border border-white/15 rounded-xl pl-8 pr-8 py-1.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-neon-green">
+                                    <button type="button" onclick="clearStoreSearchInput()" title="Reset ke Umum / HO"
+                                        class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs">×</button>
+                                </div>
+                                <span id="master-store-count" class="text-[11px] font-mono text-slate-400">Memuat daftar toko dari Master...</span>
+                            </div>
+                            <datalist id="master-store-datalist"></datalist>
+
+                            <div id="store-pills" class="flex flex-wrap items-center gap-1.5">
+                                <!-- Rendered via JS -->
+                            </div>
                         </div>
 
                         <!-- Custom Location Input -->
@@ -291,248 +277,260 @@
                         </div>
                     </div>
 
-                    <!-- 3x3 Bento Grid: Task 1 - Task 9 -->
-                    <div id="bento-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
+                    <!-- Quick Location Pills -->
+                    <div id="store-pills" class="flex flex-wrap items-center gap-1.5">
                         <!-- Rendered via JS -->
                     </div>
 
-                    <!-- Bulk Photo Uploader + Social Media Auto-Compressor -->
-                    <div class="glass-panel rounded-2xl p-4 sm:p-5 space-y-4">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                            <div>
-                                <h3 class="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
-                                    <i data-lucide="images" class="w-4 h-4 text-neon-purpleBright"></i>
-                                    <span>Lampiran Bulk Foto (Auto-Resize ala Media Sosial)</span>
-                                </h3>
-                                <p class="text-[11px] text-slate-400 mt-0.5">Otomatis menurunkan ukuran &amp; resolusi sebelum disimpan ke Google Drive &amp; tab Submit.</p>
-                            </div>
-
-                            <div class="flex items-center gap-2">
-                                <label for="compress-preset" class="text-[11px] font-mono text-slate-400">Kualitas:</label>
-                                <select id="compress-preset" onchange="reprocessQueuedPhotos()" class="bg-void border border-white/10 rounded-xl px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-neon-purple">
-                                    <option value="social">Social Standard (1080px • 75% JPEG)</option>
-                                    <option value="detail">Detail / Teks Jelas (1440px • 82% JPEG)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Dropzone -->
-                        <label id="photo-dropzone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)"
-                            class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-white/15 hover:border-neon-purple/60 bg-void/60 hover:bg-neon-purple/[0.04] rounded-2xl p-5 cursor-pointer transition-all text-center">
-                            <div class="w-10 h-10 rounded-xl bg-neon-purple/15 border border-neon-purple/35 flex items-center justify-center text-neon-purpleBright">
-                                <i data-lucide="upload-cloud" class="w-5 h-5"></i>
-                            </div>
-                            <div>
-                                <p class="text-xs sm:text-sm font-semibold text-white">Klik untuk pilih banyak foto sekaligus atau tarik &amp; lepas di sini</p>
-                                <p class="text-[11px] text-slate-500 mt-0.5">Mendukung JPG, PNG, WEBP • Kompresi berjalan otomatis di perangkat Anda</p>
-                            </div>
-                            <input type="file" id="bulk-photo-input" accept="image/*" multiple class="hidden" onchange="handleFilesSelected(this.files)">
-                        </label>
-
-                        <!-- Compressed Photo Queue Preview -->
-                        <div id="photo-queue-wrapper" class="hidden space-y-2.5">
-                            <div class="flex items-center justify-between text-xs">
-                                <span id="photo-savings-summary" class="font-mono text-neon-greenBright">0 foto siap</span>
-                                <button type="button" onclick="clearQueuedPhotos()" class="text-rose-400 hover:underline text-[11px]">Hapus Semua Foto</button>
-                            </div>
-                            <div id="photo-preview-grid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2.5">
-                                <!-- Rendered via JS -->
-                            </div>
-                        </div>
+                    <!-- Custom Location Input -->
+                    <div id="custom-store-wrap" class="hidden flex items-center gap-2 pt-1">
+                        <input type="text" id="custom-store-input" placeholder="Ketik nama toko / lokasi khusus..."
+                            oninput="setDefaultLocation(this.value, true)"
+                            class="w-full sm:max-w-xs bg-apple-bg border border-apple-border rounded-full px-4 py-2 text-xs text-apple-ink placeholder:text-apple-subtle focus:outline-none focus:border-apple-blue">
                     </div>
+                </div>
 
-                    <!-- Sticky/Bottom Submit Action Bar -->
-                    <div class="glass-panel rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border border-neon-green/25">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-xl bg-neon-green/15 border border-neon-green/35 flex items-center justify-center text-neon-greenBright">
-                                <i data-lucide="check-circle" class="w-4 h-4"></i>
-                            </div>
-                            <div>
-                                <p id="ready-tasks-summary" class="text-xs sm:text-sm font-bold text-white">0 Task siap disimpan</p>
-                                <p class="text-[11px] text-slate-400">Setiap Task terisi disimpan sebagai 1 baris di tab Submit</p>
-                            </div>
+                <!-- 3x3 Bento Grid: Task 1 - Task 9 -->
+                <div id="bento-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <!-- Rendered via JS -->
+                </div>
+
+                <!-- Bulk Photo Uploader + Social Media Auto-Compressor -->
+                <div class="apple-card rounded-3xl p-5 sm:p-6 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <h3 class="text-sm sm:text-base font-semibold text-apple-ink flex items-center gap-2">
+                                <i data-lucide="images" class="w-4 h-4 text-apple-ink"></i>
+                                <span>Lampiran Bulk Foto (Auto-Resize)</span>
+                            </h3>
+                            <p class="text-xs text-apple-muted mt-0.5">Otomatis menurunkan ukuran &amp; resolusi sebelum disimpan ke Google Drive &amp; tab Submit.</p>
                         </div>
 
                         <div class="flex items-center gap-2">
-                            <button type="button" onclick="resetDraftTasks(); clearQueuedPhotos(); renderBentoGrid();" class="px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 transition-colors">
-                                Reset Form
-                            </button>
-                            <button type="button" id="btn-submit-log" onclick="submitActivityLog()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-void bg-neon-green hover:bg-neon-greenBright transition-all shadow-neon-green">
-                                <i data-lucide="send" class="w-4 h-4"></i>
-                                <span>Simpan &amp; Kirim ke Sheets</span>
-                            </button>
+                            <label for="compress-preset" class="text-xs text-apple-muted">Kualitas:</label>
+                            <select id="compress-preset" onchange="reprocessQueuedPhotos()" class="bg-apple-bg border border-black/10 rounded-full px-3.5 py-1.5 text-xs font-medium text-apple-ink focus:outline-none focus:border-apple-blue">
+                                <option value="social">Social Standard (1080px • 75% JPEG)</option>
+                                <option value="detail">Detail / Teks Jelas (1440px • 82% JPEG)</option>
+                            </select>
                         </div>
                     </div>
-                </section>
 
-                <!-- ========================================================= -->
-                <!-- VIEW 2: KEGIATAN HARI INI (FILTERABLE SCHEDULE FEED)      -->
-                <!-- ========================================================= -->
-                <section id="view-today" class="hidden space-y-4">
-                    <div class="glass-panel rounded-2xl p-4 sm:p-5">
-                        <div class="flex flex-col lg:flex-row gap-6">
-                            <!-- Left Filter Sidebar -->
-                            <aside class="w-full lg:w-64 shrink-0 space-y-4 lg:border-r lg:border-white/10 lg:pr-5">
+                    <!-- Dropzone -->
+                    <label id="photo-dropzone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)"
+                        class="flex flex-col items-center justify-center gap-2 border border-dashed border-apple-border hover:border-apple-blue bg-apple-bg/60 hover:bg-apple-blue/[0.03] rounded-2xl p-6 cursor-pointer transition-all text-center">
+                        <div class="w-10 h-10 rounded-full bg-white border border-black/10 flex items-center justify-center text-apple-ink shadow-sm">
+                            <i data-lucide="upload-cloud" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs sm:text-sm font-semibold text-apple-ink">Klik untuk pilih banyak foto sekaligus atau tarik &amp; lepas di sini</p>
+                            <p class="text-[11px] text-apple-muted mt-0.5">Mendukung JPG, PNG, WEBP • Kompresi berjalan otomatis di perangkat Anda</p>
+                        </div>
+                        <input type="file" id="bulk-photo-input" accept="image/*" multiple class="hidden" onchange="handleFilesSelected(this.files)">
+                    </label>
+
+                    <!-- Compressed Photo Queue Preview -->
+                    <div id="photo-queue-wrapper" class="hidden space-y-3">
+                        <div class="flex items-center justify-between text-xs">
+                            <span id="photo-savings-summary" class="font-mono font-medium text-apple-ink">0 foto siap</span>
+                            <button type="button" onclick="clearQueuedPhotos()" class="text-red-600 hover:underline text-xs font-medium">Hapus Semua Foto</button>
+                        </div>
+                        <div id="photo-preview-grid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                            <!-- Rendered via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Submit Action Bar -->
+                <div class="apple-card rounded-3xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-apple-ink text-white flex items-center justify-center shrink-0">
+                            <i data-lucide="check" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <p id="ready-tasks-summary" class="text-sm font-semibold text-apple-ink">0 Task siap disimpan</p>
+                            <p class="text-xs text-apple-muted">Setiap Task terisi disimpan sebagai 1 baris di tab Submit</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2.5">
+                        <button type="button" onclick="resetDraftTasks(); clearQueuedPhotos(); renderBentoGrid();" class="px-4 py-2.5 rounded-full text-xs font-medium text-apple-ink hover:bg-apple-bg border border-apple-border transition-colors">
+                            Reset Form
+                        </button>
+                        <button type="button" id="btn-submit-log" onclick="submitActivityLog()" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-xs sm:text-sm font-medium text-white bg-apple-blue hover:bg-apple-blueHover transition-colors">
+                            <i data-lucide="arrow-up-circle" class="w-4 h-4"></i>
+                            <span>Simpan &amp; Kirim ke Sheets</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================= -->
+            <!-- VIEW 2: KEGIATAN HARI INI (FILTERABLE SCHEDULE FEED)      -->
+            <!-- ========================================================= -->
+            <section id="view-today" class="hidden space-y-5">
+                <div class="apple-card rounded-3xl p-5 sm:p-6">
+                    <div class="flex flex-col lg:flex-row gap-6">
+                        <!-- Left Filter Panel -->
+                        <aside class="w-full lg:w-64 shrink-0 space-y-5 lg:border-r lg:border-black/[0.08] lg:pr-6">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-xs font-semibold uppercase tracking-wider text-apple-muted">Filter Kegiatan</h3>
+                                <button type="button" onclick="resetFeedFilters()" class="text-xs font-medium text-apple-blue hover:underline">Reset</button>
+                            </div>
+
+                            <!-- Date Scope -->
+                            <div class="space-y-2">
+                                <p class="text-xs font-semibold text-apple-ink">Rentang Waktu</p>
+                                <label class="flex items-center gap-2 text-xs text-apple-ink cursor-pointer py-0.5">
+                                    <input type="radio" name="feed-scope" value="today" checked onchange="renderActivityFeed()" class="accent-black">
+                                    <span>Tanggal Terpilih</span>
+                                </label>
+                                <label class="flex items-center gap-2 text-xs text-apple-ink cursor-pointer py-0.5">
+                                    <input type="radio" name="feed-scope" value="week" onchange="renderActivityFeed()" class="accent-black">
+                                    <span>Minggu Ini</span>
+                                </label>
+                                <label class="flex items-center gap-2 text-xs text-apple-ink cursor-pointer py-0.5">
+                                    <input type="radio" name="feed-scope" value="month" onchange="renderActivityFeed()" class="accent-black">
+                                    <span>Bulan Ini</span>
+                                </label>
+                            </div>
+
+                            <!-- Status & Photo Filter -->
+                            <div class="space-y-2.5 pt-3 border-t border-black/[0.08]">
+                                <p class="text-xs font-semibold text-apple-ink">Status &amp; Lampiran</p>
+                                <select id="feed-status-filter" onchange="renderActivityFeed()" class="w-full bg-apple-bg border border-black/10 rounded-xl px-3 py-2 text-xs font-medium text-apple-ink focus:outline-none">
+                                    <option value="ALL">Semua Status</option>
+                                    <option value="Done">Done</option>
+                                    <option value="Progress">Progress</option>
+                                    <option value="Follow Up">Follow Up</option>
+                                </select>
+                                <label class="flex items-center gap-2 text-xs text-apple-ink cursor-pointer pt-1">
+                                    <input type="checkbox" id="feed-has-photo" onchange="renderActivityFeed()" class="accent-black rounded">
+                                    <span>Hanya yang ada foto</span>
+                                </label>
+                            </div>
+
+                            <!-- Task Categories -->
+                            <div class="space-y-2 pt-3 border-t border-black/[0.08]">
                                 <div class="flex items-center justify-between">
-                                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300">Filter Kegiatan</h3>
-                                    <button type="button" onclick="resetFeedFilters()" class="text-[11px] text-neon-greenBright hover:underline">Reset</button>
-                                </div>
-
-                                <!-- Date Scope -->
-                                <div class="space-y-1.5">
-                                    <p class="text-[11px] font-semibold text-slate-400">Rentang Waktu</p>
-                                    <label class="flex items-center gap-2 text-xs text-slate-200 cursor-pointer py-1">
-                                        <input type="radio" name="feed-scope" value="today" checked onchange="renderActivityFeed()" class="accent-emerald-400">
-                                        <span>Tanggal Terpilih</span>
-                                    </label>
-                                    <label class="flex items-center gap-2 text-xs text-slate-200 cursor-pointer py-1">
-                                        <input type="radio" name="feed-scope" value="week" onchange="renderActivityFeed()" class="accent-emerald-400">
-                                        <span>Minggu Ini</span>
-                                    </label>
-                                    <label class="flex items-center gap-2 text-xs text-slate-200 cursor-pointer py-1">
-                                        <input type="radio" name="feed-scope" value="month" onchange="renderActivityFeed()" class="accent-emerald-400">
-                                        <span>Bulan Ini</span>
-                                    </label>
-                                </div>
-
-                                <!-- Status & Photo Filter -->
-                                <div class="space-y-2 pt-2 border-t border-white/10">
-                                    <p class="text-[11px] font-semibold text-slate-400">Status &amp; Lampiran</p>
-                                    <select id="feed-status-filter" onchange="renderActivityFeed()" class="w-full bg-void border border-white/10 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none">
-                                        <option value="ALL">Semua Status</option>
-                                        <option value="Done">Done</option>
-                                        <option value="Progress">Progress</option>
-                                        <option value="Follow Up">Follow Up</option>
-                                    </select>
-                                    <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer pt-1">
-                                        <input type="checkbox" id="feed-has-photo" onchange="renderActivityFeed()" class="accent-purple-400 rounded">
-                                        <span>Hanya yang ada foto</span>
-                                    </label>
-                                </div>
-
-                                <!-- Task Categories -->
-                                <div class="space-y-1.5 pt-2 border-t border-white/10">
-                                    <div class="flex items-center justify-between">
-                                        <p class="text-[11px] font-semibold text-slate-400">Kategori Task</p>
-                                        <div class="flex gap-2 text-[10px]">
-                                            <button type="button" onclick="toggleAllFeedTasks(true)" class="text-neon-greenBright hover:underline">Semua</button>
-                                            <button type="button" onclick="toggleAllFeedTasks(false)" class="text-slate-500 hover:underline">Kosong</button>
-                                        </div>
-                                    </div>
-                                    <div id="feed-task-checkboxes" class="space-y-0.5 text-xs max-h-56 overflow-y-auto pr-1">
-                                        <!-- Rendered via JS -->
+                                    <p class="text-xs font-semibold text-apple-ink">Kategori Task</p>
+                                    <div class="flex gap-2.5 text-[11px]">
+                                        <button type="button" onclick="toggleAllFeedTasks(true)" class="text-apple-blue font-medium hover:underline">Semua</button>
+                                        <button type="button" onclick="toggleAllFeedTasks(false)" class="text-apple-muted hover:underline">Kosong</button>
                                     </div>
                                 </div>
-                            </aside>
-
-                            <!-- Right Search & Activity Cards -->
-                            <div class="flex-1 min-w-0 space-y-4">
-                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                                    <div>
-                                        <div class="flex items-center gap-2">
-                                            <h3 class="text-base sm:text-lg font-bold text-white">Kegiatan Hari Ini</h3>
-                                            <span id="today-scope-badge" class="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-neon-green/15 text-neon-greenBright border border-neon-green/30">Sen, 23 Nov 2026</span>
-                                        </div>
-                                        <p id="today-subtitle" class="text-xs text-slate-400 mt-0.5">0 baris log sesuai filter</p>
-                                    </div>
-
-                                    <!-- Search Input -->
-                                    <div class="relative w-full sm:w-64">
-                                        <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                                        <input type="text" id="feed-search-input" oninput="renderActivityFeed()" placeholder="Cari aktivitas / toko..."
-                                            class="w-full bg-void border border-white/10 rounded-xl pl-9 pr-8 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-neon-green/50">
-                                        <button type="button" id="feed-search-clear" onclick="clearFeedSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs">×</button>
-                                    </div>
-                                </div>
-
-                                <!-- Cards Grid -->
-                                <div id="feed-cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                                <div id="feed-task-checkboxes" class="space-y-1 text-xs max-h-56 overflow-y-auto pr-1">
                                     <!-- Rendered via JS -->
                                 </div>
+                            </div>
+                        </aside>
 
-                                <!-- Empty State -->
-                                <div id="feed-empty-state" class="hidden rounded-2xl border border-dashed border-white/10 bg-void/50 p-10 text-center space-y-2">
-                                    <i data-lucide="calendar-x" class="w-8 h-8 text-slate-500 mx-auto"></i>
-                                    <p class="text-sm font-semibold text-slate-300">Belum ada kegiatan yang sesuai filter</p>
-                                    <p class="text-xs text-slate-500">Klik tombol Sync Sheets di atas atau tambahkan log baru melalui menu Input Aktivitas.</p>
+                        <!-- Right Search & Activity Cards -->
+                        <div class="flex-1 min-w-0 space-y-5">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div>
+                                    <div class="flex items-center gap-2.5">
+                                        <h3 class="text-lg sm:text-xl font-bold text-apple-ink tracking-tight">Kegiatan Hari Ini</h3>
+                                        <span id="today-scope-badge" class="text-[11px] font-medium px-3 py-0.5 rounded-full bg-apple-bg text-apple-ink border border-black/[0.08]">Sen, 23 Nov 2026</span>
+                                    </div>
+                                    <p id="today-subtitle" class="text-xs text-apple-muted mt-0.5">0 baris log sesuai filter</p>
                                 </div>
+
+                                <!-- Apple Pill Search Input -->
+                                <div class="relative w-full sm:w-64">
+                                    <i data-lucide="search" class="w-4 h-4 text-apple-subtle absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                                    <input type="text" id="feed-search-input" oninput="renderActivityFeed()" placeholder="Cari aktivitas / toko..."
+                                        class="w-full bg-apple-bg border border-black/[0.08] rounded-full pl-9 pr-8 py-2 text-xs text-apple-ink placeholder:text-apple-subtle focus:outline-none focus:border-apple-blue">
+                                    <button type="button" id="feed-search-clear" onclick="clearFeedSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-apple-muted hover:text-apple-ink text-sm">×</button>
+                                </div>
+                            </div>
+
+                            <!-- Cards Grid -->
+                            <div id="feed-cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Rendered via JS -->
+                            </div>
+
+                            <!-- Empty State -->
+                            <div id="feed-empty-state" class="hidden rounded-2xl border border-dashed border-apple-border bg-apple-bg/50 p-12 text-center space-y-2">
+                                <i data-lucide="calendar-x" class="w-8 h-8 text-apple-subtle mx-auto"></i>
+                                <p class="text-sm font-semibold text-apple-ink">Belum ada kegiatan yang sesuai filter</p>
+                                <p class="text-xs text-apple-muted">Klik tombol Sync Sheets di atas atau tambahkan log baru melalui menu Input Aktivitas.</p>
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <!-- ========================================================= -->
-                <!-- VIEW 3: MATRIKS BULANAN (01-31 TASK 1-9 SUMMARY)        -->
-                <!-- ========================================================= -->
-                <section id="view-matrix" class="hidden space-y-4">
-                    <div class="glass-panel rounded-2xl p-4 sm:p-5 space-y-4">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                            <div>
-                                <h3 id="matrix-month-title" class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                                    <i data-lucide="grid-3x3" class="w-5 h-5 text-neon-greenBright"></i>
-                                    <span>Matriks Bulanan — November 2026</span>
-                                </h3>
-                                <p class="text-xs text-slate-400 mt-0.5">Rekap harian per kategori Task 1–9 berdasarkan data dari tab Submit</p>
-                            </div>
-                            <button onclick="copyMonthlyMatrixTSV()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors self-start sm:self-auto">
-                                <i data-lucide="clipboard-copy" class="w-3.5 h-3.5 text-neon-greenBright"></i>
-                                <span>Salin Matriks Bulan (TSV)</span>
-                            </button>
+            <!-- ========================================================= -->
+            <!-- VIEW 3: MATRIKS BULANAN (01-31 TASK 1-9 SUMMARY)        -->
+            <!-- ========================================================= -->
+            <section id="view-matrix" class="hidden space-y-5">
+                <div class="apple-card rounded-3xl p-5 sm:p-6 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <h3 id="matrix-month-title" class="text-lg sm:text-xl font-bold text-apple-ink tracking-tight flex items-center gap-2">
+                                <span>Matriks Bulanan — November 2026</span>
+                            </h3>
+                            <p class="text-xs text-apple-muted mt-0.5">Rekap harian per kategori Task 1–9 berdasarkan data dari tab Submit</p>
                         </div>
-
-                        <div class="overflow-x-auto rounded-xl border border-white/10 bg-void/70">
-                            <table class="w-full text-left border-collapse text-xs">
-                                <thead>
-                                    <tr class="border-b border-white/10 bg-surface text-slate-300 font-mono">
-                                        <th class="py-2.5 px-3 sticky left-0 bg-surface z-10">Hari</th>
-                                        <th class="py-2.5 px-3 sticky left-12 bg-surface z-10">Tgl</th>
-                                        <th class="py-2.5 px-3 min-w-[140px]">Task 1 - Training</th>
-                                        <th class="py-2.5 px-3 min-w-[140px]">Task 2 - Roleplay</th>
-                                        <th class="py-2.5 px-3 min-w-[160px]">Task 3 - DCOTA + Sales Coach</th>
-                                        <th class="py-2.5 px-3 min-w-[130px]">Task 4 - StreamzAI</th>
-                                        <th class="py-2.5 px-3 min-w-[140px]">Task 5 - Pemadanan Data</th>
-                                        <th class="py-2.5 px-3 min-w-[140px]">Task 6 - Develope</th>
-                                        <th class="py-2.5 px-3 min-w-[120px]">Task 7 - General</th>
-                                        <th class="py-2.5 px-3 min-w-[130px]">Task 8 - Meeting</th>
-                                        <th class="py-2.5 px-3 min-w-[140px]">Task 9 - Store Visit</th>
-                                        <th class="py-2.5 px-3 text-center">Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="matrix-table-body" class="divide-y divide-white/5">
-                                    <!-- Rendered via JS -->
-                                </tbody>
-                                <tfoot id="matrix-table-foot" class="border-t border-white/15 bg-surface/90 font-mono text-neon-greenBright">
-                                    <!-- Rendered via JS -->
-                                </tfoot>
-                            </table>
-                        </div>
+                        <button onclick="copyMonthlyMatrixTSV()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium text-apple-blue hover:bg-apple-blue/5 border border-apple-blue transition-colors self-start sm:self-auto">
+                            <i data-lucide="clipboard-copy" class="w-3.5 h-3.5"></i>
+                            <span>Salin Matriks Bulan (TSV)</span>
+                        </button>
                     </div>
-                </section>
 
-                <!-- Footer -->
-                <footer class="pt-2 pb-4 text-center space-y-1">
-                    <p class="text-[11px] font-mono text-slate-500">Daily Work Journal • Tab: Submit | TimeStamp | Tanggal | Task | Aktivitas | Toko / Lokasi | Status | Foto / Link</p>
-                    <p class="text-[11px] text-slate-500">Concept &amp; Curation by Novi Riyanto | Developed in collaboration with Gemini AI</p>
-                </footer>
+                    <div class="overflow-x-auto rounded-2xl border border-black/[0.08] bg-white">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="border-b border-black/[0.08] bg-apple-bg text-apple-ink font-semibold">
+                                    <th class="py-3 px-3 sticky left-0 bg-apple-bg z-10">Hari</th>
+                                    <th class="py-3 px-3 sticky left-12 bg-apple-bg z-10">Tgl</th>
+                                    <th class="py-3 px-3 min-w-[140px]">Task 1 - Training</th>
+                                    <th class="py-3 px-3 min-w-[140px]">Task 2 - Roleplay</th>
+                                    <th class="py-3 px-3 min-w-[160px]">Task 3 - DCOTA + Sales Coach</th>
+                                    <th class="py-3 px-3 min-w-[130px]">Task 4 - StreamzAI</th>
+                                    <th class="py-3 px-3 min-w-[140px]">Task 5 - Pemadanan Data</th>
+                                    <th class="py-3 px-3 min-w-[140px]">Task 6 - Develope</th>
+                                    <th class="py-3 px-3 min-w-[120px]">Task 7 - General</th>
+                                    <th class="py-3 px-3 min-w-[130px]">Task 8 - Meeting</th>
+                                    <th class="py-3 px-3 min-w-[140px]">Task 9 - Store Visit</th>
+                                    <th class="py-3 px-3 text-center">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="matrix-table-body" class="divide-y divide-black/[0.06]">
+                                <!-- Rendered via JS -->
+                            </tbody>
+                            <tfoot id="matrix-table-foot" class="border-t border-black/15 bg-apple-bg font-mono font-semibold text-apple-ink">
+                                <!-- Rendered via JS -->
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="pt-3 pb-6 text-center space-y-1 border-t border-black/[0.06]">
+                <p class="text-[11px] font-mono text-apple-muted">Daily Work Journal • Tab: Submit | TimeStamp | Tanggal | Task | Aktivitas | Toko / Lokasi | Status | Foto / Link</p>
+                <p class="text-[11px] text-apple-subtle">Concept &amp; Curation by Novi Riyanto | Developed in collaboration with Gemini AI</p>
+            </footer>
 
         </main>
     </div>
 
     <!-- Mobile Floating Bottom Dock -->
-    <nav class="md:hidden fixed bottom-0 inset-x-0 z-40 glass-dock px-2 py-2 flex items-center justify-around">
-        <button onclick="switchView('input')" id="nav-mob-input" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-neon-greenBright">
+    <nav class="md:hidden fixed bottom-0 inset-x-0 z-40 apple-dock border-t border-black/[0.08] px-2 py-2 flex items-center justify-around">
+        <button onclick="switchView('input')" id="nav-mob-input" class="flex flex-col items-center gap-1 py-1 px-3 rounded-full text-apple-ink font-semibold">
             <i data-lucide="plus-square" class="w-5 h-5"></i>
-            <span class="text-[10px] font-semibold">Input</span>
+            <span class="text-[10px]">Input</span>
         </button>
-        <button onclick="switchView('today')" id="nav-mob-today" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-slate-400 hover:text-white">
+        <button onclick="switchView('today')" id="nav-mob-today" class="flex flex-col items-center gap-1 py-1 px-3 rounded-full text-apple-muted hover:text-apple-ink">
             <i data-lucide="calendar-check" class="w-5 h-5"></i>
             <span class="text-[10px] font-medium">Hari Ini</span>
         </button>
-        <button onclick="switchView('matrix')" id="nav-mob-matrix" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-slate-400 hover:text-white">
+        <button onclick="switchView('matrix')" id="nav-mob-matrix" class="flex flex-col items-center gap-1 py-1 px-3 rounded-full text-apple-muted hover:text-apple-ink">
             <i data-lucide="grid-3x3" class="w-5 h-5"></i>
             <span class="text-[10px] font-medium">Matriks</span>
         </button>
-        <button onclick="openWhatsAppModal()" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-slate-400 hover:text-neon-greenBright">
+        <button onclick="openWhatsAppModal()" class="flex flex-col items-center gap-1 py-1 px-3 rounded-full text-apple-blue">
             <i data-lucide="message-square-text" class="w-5 h-5"></i>
             <span class="text-[10px] font-medium">WA</span>
         </button>
@@ -541,30 +539,30 @@
     <script>
         /**
          * Daily Work Journal & Activity Log
-         * Synced directly with Google Sheets tab "Submit":
+         * Apple-inspired Monochrome Light Edition synced with Google Sheets tab "Submit":
          * TimeStamp | Tanggal | Task | Aktivitas | Toko / Lokasi | Status | Foto / Link
          */
 
         const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzOq-kcjwGIxOh7M9N_FHfiTf6DSkATijEqi7M9X4d_AJflDDAxcsHPaCjdOxRlVpF9lA/exec';
         const LOGS_STORAGE_KEY = 'dwj_activity_logs_v3';
+        const STORES_STORAGE_KEY = 'dwj_master_stores_v1';
 
         const INDO_DAYS = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
         const INDO_MONTHS_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
         const INDO_MONTHS_FULL = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
         const TASKS = [
-            { id: 't1', shortCode: 'Task 1', label: 'Training', fullName: 'Task 1 - Training', theme: 'green', placeholder: 'Materi training, jumlah staff, atau catatan kelas...' },
-            { id: 't2', shortCode: 'Task 2', label: 'Roleplay', fullName: 'Task 2 - Roleplay', theme: 'green', placeholder: 'Skenario roleplay (CARES/NPI/Bundle) & nama staff...' },
-            { id: 't3', shortCode: 'Task 3', label: 'DCOTA + Sales Coach', fullName: 'Task 3 - DCOTA + Sales Coach', theme: 'purple', placeholder: 'Buka akses DCOTA, pengecekan unit demo, atau coaching...' },
-            { id: 't4', shortCode: 'Task 4', label: 'StreamzAI', fullName: 'Task 4 - StreamzAI', theme: 'purple', placeholder: 'Audit modul StreamzAI, progres penyelesaian staff...' },
-            { id: 't5', shortCode: 'Task 5', label: 'Pemadanan Data', fullName: 'Task 5 - Pemadanan Data', theme: 'cyan', placeholder: 'Sync headcount, data LOB Champion, atau validasi sheet...' },
-            { id: 't6', shortCode: 'Task 6', label: 'Develope', fullName: 'Task 6 - Develope', theme: 'cyan', placeholder: 'Pengembangan dashboard, formula, automasi, atau materi...' },
-            { id: 't7', shortCode: 'Task 7', label: 'General', fullName: 'Task 7 - General', theme: 'neutral', placeholder: 'Administrasi harian, koordinasi operasional, dll...' },
-            { id: 't8', shortCode: 'Task 8', label: 'Meeting', fullName: 'Task 8 - Meeting', theme: 'cyan', placeholder: 'Weekly Connect, briefing NPI, interview kandidat...' },
-            { id: 't9', shortCode: 'Task 9', label: 'Store Visit', fullName: 'Task 9 - Store Visit', theme: 'green', placeholder: 'Observasi floor, kesiapan opening, display & grooming...' }
+            { id: 't1', shortCode: 'Task 1', label: 'Training', fullName: 'Task 1 - Training', placeholder: 'Materi training, jumlah staff, atau catatan kelas...' },
+            { id: 't2', shortCode: 'Task 2', label: 'Roleplay', fullName: 'Task 2 - Roleplay', placeholder: 'Skenario roleplay (CARES/NPI/Bundle) & nama staff...' },
+            { id: 't3', shortCode: 'Task 3', label: 'DCOTA + Sales Coach', fullName: 'Task 3 - DCOTA + Sales Coach', placeholder: 'Buka akses DCOTA, pengecekan unit demo, atau coaching...' },
+            { id: 't4', shortCode: 'Task 4', label: 'StreamzAI', fullName: 'Task 4 - StreamzAI', placeholder: 'Audit modul StreamzAI, progres penyelesaian staff...' },
+            { id: 't5', shortCode: 'Task 5', label: 'Pemadanan Data', fullName: 'Task 5 - Pemadanan Data', placeholder: 'Sync headcount, data LOB Champion, atau validasi sheet...' },
+            { id: 't6', shortCode: 'Task 6', label: 'Develope', fullName: 'Task 6 - Develope', placeholder: 'Pengembangan dashboard, formula, automasi, atau materi...' },
+            { id: 't7', shortCode: 'Task 7', label: 'General', fullName: 'Task 7 - General', placeholder: 'Administrasi harian, koordinasi operasional, dll...' },
+            { id: 't8', shortCode: 'Task 8', label: 'Meeting', fullName: 'Task 8 - Meeting', placeholder: 'Weekly Connect, briefing NPI, interview kandidat...' },
+            { id: 't9', shortCode: 'Task 9', label: 'Store Visit', fullName: 'Task 9 - Store Visit', placeholder: 'Observasi floor, kesiapan opening, display & grooming...' }
         ];
-
-        const STORE_PRESETS = [
+        const DEFAULT_STORE_PRESETS = [
             'Umum / HO',
             'Digimap TP3',
             'Digimap TP4',
@@ -580,6 +578,7 @@
             'Digimap Trans Studio Makassar'
         ];
 
+        let STORE_PRESETS = [...DEFAULT_STORE_PRESETS];
         let allLogs = [];
         let selectedDate = '2026-11-23';
         let currentView = 'input';
@@ -608,7 +607,7 @@
 
             if (gaugeTimer) clearInterval(gaugeTimer);
             let progress = 8;
-            labelEl.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-neon-greenBright"></i><span>${escapeHtml(labelText)}</span>`;
+            labelEl.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-apple-blue"></i><span>${escapeHtml(labelText)}</span>`;
             pctEl.textContent = `${progress}%`;
             barEl.style.width = `${progress}%`;
             container.classList.remove('hidden');
@@ -629,7 +628,7 @@
             const pctEl = document.getElementById('sync-gauge-percent');
             const barEl = document.getElementById('sync-gauge-bar');
             if (labelText && labelEl) {
-                labelEl.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-neon-greenBright"></i><span>${escapeHtml(labelText)}</span>`;
+                labelEl.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-apple-blue"></i><span>${escapeHtml(labelText)}</span>`;
                 lucide.createIcons();
             }
             if (pctEl) pctEl.textContent = `${percent}%`;
@@ -647,7 +646,7 @@
             const barEl = document.getElementById('sync-gauge-bar');
             if (!container) return;
 
-            labelEl.innerHTML = `<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-neon-greenBright"></i><span>${escapeHtml(finalLabel)}</span>`;
+            labelEl.innerHTML = `<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-apple-ink"></i><span>${escapeHtml(finalLabel)}</span>`;
             pctEl.textContent = '100%';
             barEl.style.width = '100%';
             lucide.createIcons();
@@ -697,6 +696,13 @@
 
         function loadLocalLogsCache() {
             try {
+                const savedStores = localStorage.getItem(STORES_STORAGE_KEY);
+                if (savedStores) {
+                    const parsedStores = JSON.parse(savedStores);
+                    if (Array.isArray(parsedStores) && parsedStores.length > 0) {
+                        STORE_PRESETS = ['Umum / HO', ...parsedStores.filter(s => s && s !== 'Umum / HO')];
+                    }
+                }
                 const existing = localStorage.getItem(LOGS_STORAGE_KEY);
                 if (existing) {
                     const parsed = JSON.parse(existing);
@@ -711,7 +717,7 @@
         }
 
         /**
-         * Fetch rows directly from Google Sheets tab "Submit" via Apps Script doGet
+         * Fetch rows from "Submit" and Store list (Col B) from "Master karyawan" via Apps Script doGet
          */
         async function syncLogsFromSheets(showNotification = false) {
             const url = getConfiguredWebhookUrl();
@@ -724,37 +730,46 @@
                 syncBtn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i><span>Syncing...</span>`;
                 lucide.createIcons();
             }
-            startLoadingGauge('Menarik data dari tab Submit Google Sheets...');
+            startLoadingGauge('Menarik data tab Submit & Master karyawan...');
 
             try {
                 const res = await fetch(url, { method: 'GET', redirect: 'follow' });
-                updateLoadingGauge(72, 'Memproses baris data dari Google Sheets...');
+                updateLoadingGauge(72, 'Memproses baris data & daftar Store...');
                 const json = await res.json();
-                if (json && json.status === 'success' && Array.isArray(json.rows)) {
-                    const sheetLogs = json.rows.map((r, i) => ({
-                        id: r.id || ('sheet_' + i),
-                        timestamp: r.timestamp || '',
-                        tanggal: String(r.tanggal || '').trim().slice(0, 10),
-                        taskId: resolveTaskIdFromName(r.task),
-                        task: r.task || 'Task 7 - General',
-                        aktivitas: r.aktivitas || '',
-                        lokasi: r.lokasi || 'Umum / HO',
-                        status: r.status || 'Done',
-                        fotoLink: r.fotoLink || '',
-                        photos: [],
-                        fromSheet: true
-                    })).filter(item => item.tanggal || item.aktivitas);
+                if (json && json.status === 'success') {
+                    if (Array.isArray(json.stores) && json.stores.length > 0) {
+                        const uniqueStores = ['Umum / HO', ...new Set(json.stores.map(s => String(s).trim()).filter(s => s && s !== 'Umum / HO'))];
+                        STORE_PRESETS = uniqueStores;
+                        localStorage.setItem(STORES_STORAGE_KEY, JSON.stringify(uniqueStores));
+                        renderStorePills();
+                    }
 
-                    sheetLogs.reverse();
-                    allLogs = sheetLogs;
-                    saveLogsToStorage();
+                    if (Array.isArray(json.rows)) {
+                        const sheetLogs = json.rows.map((r, i) => ({
+                            id: r.id || ('sheet_' + i),
+                            timestamp: r.timestamp || '',
+                            tanggal: String(r.tanggal || '').trim().slice(0, 10),
+                            taskId: resolveTaskIdFromName(r.task),
+                            task: r.task || 'Task 7 - General',
+                            aktivitas: r.aktivitas || '',
+                            lokasi: r.lokasi || 'Umum / HO',
+                            status: r.status || 'Done',
+                            fotoLink: r.fotoLink || '',
+                            photos: [],
+                            fromSheet: true
+                        })).filter(item => item.tanggal || item.aktivitas);
+
+                        sheetLogs.reverse();
+                        allLogs = sheetLogs;
+                        saveLogsToStorage();
+                    }
 
                     if (currentView === 'today') renderActivityFeed();
                     else if (currentView === 'matrix') renderMonthlyMatrix();
 
-                    finishLoadingGauge(`Selesai (${allLogs.length} baris dimuat)`);
+                    finishLoadingGauge(`Selesai (${allLogs.length} baris • ${STORE_PRESETS.length - 1} store)`);
                     if (showNotification) {
-                        showToast(`Sinkronisasi berhasil: ${allLogs.length} baris terbaca dari tab Submit.`);
+                        showToast(`Sinkronisasi berhasil: ${allLogs.length} baris & ${STORE_PRESETS.length - 1} store dari Master.`);
                     }
                 } else {
                     finishLoadingGauge('Tab Submit kosong');
@@ -788,13 +803,7 @@
 
         function updateHeaderStats() {
             const countToday = allLogs.filter(l => l.tanggal === selectedDate).length;
-            document.getElementById('header-log-stats').textContent = `${countToday} log tersimpan pada tanggal ini (Total: ${allLogs.length} baris)`;
-
-            const pill = document.getElementById('webhook-status-pill');
-            if (pill) {
-                pill.textContent = 'Sheets Connected';
-                pill.className = 'text-[10px] font-mono px-2 py-0.5 rounded-full bg-neon-purple/15 text-neon-purpleBright border border-neon-purple/35';
-            }
+            document.getElementById('header-log-stats').textContent = `${countToday} log tersimpan pada tanggal ini • Total ${allLogs.length} baris di tab Submit`;
         }
 
         /**
@@ -834,17 +843,17 @@
 
                 if (v === view) {
                     if (dBtn) {
-                        dBtn.className = 'flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-neon-green/15 text-neon-greenBright border border-neon-green/35';
+                        dBtn.className = 'flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all bg-apple-ink text-white shadow-sm';
                     }
                     if (mBtn) {
-                        mBtn.className = 'flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-neon-greenBright';
+                        mBtn.className = 'flex flex-col items-center gap-1 py-1 px-3 rounded-full text-apple-ink font-semibold';
                     }
                 } else {
                     if (dBtn) {
-                        dBtn.className = 'flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all border border-transparent';
+                        dBtn.className = 'flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium text-apple-muted hover:text-apple-ink transition-all';
                     }
                     if (mBtn) {
-                        mBtn.className = 'flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-slate-400 hover:text-white';
+                        mBtn.className = 'flex flex-col items-center gap-1 py-1 px-3 rounded-full text-apple-muted hover:text-apple-ink';
                     }
                 }
             });
@@ -859,13 +868,56 @@
         }
 
         /**
-         * Default Location Pills & Per-Task Independent Location Tagging
+         * Default Location Pills & Master Store Search
          */
+        function populateMasterStoreDatalist() {
+            const dl = document.getElementById('master-store-datalist');
+            if (dl) {
+                dl.innerHTML = STORE_PRESETS.map(s => `<option value="${escapeAttr(s)}"></option>`).join('');
+            }
+            const countEl = document.getElementById('master-store-count');
+            if (countEl) {
+                const storeCount = Math.max(0, STORE_PRESETS.length - 1);
+                countEl.textContent = `${storeCount} toko tersedia (ketik kode/nama toko)`;
+            }
+        }
+
+        function onStoreSearchInput(rawVal) {
+            const q = String(rawVal || '').trim();
+            if (!q) {
+                defaultLocation = 'Umum / HO';
+                renderStorePills();
+                return;
+            }
+            const exact = STORE_PRESETS.find(s => s.toLowerCase() === q.toLowerCase());
+            if (exact) {
+                defaultLocation = exact;
+            } else {
+                const partial = STORE_PRESETS.find(s => s.toLowerCase().includes(q.toLowerCase()));
+                defaultLocation = partial || q;
+            }
+            renderStorePills();
+        }
+
+        function clearStoreSearchInput() {
+            const inp = document.getElementById('store-search-input');
+            if (inp) inp.value = '';
+            setDefaultLocation('Umum / HO', false);
+        }
+
         function renderStorePills() {
+            populateMasterStoreDatalist();
             const container = document.getElementById('store-pills');
             const isPreset = STORE_PRESETS.includes(defaultLocation);
 
-            let html = STORE_PRESETS.map(store => {
+            // Tampilkan Umum / HO, lokasi aktif saat ini, + 10 toko pertama agar ringkas (sisanya via ketik kode/nama)
+            const quickList = ['Umum / HO'];
+            if (defaultLocation && !quickList.includes(defaultLocation)) quickList.push(defaultLocation);
+            STORE_PRESETS.forEach(s => {
+                if (quickList.length < 12 && !quickList.includes(s)) quickList.push(s);
+            });
+
+            let html = quickList.map(store => {
                 const active = defaultLocation === store;
                 return `
                     <button type="button" onclick="setDefaultLocation('${escapeAttr(store)}', false)"
@@ -896,6 +948,10 @@
 
         function setDefaultLocation(loc, isCustomInput) {
             defaultLocation = loc.trim() || 'Umum / HO';
+            const searchInp = document.getElementById('store-search-input');
+            if (searchInp && !isCustomInput) {
+                searchInp.value = defaultLocation === 'Umum / HO' ? '' : defaultLocation;
+            }
             if (!isCustomInput) {
                 document.getElementById('custom-store-wrap').classList.add('hidden');
             }
@@ -914,43 +970,24 @@
             document.querySelectorAll('.status-btn').forEach(btn => {
                 const st = btn.getAttribute('data-status');
                 if (st === status) {
-                    const colorMap = {
-                        'Done': 'bg-neon-green text-void font-bold',
-                        'Progress': 'bg-neon-purple text-white font-bold',
-                        'Follow Up': 'bg-amber-400 text-void font-bold'
-                    };
-                    btn.className = `status-btn px-3 py-1.5 rounded-lg text-xs transition-all ${colorMap[st]}`;
+                    btn.className = 'status-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-apple-ink text-white shadow-sm transition-all';
                 } else {
-                    btn.className = 'status-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all';
+                    btn.className = 'status-btn px-3.5 py-1.5 rounded-full text-xs font-medium text-apple-muted hover:text-apple-ink transition-all';
                 }
             });
         }
 
         /**
-         * 3x3 Bento Grid Rendering (Task 1 - Task 9)
+         * 3x3 Bento Grid Rendering (Task 1 - Task 9 — Apple Monochrome Light Theme)
          */
-        function getThemeStyles(theme, active) {
-            if (theme === 'green') {
-                return {
-                    card: active ? 'border-neon-green/70 bg-neon-green/[0.06] shadow-neon-green' : 'border-white/10 bg-surface/80 hover:border-white/25',
-                    badge: active ? 'bg-neon-green text-void font-bold' : 'bg-neon-green/10 text-neon-greenBright border border-neon-green/30 font-semibold'
-                };
-            }
-            if (theme === 'purple') {
-                return {
-                    card: active ? 'border-neon-purple/70 bg-neon-purple/[0.06] shadow-neon-purple' : 'border-white/10 bg-surface/80 hover:border-white/25',
-                    badge: active ? 'bg-neon-purple text-white font-bold' : 'bg-neon-purple/10 text-neon-purpleBright border border-neon-purple/30 font-semibold'
-                };
-            }
-            if (theme === 'cyan') {
-                return {
-                    card: active ? 'border-neon-cyan/70 bg-neon-cyan/[0.06] shadow-neon-cyan' : 'border-white/10 bg-surface/80 hover:border-white/25',
-                    badge: active ? 'bg-neon-cyan text-void font-bold' : 'bg-neon-cyan/10 text-cyan-300 border border-neon-cyan/30 font-semibold'
-                };
-            }
+        function getMonochromeCardStyles(active) {
             return {
-                card: active ? 'border-slate-400/70 bg-white/[0.05]' : 'border-white/10 bg-surface/80 hover:border-white/25',
-                badge: active ? 'bg-slate-200 text-void font-bold' : 'bg-white/10 text-slate-300 border border-white/15 font-semibold'
+                card: active
+                    ? 'border-apple-ink bg-white shadow-apple-hover ring-1 ring-apple-ink'
+                    : 'border-black/[0.08] bg-white hover:border-black/25 shadow-apple-card',
+                badge: active
+                    ? 'bg-apple-ink text-white font-semibold'
+                    : 'bg-apple-bg text-apple-ink font-medium border border-black/[0.06]'
             };
         }
 
@@ -958,7 +995,7 @@
             const grid = document.getElementById('bento-grid');
             grid.innerHTML = TASKS.map(t => {
                 const st = draftTasks[t.id];
-                const styles = getThemeStyles(t.theme, st.active);
+                const styles = getMonochromeCardStyles(st.active);
                 const effectiveLoc = st.locationOverride !== null ? st.locationOverride : defaultLocation;
 
                 const optionsList = [...STORE_PRESETS];
@@ -970,16 +1007,16 @@
                 ).join('');
 
                 return `
-                    <div id="card-${t.id}" class="task-card rounded-2xl border p-4 flex flex-col justify-between gap-2.5 ${styles.card}">
+                    <div id="card-${t.id}" class="task-card rounded-3xl border p-5 flex flex-col justify-between gap-3 ${styles.card}">
                         <div onclick="activateTaskCard('${t.id}')" class="flex items-center justify-between gap-2 cursor-pointer select-none">
                             <div class="flex items-center gap-2 min-w-0">
-                                <span id="badge-${t.id}" class="text-[11px] font-mono px-2 py-0.5 rounded-md transition-colors ${styles.badge}">
+                                <span id="badge-${t.id}" class="text-[11px] font-mono px-2.5 py-0.5 rounded-full transition-colors ${styles.badge}">
                                     ${t.shortCode}
                                 </span>
-                                <h3 class="text-xs sm:text-sm font-bold text-white truncate">${t.label}</h3>
+                                <h3 class="text-sm font-semibold text-apple-ink truncate">${t.label}</h3>
                             </div>
                             <button type="button" id="clear-${t.id}" onclick="event.stopPropagation(); clearTaskCard('${t.id}')" title="Kosongkan"
-                                class="${st.active ? 'flex' : 'hidden'} w-6 h-6 rounded-lg items-center justify-center text-slate-400 hover:text-rose-400 hover:bg-rose-500/15 transition-colors text-base font-bold leading-none">
+                                class="${st.active ? 'flex' : 'hidden'} w-6 h-6 rounded-full items-center justify-center text-apple-muted hover:text-apple-ink hover:bg-apple-bg transition-colors text-base font-medium leading-none">
                                 ×
                             </button>
                         </div>
@@ -989,16 +1026,18 @@
                             placeholder="${t.placeholder}"
                             onfocus="activateTaskCard('${t.id}', false)"
                             oninput="onTaskTextChange('${t.id}', this)"
-                            class="w-full bg-void/90 border border-white/10 rounded-xl px-3 py-2 text-xs sm:text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-white/30 resize-none leading-relaxed">${escapeHtml(st.text)}</textarea>
+                            class="w-full bg-apple-bg/80 border border-black/[0.06] rounded-2xl px-3.5 py-2.5 text-xs sm:text-sm text-apple-ink placeholder:text-apple-subtle focus:outline-none focus:bg-white focus:border-apple-blue resize-none leading-relaxed">${escapeHtml(st.text)}</textarea>
 
                         <div class="flex items-center justify-between gap-2 pt-0.5">
                             <span class="text-[10px] font-mono text-slate-400 flex items-center gap-1 shrink-0">
                                 <i data-lucide="map-pin" class="w-3 h-3 text-slate-500"></i> Lokasi:
                             </span>
-                            <select onchange="overrideTaskLocation('${t.id}', this.value)"
+                            <input type="text" list="master-store-datalist"
+                                value="${escapeAttr(effectiveLoc)}"
+                                placeholder="Ketik kode/toko..."
+                                onchange="overrideTaskLocation('${t.id}', this.value)"
+                                onfocus="this.select()"
                                 class="bg-void/90 border border-white/10 rounded-lg px-2 py-1 text-[11px] text-slate-200 focus:outline-none focus:border-neon-green/50 max-w-[175px] truncate">
-                                ${locOptionsHtml}
-                            </select>
                         </div>
                     </div>
                 `;
@@ -1022,7 +1061,7 @@
 
         function onTaskTextChange(taskId, el) {
             el.style.height = 'auto';
-            el.style.height = Math.max(el.scrollHeight, 56) + 'px';
+            el.style.height = Math.max(el.scrollHeight, 60) + 'px';
             draftTasks[taskId].text = el.value;
             if (!draftTasks[taskId].active && el.value.trim().length > 0) {
                 draftTasks[taskId].active = true;
@@ -1032,8 +1071,13 @@
         }
 
         function overrideTaskLocation(taskId, val) {
-            draftTasks[taskId].locationOverride = (val === defaultLocation) ? null : val;
+            const clean = String(val || '').trim() || defaultLocation;
+            const match = STORE_PRESETS.find(s => s.toLowerCase() === clean.toLowerCase())
+                || STORE_PRESETS.find(s => s.toLowerCase().includes(clean.toLowerCase()))
+                || clean;
+            draftTasks[taskId].locationOverride = (match === defaultLocation) ? null : match;
             activateTaskCard(taskId, false);
+            renderBentoGrid();
         }
 
         function clearTaskCard(taskId) {
@@ -1041,23 +1085,22 @@
             const inp = document.getElementById(`input-${taskId}`);
             if (inp) {
                 inp.value = '';
-                inp.style.height = '56px';
+                inp.style.height = '60px';
             }
             syncCardState(taskId);
             updateReadyTasksCounter();
         }
 
         function syncCardState(taskId) {
-            const t = TASKS.find(x => x.id === taskId);
             const st = draftTasks[taskId];
-            const styles = getThemeStyles(t.theme, st.active);
+            const styles = getMonochromeCardStyles(st.active);
             const card = document.getElementById(`card-${taskId}`);
             const badge = document.getElementById(`badge-${taskId}`);
             const clearBtn = document.getElementById(`clear-${taskId}`);
 
             if (!card || !badge || !clearBtn) return;
-            card.className = `task-card rounded-2xl border p-4 flex flex-col justify-between gap-2.5 ${styles.card}`;
-            badge.className = `text-[11px] font-mono px-2 py-0.5 rounded-md transition-colors ${styles.badge}`;
+            card.className = `task-card rounded-3xl border p-5 flex flex-col justify-between gap-3 ${styles.card}`;
+            badge.className = `text-[11px] font-mono px-2.5 py-0.5 rounded-full transition-colors ${styles.badge}`;
             if (st.active) {
                 clearBtn.classList.remove('hidden');
                 clearBtn.classList.add('flex');
@@ -1087,17 +1130,17 @@
 
         function handleDragOver(e) {
             e.preventDefault();
-            document.getElementById('photo-dropzone').classList.add('border-neon-purple', 'bg-neon-purple/10');
+            document.getElementById('photo-dropzone').classList.add('border-apple-blue', 'bg-apple-blue/5');
         }
 
         function handleDragLeave(e) {
             e.preventDefault();
-            document.getElementById('photo-dropzone').classList.remove('border-neon-purple', 'bg-neon-purple/10');
+            document.getElementById('photo-dropzone').classList.remove('border-apple-blue', 'bg-apple-blue/5');
         }
 
         function handleDrop(e) {
             e.preventDefault();
-            document.getElementById('photo-dropzone').classList.remove('border-neon-purple', 'bg-neon-purple/10');
+            document.getElementById('photo-dropzone').classList.remove('border-apple-blue', 'bg-apple-blue/5');
             if (e.dataTransfer && e.dataTransfer.files) {
                 handleFilesSelected(e.dataTransfer.files);
             }
@@ -1108,7 +1151,7 @@
             if (files.length === 0) return;
 
             const config = getCompressionConfig();
-            showToast(`Mengompres ${files.length} foto ala media sosial...`);
+            showToast(`Mengompres ${files.length} foto secara otomatis...`);
 
             for (const file of files) {
                 try {
@@ -1217,17 +1260,17 @@
             grid.innerHTML = queuedPhotos.map((p, idx) => {
                 const pct = p.originalSize > 0 ? Math.max(0, Math.round(((p.originalSize - p.compressedSize) / p.originalSize) * 100)) : 0;
                 return `
-                    <div class="relative group rounded-xl overflow-hidden border border-white/10 bg-void">
+                    <div class="relative group rounded-2xl overflow-hidden border border-black/10 bg-apple-bg">
                         <img src="${p.dataUrl}" alt="${escapeAttr(p.name)}"
                             onclick="openPhotoModal('${p.dataUrl}', '${escapeAttr(p.name)}', '${p.width}×${p.height}px • ${formatBytes(p.compressedSize)}')"
                             class="w-full h-24 object-cover cursor-pointer group-hover:scale-105 transition-transform">
                         <button type="button" onclick="removeQueuedPhoto(${idx})" title="Hapus Foto"
-                            class="absolute top-1.5 right-1.5 w-6 h-6 rounded-lg bg-black/75 text-white hover:bg-rose-500 flex items-center justify-center text-xs font-bold">
+                            class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-black/75 text-white hover:bg-black flex items-center justify-center text-xs font-semibold">
                             ×
                         </button>
-                        <div class="p-2 text-[10px] font-mono bg-void/95 border-t border-white/5 space-y-0.5">
-                            <p class="text-slate-300 truncate">${escapeHtml(p.name)}</p>
-                            <p class="text-neon-greenBright">${formatBytes(p.originalSize)} → ${formatBytes(p.compressedSize)} (-${pct}%)</p>
+                        <div class="p-2 text-[10px] font-mono bg-white border-t border-black/[0.06] space-y-0.5">
+                            <p class="text-apple-ink truncate">${escapeHtml(p.name)}</p>
+                            <p class="text-apple-blue font-semibold">${formatBytes(p.originalSize)} → ${formatBytes(p.compressedSize)} (-${pct}%)</p>
                         </div>
                     </div>
                 `;
@@ -1362,8 +1405,8 @@
             box.innerHTML = TASKS.map(t => {
                 const checked = feedEnabledTasks.has(t.id) ? 'checked' : '';
                 return `
-                    <label class="flex items-center gap-2 py-1 px-2 rounded-lg hover:bg-white/5 cursor-pointer text-slate-300 select-none">
-                        <input type="checkbox" ${checked} onchange="toggleFeedTask('${t.id}', this.checked)" class="accent-emerald-400 rounded">
+                    <label class="flex items-center gap-2 py-1 px-2 rounded-lg hover:bg-apple-bg cursor-pointer text-apple-ink select-none">
+                        <input type="checkbox" ${checked} onchange="toggleFeedTask('${t.id}', this.checked)" class="accent-black rounded">
                         <span class="truncate">${t.shortCode} · ${t.label}</span>
                     </label>
                 `;
@@ -1469,18 +1512,16 @@
 
             empty.classList.add('hidden');
             grid.innerHTML = items.map(item => {
-                const taskMeta = TASKS.find(t => t.id === item.taskId) || TASKS[0];
-                const styles = getThemeStyles(taskMeta.theme, false);
                 const statusBadge = item.status === 'Done'
-                    ? 'bg-neon-green/15 text-neon-greenBright border-neon-green/30'
+                    ? 'bg-apple-ink text-white'
                     : item.status === 'Progress'
-                        ? 'bg-neon-purple/15 text-neon-purpleBright border-neon-purple/30'
-                        : 'bg-amber-400/15 text-amber-300 border-amber-400/30';
+                        ? 'bg-apple-blue/10 text-apple-blue border border-apple-blue/30'
+                        : 'bg-apple-bg text-apple-muted border border-black/10';
 
                 const isStore = item.lokasi && item.lokasi !== 'Umum / HO';
                 const locPill = isStore
-                    ? 'bg-neon-green/10 text-neon-greenBright border-neon-green/30'
-                    : 'bg-white/5 text-slate-300 border-white/10';
+                    ? 'bg-apple-ink/5 text-apple-ink font-semibold border-black/15'
+                    : 'bg-apple-bg text-apple-muted border-black/[0.06]';
 
                 const photos = item.photos || [];
                 const driveUrls = (item.fotoLink || '')
@@ -1492,14 +1533,14 @@
                 if (photos.length > 0) {
                     photosHtml = `
                         <div class="pt-1 space-y-1.5">
-                            <span class="text-[10px] font-mono text-neon-purpleBright flex items-center gap-1">
+                            <span class="text-[11px] font-medium text-apple-muted flex items-center gap-1">
                                 <i data-lucide="image" class="w-3 h-3"></i> ${photos.length} Foto Terlampir
                             </span>
                             <div class="flex gap-1.5 overflow-x-auto pb-1">
                                 ${photos.map(ph => `
                                     <img src="${ph.dataUrl}" alt="${escapeAttr(ph.name)}"
                                         onclick="openPhotoModal('${ph.dataUrl}', '${escapeAttr(ph.name)}', '${ph.width || ''}×${ph.height || ''}px • ${formatBytes(ph.compressedSize || 0)}')"
-                                        class="w-12 h-12 rounded-lg object-cover border border-white/15 cursor-pointer shrink-0 hover:opacity-85">
+                                        class="w-12 h-12 rounded-xl object-cover border border-black/10 cursor-pointer shrink-0 hover:opacity-85">
                                 `).join('')}
                             </div>
                         </div>
@@ -1509,7 +1550,7 @@
                         <div class="pt-1 flex flex-wrap gap-1.5">
                             ${driveUrls.map((u, idx) => `
                                 <a href="${escapeAttr(u)}" target="_blank" rel="noopener noreferrer"
-                                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-mono bg-neon-purple/15 text-neon-purpleBright border border-neon-purple/30 hover:bg-neon-purple/25 transition-colors">
+                                    class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-medium text-apple-blue bg-apple-blue/5 border border-apple-blue/30 hover:bg-apple-blue/10 transition-colors">
                                     <i data-lucide="external-link" class="w-3 h-3"></i>
                                     <span>Foto Drive #${idx + 1}</span>
                                 </a>
@@ -1519,39 +1560,39 @@
                 }
 
                 return `
-                    <article class="rounded-2xl border border-white/10 bg-surface/85 p-4 flex flex-col justify-between gap-3 hover:border-white/25 transition-all">
-                        <div class="space-y-2.5">
+                    <article class="rounded-3xl border border-black/[0.08] bg-white p-5 flex flex-col justify-between gap-3 shadow-apple-card hover:shadow-apple-hover transition-all">
+                        <div class="space-y-3">
                             <div class="flex items-start justify-between gap-2">
-                                <span class="text-[11px] font-mono px-2 py-0.5 rounded-md ${styles.badge}">
+                                <span class="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-apple-bg text-apple-ink border border-black/[0.06]">
                                     ${escapeHtml(item.task)}
                                 </span>
-                                <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full border ${statusBadge}">
+                                <span class="text-[10px] font-semibold px-2.5 py-0.5 rounded-full ${statusBadge}">
                                     ${escapeHtml(item.status)}
                                 </span>
                             </div>
 
                             <div class="flex flex-wrap items-center gap-1.5 text-[11px]">
-                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border font-medium ${locPill}">
+                                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border ${locPill}">
                                     <i data-lucide="map-pin" class="w-3 h-3"></i>
                                     ${escapeHtml(item.lokasi || 'Umum / HO')}
                                 </span>
-                                <span class="text-slate-500 font-mono">${escapeHtml(item.tanggal)}</span>
+                                <span class="text-apple-subtle font-mono">${escapeHtml(item.tanggal)}</span>
                             </div>
 
-                            <p class="text-xs sm:text-sm text-slate-100 bg-void/80 border border-white/5 rounded-xl p-3 leading-relaxed whitespace-pre-line">
+                            <p class="text-xs sm:text-sm text-apple-ink bg-apple-bg/70 rounded-2xl p-3.5 leading-relaxed whitespace-pre-line">
                                 ${escapeHtml(item.aktivitas)}
                             </p>
 
                             ${photosHtml}
                         </div>
 
-                        <div class="pt-2 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-500">
+                        <div class="pt-2.5 border-t border-black/[0.06] flex items-center justify-between text-[11px] text-apple-subtle">
                             <span class="font-mono">${escapeHtml((item.timestamp.split(' ')[1] || item.timestamp))}</span>
-                            <div class="flex items-center gap-1.5">
-                                <button type="button" onclick="editLogEntry('${item.id}')" class="px-2 py-1 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors">
+                            <div class="flex items-center gap-1">
+                                <button type="button" onclick="editLogEntry('${item.id}')" class="px-2.5 py-1 rounded-full text-apple-blue font-medium hover:bg-apple-blue/5 transition-colors">
                                     Edit
                                 </button>
-                                <button type="button" onclick="deleteLogEntry('${item.id}')" class="px-2 py-1 rounded-lg text-rose-400 hover:bg-rose-500/15 transition-colors">
+                                <button type="button" onclick="deleteLogEntry('${item.id}')" class="px-2.5 py-1 rounded-full text-red-600 font-medium hover:bg-red-50 transition-colors">
                                     Hapus
                                 </button>
                             </div>
@@ -1641,7 +1682,6 @@
             const base = parseLocalDate(selectedDate);
             const monthLabel = `${INDO_MONTHS_FULL[base.getMonth()]} ${base.getFullYear()}`;
             document.getElementById('matrix-month-title').innerHTML = `
-                <i data-lucide="grid-3x3" class="w-5 h-5 text-neon-greenBright"></i>
                 <span>Matriks Bulanan — ${monthLabel}</span>
             `;
 
@@ -1652,28 +1692,28 @@
             tbody.innerHTML = rows.map(r => {
                 const isSelected = r.iso === selectedDate;
                 const rowBg = isSelected
-                    ? 'bg-neon-green/10'
+                    ? 'bg-apple-blue/[0.06]'
                     : r.isWeekend
-                        ? 'bg-rose-950/15 text-slate-400'
-                        : 'hover:bg-white/[0.03]';
+                        ? 'bg-apple-bg/60 text-apple-muted'
+                        : 'hover:bg-apple-bg/40';
 
                 const dayColor = r.dayName === 'Min'
-                    ? 'text-rose-400 font-bold'
+                    ? 'text-red-600 font-semibold'
                     : r.dayName === 'Sab'
-                        ? 'text-amber-300 font-semibold'
-                        : 'text-slate-300';
+                        ? 'text-apple-muted font-semibold'
+                        : 'text-apple-ink';
 
                 const cellsHtml = TASKS.map(t => {
                     const val = r.taskCells[t.id];
-                    return `<td class="py-2 px-3 align-top text-slate-200 leading-snug max-w-[220px]">${val ? escapeHtml(val) : '<span class="text-slate-700">-</span>'}</td>`;
+                    return `<td class="py-2.5 px-3 align-top text-apple-ink leading-snug max-w-[220px]">${val ? escapeHtml(val) : '<span class="text-black/20">-</span>'}</td>`;
                 }).join('');
 
                 return `
                     <tr class="${rowBg}">
-                        <td class="py-2 px-3 font-mono sticky left-0 bg-void/95 ${dayColor}">${r.dayName}</td>
-                        <td class="py-2 px-3 font-mono font-semibold text-white sticky left-12 bg-void/95">${r.dayNum}</td>
+                        <td class="py-2.5 px-3 font-mono sticky left-0 bg-white/95 ${dayColor}">${r.dayName}</td>
+                        <td class="py-2.5 px-3 font-mono font-semibold text-apple-ink sticky left-12 bg-white/95">${r.dayNum}</td>
                         ${cellsHtml}
-                        <td class="py-2 px-3 font-mono font-bold text-center ${r.totalActive > 0 ? 'text-neon-greenBright' : 'text-slate-600'}">${r.totalActive}</td>
+                        <td class="py-2.5 px-3 font-mono font-bold text-center ${r.totalActive > 0 ? 'text-apple-blue' : 'text-black/25'}">${r.totalActive}</td>
                     </tr>
                 `;
             }).join('');
@@ -1683,9 +1723,9 @@
 
             tfoot.innerHTML = `
                 <tr>
-                    <td colspan="2" class="py-2.5 px-3 text-white sticky left-0 bg-surface z-10">Total Hari</td>
+                    <td colspan="2" class="py-2.5 px-3 text-apple-ink sticky left-0 bg-apple-bg z-10">Total Hari</td>
                     ${taskDayCounts.map(cnt => `<td class="py-2.5 px-3">${cnt} hr</td>`).join('')}
-                    <td class="py-2.5 px-3 text-center text-white">${grandTotalDays}</td>
+                    <td class="py-2.5 px-3 text-center text-apple-blue">${grandTotalDays}</td>
                 </tr>
             `;
 
@@ -1833,14 +1873,14 @@
             const el = document.createElement('div');
             const isErr = type === 'error';
 
-            el.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-2xl border text-xs sm:text-sm font-medium transition-all duration-300 transform -translate-y-2 opacity-0 backdrop-blur-md ${
+            el.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-2xl shadow-lg border text-xs sm:text-sm font-medium transition-all duration-300 transform -translate-y-2 opacity-0 backdrop-blur-md ${
                 isErr
-                    ? 'bg-rose-950/95 text-rose-100 border-rose-500/40'
-                    : 'bg-surface/95 text-white border-neon-green/45'
+                    ? 'bg-red-50/95 text-red-900 border-red-200'
+                    : 'bg-white/95 text-apple-ink border-black/10'
             }`;
 
             el.innerHTML = `
-                <i data-lucide="${isErr ? 'alert-circle' : 'check-circle-2'}" class="w-4 h-4 ${isErr ? 'text-rose-400' : 'text-neon-greenBright'} shrink-0"></i>
+                <i data-lucide="${isErr ? 'alert-circle' : 'check-circle-2'}" class="w-4 h-4 ${isErr ? 'text-red-600' : 'text-apple-blue'} shrink-0"></i>
                 <span>${escapeHtml(msg)}</span>
             `;
 
