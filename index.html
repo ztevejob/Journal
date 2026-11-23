@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Daily Work Journal — Task 1–9 Compact Tracker</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        obsidian: {
+                            950: '#090d16',
+                            900: '#0f172a',
+                            850: '#131c31',
+                            800: '#182238',
+                        },
+                        neon: {
+                            green: '#22c55e',
+                            emerald: '#10b981',
+                            purple: '#a855f7',
+                        }
+                    },
+                    boxShadow: {
+                        'neon-green': '0 0 22px -6px rgba(34, 197, 94, 0.45)',
+                        'neon-purple': '0 0 22px -6px rgba(168, 85, 247, 0.45)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #090d16;
+            background-image:
+                radial-gradient(circle at 10% 8%, rgba(34, 197, 94, 0.08) 0%, transparent 36%),
+                radial-gradient(circle at 90% 12%, rgba(168, 85, 247, 0.09) 0%, transparent 38%);
+            background-attachment: fixed;
+            color: #e2e8f0;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.72);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-dock {
+            background: rgba(9, 13, 22, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.09);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1) opacity(0.75);
+            cursor: pointer;
+        }
+
+        .task-card {
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-24 lg:pb-10 selection:bg-neon-green/25 selection:text-neon-green">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none max-w-sm w-full px-4 sm:px-0"></div>
+
+    <!-- Modal: WhatsApp Summary Preview -->
+    <div id="wa-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="glass-panel rounded-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[88vh] shadow-2xl border border-white/10">
+            <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between bg-obsidian-950/60">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-neon-green/15 border border-neon-green/30 flex items-center justify-center text-neon-green">
+                        <i data-lucide="message-square-text" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-white text-sm">Ringkasan Laporan WhatsApp</h3>
+                        <p class="text-[11px] text-slate-400">Hanya menampilkan Task aktif pada tanggal terpilih</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('wa-modal')" class="p-1.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-5 overflow-y-auto flex-1">
+                <textarea id="wa-report-text" readonly class="w-full h-64 p-3.5 text-xs sm:text-sm font-mono bg-obsidian-950 border border-white/10 rounded-xl text-slate-200 focus:outline-none resize-none leading-relaxed"></textarea>
+            </div>
+            <div class="px-5 py-3.5 border-t border-white/10 bg-obsidian-950/60 flex items-center justify-end gap-2.5">
+                <button onclick="closeModal('wa-modal')" class="px-4 py-2 text-xs font-medium text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-colors">
+                    Tutup
+                </button>
+                <button onclick="copyWhatsAppText()" class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-obsidian-950 bg-neon-green hover:bg-emerald-400 rounded-xl transition-all shadow-neon-green">
+                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    Salin Laporan WA
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Google Sheets Webhook Setup -->
+    <div id="webhook-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="glass-panel rounded-2xl w-full max-w-xl overflow-hidden flex flex-col max-h-[90vh] shadow-2xl border border-white/10">
+            <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between bg-obsidian-950/60">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-neon-purple/15 border border-neon-purple/30 flex items-center justify-center text-neon-purple">
+                        <i data-lucide="sheet" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-white text-sm">Koneksi Google Sheets (Matriks Bulanan)</h3>
+                        <p class="text-[11px] text-slate-400">Otomatis mengisi/memperbarui baris tanggal (01–31) di sheet Anda</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('webhook-modal')" class="p-1.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-5 overflow-y-auto space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1.5">URL Web App Google Apps Script (`doPost`)</label>
+                    <input type="url" id="webhook-url-input" placeholder="https://script.google.com/macros/s/AKfycb.../exec"
+                        class="w-full bg-obsidian-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-neon-purple">
+                    <p class="text-[11px] text-slate-400 mt-1.5">URL tersimpan otomatis di browser ini. Saat Anda klik <b>Simpan &amp; Kirim</b>, baris tanggal yang cocok akan langsung diperbarui.</p>
+                </div>
+
+                <div class="bg-obsidian-950 border border-white/10 rounded-xl p-3.5">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[11px] font-semibold text-neon-purple uppercase tracking-wider">Kode Apps Script (Update Baris Tanggal 01–31)</span>
+                        <button onclick="copyAppsScriptCode()" class="text-[11px] text-slate-300 hover:text-white inline-flex items-center gap-1 bg-white/5 hover:bg-white/10 px-2.5 py-1 rounded-lg transition-colors">
+                            <i data-lucide="copy" class="w-3 h-3"></i> Salin Kode
+                        </button>
+                    </div>
+                    <pre id="apps-script-snippet" class="text-[11px] font-mono text-slate-300 overflow-x-auto leading-relaxed">function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var d = JSON.parse(e.postData.contents);
+  // d = { dayName: "Sen", dayNum: "23", tasks: ["...", ...] }
+  var lastRow = sheet.getLastRow();
+  var targetRow = -1;
+
+  for (var r = 2; r <= lastRow; r++) {
+    var cellVal = String(sheet.getRange(r, 2).getValue()).trim().padStart(2, '0');
+    if (cellVal === d.dayNum) {
+      targetRow = r;
+      break;
+    }
+  }
+
+  var rowValues = [d.dayName, d.dayNum].concat(d.tasks);
+  if (targetRow > 0) {
+    sheet.getRange(targetRow, 1, 1, rowValues.length).setValues([rowValues]);
+  } else {
+    sheet.appendRow(rowValues);
+  }
+
+  return ContentService.createTextOutput(JSON.stringify({ status: "ok" }))
+    .setMimeType(ContentService.MimeType.JSON);
+}</pre>
+                </div>
+            </div>
+            <div class="px-5 py-3.5 border-t border-white/10 bg-obsidian-950/60 flex items-center justify-between gap-2">
+                <button onclick="saveWebhookUrl()" class="px-4 py-2 text-xs font-semibold text-white bg-white/10 hover:bg-white/15 rounded-xl transition-colors">
+                    Simpan URL
+                </button>
+                <button onclick="pushToGoogleSheets()" id="modal-push-btn" class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-neon-purple hover:bg-purple-500 rounded-xl transition-all shadow-neon-purple">
+                    <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                    Kirim Tanggal Ini ke Sheets
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 lg:pt-7">
+        <div class="flex flex-col lg:flex-row gap-6">
+
+            <!-- Desktop Glassmorphism Sidebar -->
+            <aside class="hidden lg:flex flex-col justify-between w-64 shrink-0 glass-panel rounded-2xl p-5 h-[calc(100vh-3.5rem)] sticky top-7">
+                <div class="space-y-6">
+                    <!-- Brand -->
+                    <div class="flex items-center gap-3 px-1">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-green/20 to-neon-purple/20 border border-neon-green/40 flex items-center justify-center shadow-neon-green">
+                            <i data-lucide="check-square" class="w-5 h-5 text-neon-green"></i>
+                        </div>
+                        <div>
+                            <h1 class="font-bold text-white text-sm tracking-tight leading-tight">Daily Work<br><span class="text-neon-green">Journal</span></h1>
+                            <span class="text-[10px] font-mono text-slate-400">TASK 1–9 TRACKER</span>
+                        </div>
+                    </div>
+
+                    <!-- Navigation -->
+                    <nav class="space-y-1.5">
+                        <button onclick="switchView('today')" id="nav-desk-today" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-neon-green/15 text-neon-green border border-neon-green/35">
+                            <i data-lucide="calendar-check" class="w-4 h-4"></i>
+                            <span>Kegiatan Hari Ini</span>
+                        </button>
+                        <button onclick="switchView('daily')" id="nav-desk-daily" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all border border-transparent">
+                            <i data-lucide="layout-grid" class="w-4 h-4"></i>
+                            <span>Input Harian</span>
+                        </button>
+                        <button onclick="switchView('matrix')" id="nav-desk-matrix" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all border border-transparent">
+                            <i data-lucide="table" class="w-4 h-4"></i>
+                            <span>Matriks Bulanan</span>
+                        </button>
+                    </nav>
+
+                    <!-- Quick Tips -->
+                    <div class="p-3.5 rounded-xl bg-obsidian-950/80 border border-white/5 space-y-2">
+                        <p class="text-[11px] font-semibold text-slate-300 flex items-center gap-1.5">
+                            <i data-lucide="zap" class="w-3.5 h-3.5 text-neon-green"></i>
+                            Alur Super Cepat
+                        </p>
+                        <p class="text-[11px] text-slate-400 leading-relaxed">
+                            Klik kartu Task atau langsung ketik aktivitas di dalamnya. Tersimpan otomatis per tanggal tanpa perlu isi durasi.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Quick Export & Sheets Buttons -->
+                <div class="space-y-2 pt-4 border-t border-white/10">
+                    <button onclick="openWhatsAppModal()" class="w-full flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-bold text-obsidian-950 bg-neon-green hover:bg-emerald-400 transition-all shadow-neon-green">
+                        <i data-lucide="message-square-text" class="w-4 h-4"></i>
+                        Salin Laporan WA
+                    </button>
+                    <button onclick="copyTableRowTSV()" class="w-full flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors">
+                        <i data-lucide="clipboard-copy" class="w-3.5 h-3.5 text-neon-green"></i>
+                        Salin Baris Tabel (TSV)
+                    </button>
+                    <button onclick="openWebhookModal()" class="w-full flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold text-neon-purple bg-neon-purple/10 hover:bg-neon-purple/20 border border-neon-purple/30 transition-colors">
+                        <i data-lucide="sheet" class="w-3.5 h-3.5"></i>
+                        Setup Google Sheets
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Workspace Area -->
+            <main class="flex-1 min-w-0 space-y-5">
+
+                <!-- Top Date & Action Header -->
+                <header class="glass-panel rounded-2xl p-4 sm:p-5">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <!-- Date Navigation -->
+                        <div class="flex flex-wrap items-center gap-3">
+                            <div class="flex items-center bg-obsidian-950 border border-white/10 rounded-xl p-1">
+                                <button onclick="shiftDate(-1)" title="Hari Sebelumnya" class="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+                                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                                </button>
+                                <input type="date" id="date-picker" class="bg-transparent text-xs sm:text-sm font-mono font-semibold text-white px-2 py-1 focus:outline-none">
+                                <button onclick="shiftDate(1)" title="Hari Berikutnya" class="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h2 id="formatted-date-title" class="text-base sm:text-lg font-bold text-white tracking-tight">Sen, 23 Nov 2026</h2>
+                                    <span id="weekend-badge" class="hidden text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-400 border border-rose-500/30">
+                                        Weekend
+                                    </span>
+                                </div>
+                                <div class="flex items-center gap-2 mt-0.5">
+                                    <span id="active-counter-label" class="text-xs font-mono text-neon-green font-semibold">0 Task Aktif</span>
+                                    <span class="text-slate-600">•</span>
+                                    <span id="autosave-status" class="text-[11px] font-mono text-slate-400">Auto-saved lokal</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Action Controls -->
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button onclick="openWhatsAppModal()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors">
+                                <i data-lucide="message-square-text" class="w-3.5 h-3.5 text-neon-green"></i>
+                                <span class="hidden sm:inline">Salin Laporan WA</span>
+                                <span class="sm:hidden">WA</span>
+                            </button>
+                            <button onclick="copyTableRowTSV()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors">
+                                <i data-lucide="clipboard-copy" class="w-3.5 h-3.5 text-neon-purple"></i>
+                                <span class="hidden sm:inline">Salin Baris Tabel (TSV)</span>
+                                <span class="sm:hidden">TSV</span>
+                            </button>
+                            <button onclick="handleSaveAndSubmit()" id="btn-save-submit" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-obsidian-950 bg-neon-green hover:bg-emerald-400 transition-all shadow-neon-green">
+                                <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                                <span>Simpan &amp; Kirim</span>
+                            </button>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- VIEW 1: INPUT HARIAN (3x3 BENTO GRID) -->
+                <section id="view-daily" class="hidden space-y-4">
+                    <div id="bento-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
+                        <!-- 9 Task Cards rendered dynamically via JS -->
+                    </div>
+                </section>
+
+                <!-- VIEW 0: KEGIATAN HARI INI (SCHEDULE CARD GRID + LEFT FILTERS + TOP SEARCH) -->
+                <section id="view-today" class="space-y-4">
+                    <div class="glass-panel rounded-2xl p-4 sm:p-5">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                            <div>
+                                <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
+                                    <span>Kegiatan Hari Ini</span>
+                                    <span id="today-scope-badge" class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-neon-green/15 text-neon-green border border-neon-green/30">
+                                        Hari Ini
+                                    </span>
+                                </h3>
+                                <p id="today-summary-subtitle" class="text-xs text-slate-400 mt-0.5">
+                                    Menampilkan aktivitas tercatat pada tanggal terpilih
+                                </p>
+                            </div>
+                            <button onclick="jumpToInputDate(selectedDate)" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-obsidian-950 bg-neon-green hover:bg-emerald-400 transition-all shadow-neon-green self-start sm:self-auto">
+                                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                                <span>Catat / Edit Aktivitas</span>
+                            </button>
+                        </div>
+
+                        <!-- Top Search Bar -->
+                        <div class="relative mb-5">
+                            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                            <input type="text" id="today-search-input" oninput="renderTodaySchedule()"
+                                placeholder="Cari kegiatan, nama toko, email akses, topik meeting, atau task..."
+                                class="w-full bg-obsidian-950/90 border border-white/10 rounded-xl pl-10 pr-10 py-2.5 text-xs sm:text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-neon-green/60 transition-colors">
+                            <button type="button" id="today-search-clear" onclick="clearTodaySearch()" title="Hapus pencarian"
+                                class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-white rounded-lg">
+                                <i data-lucide="x" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+
+                        <!-- Left Filter Panel + Right Activity Card Grid -->
+                        <div class="flex flex-col md:flex-row gap-5 items-start">
+                            <!-- Left Filter Sidebar -->
+                            <aside class="w-full md:w-56 shrink-0 bg-obsidian-950/75 border border-white/10 rounded-2xl p-3.5 space-y-4">
+                                <!-- Date Scope Filter -->
+                                <div>
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xs font-bold text-white tracking-wide">Rentang Waktu</span>
+                                        <button type="button" onclick="resetTodayFilters()" class="text-[11px] font-medium text-neon-purple hover:underline">
+                                            Reset
+                                        </button>
+                                    </div>
+                                    <div class="space-y-1 text-xs">
+                                        <label class="flex items-center gap-2 py-1 px-2 rounded-lg hover:bg-white/5 cursor-pointer text-slate-200">
+                                            <input type="radio" name="today-scope" value="today" checked onchange="renderTodaySchedule()" class="accent-emerald-400">
+                                            <span>Tanggal Terpilih (Hari Ini)</span>
+                                        </label>
+                                        <label class="flex items-center gap-2 py-1 px-2 rounded-lg hover:bg-white/5 cursor-pointer text-slate-300">
+                                            <input type="radio" name="today-scope" value="week" onchange="renderTodaySchedule()" class="accent-emerald-400">
+                                            <span>Minggu Ini</span>
+                                        </label>
+                                        <label class="flex items-center gap-2 py-1 px-2 rounded-lg hover:bg-white/5 cursor-pointer text-slate-300">
+                                            <input type="radio" name="today-scope" value="month" onchange="renderTodaySchedule()" class="accent-emerald-400">
+                                            <span>Bulan Ini</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="border-t border-white/10 pt-3">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xs font-bold text-white tracking-wide">Kategori Task</span>
+                                        <button type="button" onclick="setAllTaskFilters(true)" class="text-[10px] font-mono text-slate-400 hover:text-neon-green">
+                                            Semua
+                                        </button>
+                                    </div>
+                                    <div id="today-task-filters" class="space-y-1 max-h-64 overflow-y-auto pr-1 text-xs">
+                                        <!-- Task filter checkboxes rendered dynamically -->
+                                    </div>
+                                </div>
+                            </aside>
+
+                            <!-- Right Cards Grid -->
+                            <div class="flex-1 min-w-0 w-full">
+                                <div id="today-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3.5">
+                                    <!-- Activity cards rendered dynamically -->
+                                </div>
+                                <div id="today-empty-state" class="hidden rounded-2xl border border-dashed border-white/10 bg-obsidian-950/50 p-8 text-center space-y-2.5">
+                                    <div class="w-11 h-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto text-slate-400">
+                                        <i data-lucide="calendar-off" class="w-5 h-5"></i>
+                                    </div>
+                                    <h4 class="text-sm font-bold text-white">Belum ada kegiatan ditampilkan</h4>
+                                    <p class="text-xs text-slate-400 max-w-md mx-auto">
+                                        Tidak ada catatan yang cocok dengan filter atau kata kunci saat ini. Klik tombol di bawah untuk langsung mengetik aktivitas pada tanggal terpilih.
+                                    </p>
+                                    <button onclick="jumpToInputDate(selectedDate)" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-obsidian-950 bg-neon-green hover:bg-emerald-400 transition-all">
+                                        <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                                        <span>Isi Catatan Task 1–9</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VIEW 2: MATRIKS BULANAN (GOOGLE SHEETS MIRROR) -->
+                <section id="view-matrix" class="hidden space-y-4">
+                    <div class="glass-panel rounded-2xl p-4 sm:p-5">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                            <div>
+                                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                                    <i data-lucide="table" class="w-4 h-4 text-neon-purple"></i>
+                                    Matriks Bulanan — <span id="matrix-month-title" class="text-neon-green">November 2026</span>
+                                </h3>
+                                <p class="text-xs text-slate-400 mt-0.5">Klik baris tanggal mana saja untuk langsung mengisi atau mengedit catatan hari tersebut.</p>
+                            </div>
+                            <button onclick="copyFullMonthTSV()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-white bg-neon-purple/20 hover:bg-neon-purple/30 border border-neon-purple/40 transition-colors self-start sm:self-auto">
+                                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                                Salin Seluruh Bulan (TSV)
+                            </button>
+                        </div>
+
+                        <!-- Responsive Matrix Table -->
+                        <div class="overflow-x-auto rounded-xl border border-white/10 bg-obsidian-950/90">
+                            <table class="w-full text-left border-collapse min-w-[1150px]">
+                                <thead>
+                                    <tr class="border-b border-white/10 bg-obsidian-900/95 text-[11px] font-mono uppercase tracking-wider text-slate-300">
+                                        <th class="py-3 px-2.5 w-14 text-center border-r border-white/5">Hari</th>
+                                        <th class="py-3 px-2.5 w-16 text-center border-r border-white/10">Tanggal</th>
+                                        <th class="py-3 px-3 border-r border-white/5 text-neon-green">Task 1 - Training</th>
+                                        <th class="py-3 px-3 border-r border-white/5 text-neon-green">Task 2 - Roleplay</th>
+                                        <th class="py-3 px-3 border-r border-white/5 text-neon-purple">Task 3 - DCOTA + Sales Coach</th>
+                                        <th class="py-3 px-3 border-r border-white/5 text-neon-purple">Task 4 - StreamzAI</th>
+                                        <th class="py-3 px-3 border-r border-white/5 text-neon-green">Task 5 - Pemadanan Data</th>
+                                        <th class="py-3 px-3 border-r border-white/5 text-neon-purple">Task 6 - Develope</th>
+                                        <th class="py-3 px-3 border-r border-white/5 text-slate-300">Task 7 - General</th>
+                                        <th class="py-3 px-3 border-r border-white/5 text-neon-purple">Task 8 - Meeting</th>
+                                        <th class="py-3 px-3 border-r border-white/10 text-neon-green">Task 9 - Store Visit</th>
+                                        <th class="py-3 px-2.5 w-20 text-center">Total Task</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="matrix-tbody" class="text-xs divide-y divide-white/5">
+                                    <!-- Rows 01..31 rendered dynamically via JS -->
+                                </tbody>
+                                <tfoot id="matrix-tfoot" class="border-t-2 border-white/15 bg-obsidian-900 font-mono text-xs font-bold text-white">
+                                    <!-- Summary COUNT row rendered dynamically via JS -->
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Subtle Footer -->
+                <footer class="pt-2 pb-4 text-center space-y-1">
+                    <p class="text-[11px] font-mono text-slate-500">Daily Work Journal • Task 1–9 Tracker</p>
+                    <p class="text-[11px] text-slate-500">Concept &amp; Curation by Novi Riyanto | Developed in collaboration with Gemini AI</p>
+                </footer>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom iOS-Style Dock -->
+    <nav class="lg:hidden fixed bottom-0 inset-x-0 z-40 glass-dock px-1.5 py-2 flex items-center justify-around">
+        <button onclick="switchView('today')" id="nav-mob-today" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-neon-green">
+            <i data-lucide="calendar-check" class="w-5 h-5"></i>
+            <span class="text-[10px] font-semibold">Hari Ini</span>
+        </button>
+        <button onclick="switchView('daily')" id="nav-mob-daily" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-slate-400 hover:text-white">
+            <i data-lucide="layout-grid" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Input</span>
+        </button>
+        <button onclick="switchView('matrix')" id="nav-mob-matrix" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-slate-400 hover:text-white">
+            <i data-lucide="table" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Matriks</span>
+        </button>
+        <button onclick="openWhatsAppModal()" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-slate-400 hover:text-neon-green">
+            <i data-lucide="message-square-text" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">WA</span>
+        </button>
+        <button onclick="openWebhookModal()" class="flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-slate-400 hover:text-neon-purple">
+            <i data-lucide="sheet" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Sheets</span>
+        </button>
+    </nav>
+
+    <script>
+        /**
+         * Daily Work Journal — Task 1–9 Compact Tracker
+         * Ultra-fast single-file journal with zero duration fields, auto-saving per date,
+         * 3x3 Bento Grid, Monthly Calendar Matrix view, TSV row copy, WhatsApp summary,
+         * and direct Google Apps Script Webhook integration.
+         */
+
+        const STORAGE_PREFIX = 'dwj_compact_v1_';
+        const WEBHOOK_KEY = 'dwj_compact_webhook_url';
+
+        const TASKS = [
+            { id: 't1', code: 'Task 1', label: 'Training', icon: 'graduation-cap', accent: 'green', placeholder: 'Misal: Training ACE 4 staff TP3...' },
+            { id: 't2', code: 'Task 2', label: 'Roleplay', icon: 'users', accent: 'green', placeholder: 'Misal: Roleplay CARES & LOB 3 staff...' },
+            { id: 't3', code: 'Task 3', label: 'DCOTA + Sales Coach', icon: 'shield-check', accent: 'purple', placeholder: 'Misal: Buka akses zulvaalianti.digimap@gmail.com...' },
+            { id: 't4', code: 'Task 4', label: 'StreamzAI', icon: 'sparkles', accent: 'purple', placeholder: 'Misal: Audit compliance & update mapping user...' },
+            { id: 't5', code: 'Task 5', label: 'Pemadanan Data', icon: 'database', accent: 'green', placeholder: 'Misal: Check pemadanan data LOB & headcount...' },
+            { id: 't6', code: 'Task 6', label: 'Develope', icon: 'code-2', accent: 'purple', placeholder: 'Misal: Design dashboard monitor LOB Champion...' },
+            { id: 't7', code: 'Task 7', label: 'General', icon: 'folder-kanban', accent: 'green', placeholder: 'Misal: Aturan tambahan new staff & koordinasi...' },
+            { id: 't8', code: 'Task 8', label: 'Meeting', icon: 'video', accent: 'purple', placeholder: 'Misal: Meeting QTR, eSim Indosat, Weekly Connect...' },
+            { id: 't9', code: 'Task 9', label: 'Store Visit', icon: 'store', accent: 'green', placeholder: 'Misal: Visit TP3: cek unit demo & coaching floor...' }
+        ];
+
+        const INDO_DAYS_SHORT = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+        const INDO_MONTHS_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        const INDO_MONTHS_FULL = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+        let selectedDate = '2026-11-23'; // Defaults to today (Nov 23, 2026) or live system date if preferred
+        let currentView = 'today'; // 'today' | 'daily' | 'matrix'
+        let dayData = {}; // { t1: { active: bool, text: string }, ... }
+        let enabledTaskFilters = new Set(TASKS.map(t => t.id));
+        /**
+         * Detect system today or fallback cleanly to 2026-11-23
+         */
+        function getInitialDate() {
+            const now = new Date();
+            if (now.getFullYear() >= 2025) {
+                return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+            }
+            return '2026-11-23';
+        }
+
+        /**
+         * Parse YYYY-MM-DD safely in local timezone
+         */
+        function parseLocalDate(dateStr) {
+            const [y, m, d] = dateStr.split('-').map(Number);
+            return new Date(y, m - 1, d);
+        }
+
+        /**
+         * Format date header like "Sen, 23 Nov 2026"
+         */
+        function formatHeaderDate(dateStr) {
+            const dt = parseLocalDate(dateStr);
+            const dayName = INDO_DAYS_SHORT[dt.getDay()];
+            const dayNum = dt.getDate();
+            const monthName = INDO_MONTHS_SHORT[dt.getMonth()];
+            return `${dayName}, ${dayNum} ${monthName} ${dt.getFullYear()}`;
+        }
+
+        /**
+         * Create blank day state
+         */
+        function createEmptyDayState() {
+            const state = {};
+            TASKS.forEach(t => {
+                state[t.id] = { active: false, text: '' };
+            });
+            return state;
+        }
+
+        /**
+         * Load day data from localStorage
+         */
+        function loadDay(dateStr) {
+            selectedDate = dateStr;
+            document.getElementById('date-picker').value = dateStr;
+            document.getElementById('formatted-date-title').textContent = formatHeaderDate(dateStr);
+
+            const dt = parseLocalDate(dateStr);
+            const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
+            const weekendBadge = document.getElementById('weekend-badge');
+            if (isWeekend) {
+                weekendBadge.classList.remove('hidden');
+            } else {
+                weekendBadge.classList.add('hidden');
+            }
+
+            try {
+                const raw = localStorage.getItem(STORAGE_PREFIX + dateStr);
+                const parsed = raw ? JSON.parse(raw) : null;
+                dayData = createEmptyDayState();
+                if (parsed) {
+                    TASKS.forEach(t => {
+                        if (parsed[t.id]) {
+                            dayData[t.id] = {
+                                active: Boolean(parsed[t.id].active || (parsed[t.id].text && parsed[t.id].text.trim().length > 0)),
+                                text: parsed[t.id].text || ''
+                            };
+                        }
+                    });
+                }
+            } catch (e) {
+                console.error('Failed to read localStorage:', e);
+                dayData = createEmptyDayState();
+            }
+
+            renderBentoGrid();
+            updateActiveCounter();
+            if (currentView === 'today') {
+                renderTodaySchedule();
+            } else if (currentView === 'matrix') {
+                renderMonthlyMatrix();
+            }
+        }
+
+        /**
+         * Switch between 'today' (Schedule Card Grid), 'daily' (3x3 Bento Grid), and 'matrix' (Monthly Table)
+         */
+        function switchView(view) {
+            currentView = view;
+            const todayEl = document.getElementById('view-today');
+            const dailyEl = document.getElementById('view-daily');
+            const matrixEl = document.getElementById('view-matrix');
+
+            const dToday = document.getElementById('nav-desk-today');
+            const dDaily = document.getElementById('nav-desk-daily');
+            const dMatrix = document.getElementById('nav-desk-matrix');
+            const mToday = document.getElementById('nav-mob-today');
+            const mDaily = document.getElementById('nav-mob-daily');
+            const mMatrix = document.getElementById('nav-mob-matrix');
+
+            const inactiveDeskClass = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all border border-transparent';
+            const inactiveMobClass = 'flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-slate-400 hover:text-white';
+
+            todayEl.classList.add('hidden');
+            dailyEl.classList.add('hidden');
+            matrixEl.classList.add('hidden');
+
+            dToday.className = inactiveDeskClass;
+            dDaily.className = inactiveDeskClass;
+            dMatrix.className = inactiveDeskClass;
+
+            mToday.className = inactiveMobClass;
+            mDaily.className = inactiveMobClass;
+            mMatrix.className = inactiveMobClass;
+
+            if (view === 'today') {
+                todayEl.classList.remove('hidden');
+                dToday.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-neon-green/15 text-neon-green border border-neon-green/35';
+                mToday.className = 'flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-neon-green';
+                renderTodayTaskFilterList();
+                renderTodaySchedule();
+            } else if (view === 'daily') {
+                dailyEl.classList.remove('hidden');
+                dDaily.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-neon-green/15 text-neon-green border border-neon-green/35';
+                mDaily.className = 'flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-neon-green';
+            } else {
+                matrixEl.classList.remove('hidden');
+                dMatrix.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-neon-purple/15 text-neon-purple border border-neon-purple/35';
+                mMatrix.className = 'flex flex-col items-center gap-1 py-1 px-2.5 rounded-xl text-neon-purple';
+                renderMonthlyMatrix();
+            }
+            lucide.createIcons();
+        }
+
+        /**
+         * Render Task 1-9 filter checkboxes inside "Kegiatan Hari Ini" left sidebar
+         */
+        function renderTodayTaskFilterList() {
+            const container = document.getElementById('today-task-filters');
+            if (!container) return;
+            container.innerHTML = TASKS.map(task => {
+                const checked = enabledTaskFilters.has(task.id) ? 'checked' : '';
+                const accentClass = task.accent === 'green' ? 'accent-emerald-400' : 'accent-purple-400';
+                return `
+                    <label class="flex items-center gap-2 py-1 px-2 rounded-lg hover:bg-white/5 cursor-pointer text-slate-300 select-none">
+                        <input type="checkbox" ${checked} onchange="toggleTaskFilter('${task.id}', this.checked)" class="${accentClass} rounded">
+                        <span class="truncate">${task.code} · ${task.label}</span>
+                    </label>
+                `;
+            }).join('');
+        }
+
+        function toggleTaskFilter(taskId, isChecked) {
+            if (isChecked) {
+                enabledTaskFilters.add(taskId);
+            } else {
+                enabledTaskFilters.delete(taskId);
+            }
+            renderTodaySchedule();
+        }
+
+        function setAllTaskFilters(enableAll) {
+            if (enableAll) {
+                enabledTaskFilters = new Set(TASKS.map(t => t.id));
+            } else {
+                enabledTaskFilters.clear();
+            }
+            renderTodayTaskFilterList();
+            renderTodaySchedule();
+        }
+
+        function resetTodayFilters() {
+            const todayRadio = document.querySelector('input[name="today-scope"][value="today"]');
+            if (todayRadio) todayRadio.checked = true;
+            enabledTaskFilters = new Set(TASKS.map(t => t.id));
+            const searchInput = document.getElementById('today-search-input');
+            if (searchInput) searchInput.value = '';
+            renderTodayTaskFilterList();
+            renderTodaySchedule();
+        }
+
+        function clearTodaySearch() {
+            const input = document.getElementById('today-search-input');
+            if (input) {
+                input.value = '';
+                renderTodaySchedule();
+                input.focus();
+            }
+        }
+
+        function toIsoDate(dt) {
+            return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+        }
+
+        /**
+         * Collect matching activity cards based on scope ('today' | 'week' | 'month'),
+         * enabled Task 1-9 filters, and search keyword.
+         */
+        function collectScheduleActivities() {
+            const scopeInput = document.querySelector('input[name="today-scope"]:checked');
+            const scope = scopeInput ? scopeInput.value : 'today';
+            const query = (document.getElementById('today-search-input')?.value || '').trim().toLowerCase();
+
+            const clearBtn = document.getElementById('today-search-clear');
+            if (clearBtn) {
+                clearBtn.classList.toggle('hidden', query.length === 0);
+            }
+
+            const baseDt = parseLocalDate(selectedDate);
+            const targetDates = [];
+
+            if (scope === 'today') {
+                targetDates.push(selectedDate);
+            } else if (scope === 'week') {
+                // Monday through Sunday of selectedDate's week
+                const dayOfWeek = baseDt.getDay(); // 0=Sun..6=Sat
+                const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+                const monday = new Date(baseDt.getFullYear(), baseDt.getMonth(), baseDt.getDate() + diffToMonday);
+                for (let i = 0; i < 7; i++) {
+                    const d = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i);
+                    targetDates.push(toIsoDate(d));
+                }
+            } else if (scope === 'month') {
+                const year = baseDt.getFullYear();
+                const month = baseDt.getMonth();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                for (let day = 1; day <= daysInMonth; day++) {
+                    targetDates.push(toIsoDate(new Date(year, month, day)));
+                }
+            }
+
+            const items = [];
+            targetDates.forEach(isoStr => {
+                let saved = {};
+                if (isoStr === selectedDate) {
+                    saved = dayData;
+                } else {
+                    try {
+                        const raw = localStorage.getItem(STORAGE_PREFIX + isoStr);
+                        saved = raw ? JSON.parse(raw) : {};
+                    } catch (e) {
+                        saved = {};
+                    }
+                }
+
+                TASKS.forEach(task => {
+                    if (!enabledTaskFilters.has(task.id)) return;
+                    const text = (saved[task.id] && saved[task.id].text) ? saved[task.id].text.trim() : '';
+                    if (!text) return;
+
+                    if (query) {
+                        const haystack = `${task.code} ${task.label} ${text} ${formatHeaderDate(isoStr)}`.toLowerCase();
+                        if (!haystack.includes(query)) return;
+                    }
+
+                    items.push({
+                        date: isoStr,
+                        formattedDate: formatHeaderDate(isoStr),
+                        task: task,
+                        text: text
+                    });
+                });
+            });
+
+            return { scope, items };
+        }
+
+        /**
+         * Render "Kegiatan Hari Ini" schedule cards inspired by the reference card grid
+         */
+        function renderTodaySchedule() {
+            const { scope, items } = collectScheduleActivities();
+            const grid = document.getElementById('today-cards-grid');
+            const emptyState = document.getElementById('today-empty-state');
+            const scopeBadge = document.getElementById('today-scope-badge');
+            const subtitle = document.getElementById('today-summary-subtitle');
+
+            if (!grid || !emptyState) return;
+
+            const scopeLabels = {
+                today: `Hari Ini · ${formatHeaderDate(selectedDate)}`,
+                week: 'Minggu Ini',
+                month: `${INDO_MONTHS_FULL[parseLocalDate(selectedDate).getMonth()]} ${parseLocalDate(selectedDate).getFullYear()}`
+            };
+
+            scopeBadge.textContent = scopeLabels[scope] || 'Hari Ini';
+            subtitle.textContent = `${items.length} aktivitas tercatat sesuai filter aktif`;
+
+            if (items.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                lucide.createIcons();
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            grid.innerHTML = items.map(item => {
+                const isGreen = item.task.accent === 'green';
+                const cardAccent = isGreen
+                    ? 'border-white/10 hover:border-neon-green/60 hover:shadow-neon-green'
+                    : 'border-white/10 hover:border-neon-purple/60 hover:shadow-neon-purple';
+                const iconBox = isGreen
+                    ? 'bg-neon-green/15 text-neon-green border-neon-green/30'
+                    : 'bg-neon-purple/15 text-neon-purple border-neon-purple/30';
+                const pillClass = isGreen
+                    ? 'bg-neon-green/10 text-neon-green border border-neon-green/25'
+                    : 'bg-neon-purple/10 text-neon-purple border border-neon-purple/25';
+
+                return `
+                    <article onclick="jumpToTaskEditor('${item.date}', '${item.task.id}')"
+                        class="task-card cursor-pointer rounded-2xl border bg-obsidian-900/80 p-4 flex flex-col justify-between gap-3 ${cardAccent}">
+                        <div class="space-y-2.5">
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="w-9 h-9 rounded-xl border flex items-center justify-center shrink-0 ${iconBox}">
+                                    <i data-lucide="${item.task.icon}" class="w-4 h-4"></i>
+                                </div>
+                                <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full ${pillClass}">
+                                    ${item.task.code}
+                                </span>
+                            </div>
+
+                            <div>
+                                <h4 class="text-sm font-bold text-white leading-snug">${escapeHtml(item.task.label)}</h4>
+                                <p class="text-[11px] font-mono text-slate-400 mt-1 flex items-center gap-1.5">
+                                    <i data-lucide="calendar" class="w-3 h-3 text-slate-500"></i>
+                                    <span>${escapeHtml(item.formattedDate)}</span>
+                                </p>
+                            </div>
+
+                            <p class="text-xs text-slate-200 whitespace-pre-line leading-relaxed bg-obsidian-950/75 border border-white/5 rounded-xl p-2.5">
+                                ${escapeHtml(item.text)}
+                            </p>
+                        </div>
+
+                        <div class="pt-1 flex items-center justify-between text-[11px] text-slate-400 border-t border-white/5">
+                            <span>Klik untuk edit catatan</span>
+                            <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-slate-400"></i>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        function jumpToInputDate(dateStr) {
+            if (dateStr !== selectedDate) {
+                loadDay(dateStr);
+            }
+            switchView('daily');
+        }
+
+        function jumpToTaskEditor(dateStr, taskId) {
+            if (dateStr !== selectedDate) {
+                loadDay(dateStr);
+            }
+            switchView('daily');
+            setTimeout(() => {
+                activateAndFocusTask(taskId);
+                const card = document.getElementById(`card-${taskId}`);
+                if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 60);
+        }
+
+        /**
+         * Shift date by -1 or +1 day
+         */
+        function shiftDate(offset) {
+            const dt = parseLocalDate(selectedDate);
+            dt.setDate(dt.getDate() + offset);
+            const nextStr = `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+            loadDay(nextStr);
+        }
+
+        /**
+         * Switch between 'daily' (3x3 Bento Grid) and 'matrix' (Monthly Table)
+         */
+        function switchView(view) {
+            currentView = view;
+            const dailyEl = document.getElementById('view-daily');
+            const matrixEl = document.getElementById('view-matrix');
+
+            const dDaily = document.getElementById('nav-desk-daily');
+            const dMatrix = document.getElementById('nav-desk-matrix');
+            const mDaily = document.getElementById('nav-mob-daily');
+            const mMatrix = document.getElementById('nav-mob-matrix');
+
+            if (view === 'daily') {
+                dailyEl.classList.remove('hidden');
+                matrixEl.classList.add('hidden');
+
+                dDaily.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-neon-green/15 text-neon-green border border-neon-green/35';
+                dMatrix.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all border border-transparent';
+
+                mDaily.className = 'flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-neon-green';
+                mMatrix.className = 'flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-slate-400 hover:text-white';
+            } else {
+                dailyEl.classList.add('hidden');
+                matrixEl.classList.remove('hidden');
+
+                dMatrix.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-neon-purple/15 text-neon-purple border border-neon-purple/35';
+                dDaily.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all border border-transparent';
+
+                mMatrix.className = 'flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-neon-purple';
+                mDaily.className = 'flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-slate-400 hover:text-white';
+
+                renderMonthlyMatrix();
+            }
+            lucide.createIcons();
+        }
+
+        /**
+         * Render 9 Task Cards in 3x3 Bento Grid
+         */
+        function renderBentoGrid() {
+            const grid = document.getElementById('bento-grid');
+            grid.innerHTML = '';
+
+            TASKS.forEach(task => {
+                const st = dayData[task.id];
+                const isGreen = task.accent === 'green';
+
+                const activeBorder = isGreen
+                    ? 'border-neon-green/70 bg-neon-green/[0.06] shadow-neon-green'
+                    : 'border-neon-purple/70 bg-neon-purple/[0.06] shadow-neon-purple';
+
+                const inactiveBorder = 'border-white/10 bg-obsidian-900/65 hover:border-white/25';
+
+                const badgeStyle = st.active
+                    ? (isGreen
+                        ? 'bg-neon-green text-obsidian-950 font-bold'
+                        : 'bg-neon-purple text-white font-bold')
+                    : (isGreen
+                        ? 'bg-neon-green/10 text-neon-green border border-neon-green/30 font-semibold'
+                        : 'bg-neon-purple/10 text-neon-purple border border-neon-purple/30 font-semibold');
+
+                const card = document.createElement('div');
+                card.id = `card-${task.id}`;
+                card.className = `task-card rounded-2xl border p-4 flex flex-col justify-between ${st.active ? activeBorder : inactiveBorder}`;
+
+                card.innerHTML = `
+                    <div onclick="activateAndFocusTask('${task.id}')" class="flex items-center justify-between gap-2 cursor-pointer select-none mb-2.5">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span id="badge-${task.id}" class="text-[11px] font-mono px-2 py-0.5 rounded-md transition-colors ${badgeStyle}">
+                                ${task.code}
+                            </span>
+                            <h3 class="text-xs sm:text-sm font-bold text-white truncate">${task.label}</h3>
+                        </div>
+                        <button type="button" id="clear-${task.id}" onclick="event.stopPropagation(); clearTask('${task.id}')" title="Kosongkan & Nonaktifkan"
+                            class="${st.active ? 'flex' : 'hidden'} w-6 h-6 rounded-lg items-center justify-center text-slate-400 hover:text-rose-400 hover:bg-rose-500/15 transition-colors text-base font-bold leading-none">
+                            ×
+                        </button>
+                    </div>
+                    <textarea id="input-${task.id}"
+                        rows="2"
+                        placeholder="${task.placeholder}"
+                        onfocus="handleTaskFocus('${task.id}')"
+                        oninput="handleTaskInput('${task.id}', this)"
+                        class="w-full bg-obsidian-950/85 border border-white/10 rounded-xl px-3 py-2 text-xs sm:text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-white/30 resize-none leading-relaxed transition-all">${escapeHtml(st.text)}</textarea>
+                `;
+
+                grid.appendChild(card);
+            });
+
+            // Auto-resize any prefilled textareas
+            TASKS.forEach(t => {
+                const ta = document.getElementById(`input-${t.id}`);
+                if (ta) autoExpandTextarea(ta);
+            });
+        }
+
+        /**
+         * Auto-expand textarea height to fit content cleanly
+         */
+        function autoExpandTextarea(el) {
+            el.style.height = 'auto';
+            el.style.height = Math.max(el.scrollHeight, 56) + 'px';
+        }
+
+        /**
+         * Clicking card header activates it and focuses textarea immediately
+         */
+        function activateAndFocusTask(taskId) {
+            if (!dayData[taskId].active) {
+                dayData[taskId].active = true;
+                syncCardVisualState(taskId);
+                updateActiveCounter();
+                persistDay();
+            }
+            const input = document.getElementById(`input-${taskId}`);
+            if (input) input.focus();
+        }
+
+        /**
+         * Focusing textarea marks task active automatically
+         */
+        function handleTaskFocus(taskId) {
+            if (!dayData[taskId].active) {
+                dayData[taskId].active = true;
+                syncCardVisualState(taskId);
+                updateActiveCounter();
+                persistDay();
+            }
+        }
+
+        /**
+         * Typing inside textarea updates state, expands box, and auto-saves
+         */
+        function handleTaskInput(taskId, el) {
+            autoExpandTextarea(el);
+            dayData[taskId].text = el.value;
+            if (!dayData[taskId].active && el.value.trim().length > 0) {
+                dayData[taskId].active = true;
+            }
+            syncCardVisualState(taskId);
+            updateActiveCounter();
+            persistDay();
+        }
+
+        /**
+         * Clicking '×' clears text and deactivates card
+         */
+        function clearTask(taskId) {
+            dayData[taskId] = { active: false, text: '' };
+            const input = document.getElementById(`input-${taskId}`);
+            if (input) {
+                input.value = '';
+                autoExpandTextarea(input);
+            }
+            syncCardVisualState(taskId);
+            updateActiveCounter();
+            persistDay();
+        }
+
+        /**
+         * Lightweight visual update without re-rendering DOM (keeps typing cursor intact)
+         */
+        function syncCardVisualState(taskId) {
+            const task = TASKS.find(t => t.id === taskId);
+            const st = dayData[taskId];
+            const isGreen = task.accent === 'green';
+
+            const card = document.getElementById(`card-${taskId}`);
+            const badge = document.getElementById(`badge-${taskId}`);
+            const clearBtn = document.getElementById(`clear-${taskId}`);
+
+            if (!card || !badge || !clearBtn) return;
+
+            if (st.active) {
+                card.className = `task-card rounded-2xl border p-4 flex flex-col justify-between ${
+                    isGreen
+                        ? 'border-neon-green/70 bg-neon-green/[0.06] shadow-neon-green'
+                        : 'border-neon-purple/70 bg-neon-purple/[0.06] shadow-neon-purple'
+                }`;
+                badge.className = `text-[11px] font-mono px-2 py-0.5 rounded-md transition-colors ${
+                    isGreen ? 'bg-neon-green text-obsidian-950 font-bold' : 'bg-neon-purple text-white font-bold'
+                }`;
+                clearBtn.classList.remove('hidden');
+                clearBtn.classList.add('flex');
+            } else {
+                card.className = 'task-card rounded-2xl border p-4 flex flex-col justify-between border-white/10 bg-obsidian-900/65 hover:border-white/25';
+                badge.className = `text-[11px] font-mono px-2 py-0.5 rounded-md transition-colors ${
+                    isGreen
+                        ? 'bg-neon-green/10 text-neon-green border border-neon-green/30 font-semibold'
+                        : 'bg-neon-purple/10 text-neon-purple border border-neon-purple/30 font-semibold'
+                }`;
+                clearBtn.classList.add('hidden');
+                clearBtn.classList.remove('flex');
+            }
+        }
+
+        function updateActiveCounter() {
+            const count = TASKS.filter(t => dayData[t.id].active && dayData[t.id].text.trim().length > 0).length;
+            const selectedOnly = TASKS.filter(t => dayData[t.id].active).length;
+            const displayCount = Math.max(count, selectedOnly);
+            document.getElementById('active-counter-label').textContent = `${displayCount} Task Aktif`;
+        }
+
+        /**
+         * MONTHLY MATRIX VIEW (Mirrors Google Sheets layout: Hari | Tanggal | Task 1..9 | Total Task)
+         */
+        function renderMonthlyMatrix() {
+            const dt = parseLocalDate(selectedDate);
+            const year = dt.getFullYear();
+            const month = dt.getMonth(); // 0-indexed
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            document.getElementById('matrix-month-title').textContent = `${INDO_MONTHS_FULL[month]} ${year}`;
+
+            const tbody = document.getElementById('matrix-tbody');
+            tbody.innerHTML = '';
+
+            const colTotals = {};
+            TASKS.forEach(t => colTotals[t.id] = 0);
+            let grandTotalTasks = 0;
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateObj = new Date(year, month, d);
+                const dayName = INDO_DAYS_SHORT[dateObj.getDay()];
+                const dayNumStr = String(d).padStart(2, '0');
+                const isoStr = `${year}-${String(month + 1).padStart(2, '0')}-${dayNumStr}`;
+                const isWeekend = dateObj.getDay() === 0 || dateObj.getDay() === 6;
+                const isCurrentSelected = isoStr === selectedDate;
+
+                let saved = {};
+                try {
+                    const raw = localStorage.getItem(STORAGE_PREFIX + isoStr);
+                    saved = raw ? JSON.parse(raw) : {};
+                } catch (e) {
+                    saved = {};
+                }
+
+                let rowActiveCount = 0;
+                const cellsHtml = TASKS.map(t => {
+                    const val = (saved[t.id] && saved[t.id].text) ? saved[t.id].text.trim() : '';
+                    if (val.length > 0) {
+                        rowActiveCount++;
+                        colTotals[t.id]++;
+                        grandTotalTasks++;
+                    }
+                    return `<td class="py-2.5 px-3 border-r border-white/5 align-top whitespace-pre-line text-slate-200 max-w-[200px]">${val ? escapeHtml(val) : '<span class="text-slate-700">-</span>'}</td>`;
+                }).join('');
+
+                const tr = document.createElement('tr');
+                tr.onclick = () => {
+                    loadDay(isoStr);
+                    switchView('daily');
+                };
+
+                tr.className = `cursor-pointer transition-colors ${
+                    isCurrentSelected
+                        ? 'bg-neon-green/10 hover:bg-neon-green/15'
+                        : isWeekend
+                            ? 'bg-obsidian-950/95 opacity-60 hover:opacity-100'
+                            : 'hover:bg-white/[0.04]'
+                }`;
+
+                tr.innerHTML = `
+                    <td class="py-2.5 px-2.5 text-center font-mono font-semibold border-r border-white/5 ${
+                        isWeekend ? 'text-rose-400' : 'text-slate-300'
+                    }">${dayName}</td>
+                    <td class="py-2.5 px-2.5 text-center font-mono font-bold border-r border-white/10 ${
+                        isCurrentSelected ? 'text-neon-green' : 'text-white'
+                    }">${dayNumStr}</td>
+                    ${cellsHtml}
+                    <td class="py-2.5 px-2.5 text-center font-mono font-bold ${
+                        rowActiveCount > 0 ? 'text-neon-green' : 'text-slate-600'
+                    }">${rowActiveCount > 0 ? rowActiveCount : '-'}</td>
+                `;
+
+                tbody.appendChild(tr);
+            }
+
+            // Summary COUNT Row at bottom
+            const tfoot = document.getElementById('matrix-tfoot');
+            const summaryCells = TASKS.map(t => {
+                const c = colTotals[t.id];
+                return `<td class="py-3 px-3 text-center border-r border-white/5 ${c > 0 ? 'text-neon-green' : 'text-slate-500'}">${c} hari</td>`;
+            }).join('');
+
+            tfoot.innerHTML = `
+                <tr>
+                    <td colspan="2" class="py-3 px-3 text-center uppercase tracking-wider text-[11px] text-slate-300 border-r border-white/10">Total Aktif</td>
+                    ${summaryCells}
+                    <td class="py-3 px-2.5 text-center text-neon-purple">${grandTotalTasks}</td>
+                </tr>
+            `;
+        }
+
+        /**
+         * EXPORT 1: WhatsApp Summary Modal
+         */
+        function buildWhatsAppSummary() {
+            const header = formatHeaderDate(selectedDate);
+            const activeItems = TASKS.filter(t => dayData[t.id].text && dayData[t.id].text.trim().length > 0);
+
+            let out = `*DAILY WORK JOURNAL*\n`;
+            out += `📅 ${header}\n`;
+            out += `━━━━━━━━━━━━━━━━━━━━\n`;
+
+            if (activeItems.length === 0) {
+                out += `_Belum ada aktivitas yang diisi pada tanggal ini._`;
+            } else {
+                activeItems.forEach(t => {
+                    const cleanText = dayData[t.id].text.trim();
+                    out += `• *${t.code} - ${t.label}:*\n  ${cleanText}\n`;
+                });
+            }
+            return out.trim();
+        }
+
+        function openWhatsAppModal() {
+            document.getElementById('wa-report-text').value = buildWhatsAppSummary();
+            const m = document.getElementById('wa-modal');
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            lucide.createIcons();
+        }
+
+        function copyWhatsAppText() {
+            const ta = document.getElementById('wa-report-text');
+            ta.select();
+            ta.setSelectionRange(0, 99999);
+            try {
+                document.execCommand('copy');
+                showToast('Laporan WhatsApp berhasil disalin!');
+            } catch (e) {
+                showToast('Gagal menyalin teks.', 'error');
+            }
+        }
+
+        /**
+         * EXPORT 2: Copy Row as TSV (Tab-Separated Values) for instant Ctrl+V into Google Sheets
+         */
+        function copyTableRowTSV() {
+            // Copies columns Task 1 through Task 9 separated by tabs
+            const cols = TASKS.map(t => {
+                const raw = (dayData[t.id].text || '').trim();
+                // Replace internal newlines with "; " so pasting into Google Sheets stays cleanly in 1 row
+                return raw.replace(/\r?\n+/g, '; ');
+            });
+
+            const tsvString = cols.join('\t');
+            copyRawText(tsvString, 'Baris Task 1–9 (TSV) disalin! Tinggal Paste (Ctrl+V) di Google Sheets.');
+        }
+
+        /**
+         * Copy Full Month Matrix as TSV
+         */
+        function copyFullMonthTSV() {
+            const dt = parseLocalDate(selectedDate);
+            const year = dt.getFullYear();
+            const month = dt.getMonth();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            const lines = [];
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateObj = new Date(year, month, d);
+                const dayName = INDO_DAYS_SHORT[dateObj.getDay()];
+                const dayNumStr = String(d).padStart(2, '0');
+                const isoStr = `${year}-${String(month + 1).padStart(2, '0')}-${dayNumStr}`;
+
+                let saved = {};
+                try {
+                    const raw = localStorage.getItem(STORAGE_PREFIX + isoStr);
+                    saved = raw ? JSON.parse(raw) : {};
+                } catch (e) {
+                    saved = {};
+                }
+
+                const taskCols = TASKS.map(t => {
+                    const txt = (saved[t.id] && saved[t.id].text) ? saved[t.id].text.trim() : '';
+                    return txt.replace(/\r?\n+/g, '; ');
+                });
+
+                lines.push([dayName, dayNumStr, ...taskCols].join('\t'));
+            }
+
+            copyRawText(lines.join('\n'), `Matriks ${INDO_MONTHS_FULL[month]} (31 baris TSV) berhasil disalin!`);
+        }
+
+        function copyRawText(text, successMsg) {
+            const temp = document.createElement('textarea');
+            temp.value = text;
+            document.body.appendChild(temp);
+            temp.select();
+            temp.setSelectionRange(0, 999999);
+            try {
+                document.execCommand('copy');
+                showToast(successMsg);
+            } catch (e) {
+                showToast('Gagal menyalin ke clipboard.', 'error');
+            }
+            document.body.removeChild(temp);
+        }
+
+        /**
+         * GOOGLE SHEETS WEBHOOK MODAL & SUBMIT HANDLER
+         */
+        function openWebhookModal() {
+            document.getElementById('webhook-url-input').value = localStorage.getItem(WEBHOOK_KEY) || '';
+            const m = document.getElementById('webhook-modal');
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            lucide.createIcons();
+        }
+
+        function saveWebhookUrl() {
+            const url = document.getElementById('webhook-url-input').value.trim();
+            localStorage.setItem(WEBHOOK_KEY, url);
+            showToast('URL Google Apps Script tersimpan.');
+        }
+
+        function copyAppsScriptCode() {
+            const code = document.getElementById('apps-script-snippet').textContent;
+            copyRawText(code, 'Kode Apps Script berhasil disalin!');
+        }
+
+        /**
+         * Primary 'Simpan & Kirim' Button Action:
+         * Saves locally and, if Webhook URL is configured, automatically pushes the date row to Google Sheets.
+         */
+        async function handleSaveAndSubmit() {
+            persistDay();
+            const webhookUrl = (localStorage.getItem(WEBHOOK_KEY) || '').trim();
+
+            if (!webhookUrl) {
+                showToast('Tersimpan di perangkat! (Atur URL Sheets jika ingin kirim otomatis)');
+                return;
+            }
+
+            await pushToGoogleSheets();
+        }
+
+        async function pushToGoogleSheets() {
+            const urlInput = document.getElementById('webhook-url-input');
+            const url = (urlInput && urlInput.value.trim()) ? urlInput.value.trim() : (localStorage.getItem(WEBHOOK_KEY) || '').trim();
+
+            if (!url) {
+                showToast('Masukkan URL Google Apps Script terlebih dahulu.', 'error');
+                return;
+            }
+
+            localStorage.setItem(WEBHOOK_KEY, url);
+
+            const dt = parseLocalDate(selectedDate);
+            const dayName = INDO_DAYS_SHORT[dt.getDay()];
+            const dayNum = String(dt.getDate()).padStart(2, '0');
+            const taskValues = TASKS.map(t => (dayData[t.id].text || '').trim());
+
+            const btn = document.getElementById('btn-save-submit');
+            const origHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Mengirim...</span>`;
+            lucide.createIcons();
+
+            try {
+                await fetch(url, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        date: selectedDate,
+                        dayName: dayName,
+                        dayNum: dayNum,
+                        tasks: taskValues
+                    })
+                });
+
+                showToast(`Baris ${dayName}, ${dayNum} terkirim ke Google Sheets!`);
+                closeModal('webhook-modal');
+            } catch (e) {
+                console.error(e);
+                showToast('Gagal mengirim ke Google Sheets.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = origHtml;
+                lucide.createIcons();
+            }
+        }
+
+        function closeModal(id) {
+            const m = document.getElementById(id);
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+        }
+
+        /**
+         * Utility: HTML Escaping
+         */
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        /**
+         * Utility: Toast Notification
+         */
+        function showToast(msg, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const el = document.createElement('div');
+            const isErr = type === 'error';
+
+            el.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-2xl border text-xs sm:text-sm font-medium transition-all duration-300 transform -translate-y-2 opacity-0 backdrop-blur-md ${
+                isErr
+                    ? 'bg-rose-950/95 text-rose-100 border-rose-500/40'
+                    : 'bg-obsidian-900/95 text-white border-neon-green/45'
+            }`;
+
+            el.innerHTML = `
+                <i data-lucide="${isErr ? 'alert-circle' : 'check-circle-2'}" class="w-4 h-4 ${isErr ? 'text-rose-400' : 'text-neon-green'} shrink-0"></i>
+                <span>${escapeHtml(msg)}</span>
+            `;
+
+            container.appendChild(el);
+            lucide.createIcons();
+
+            requestAnimationFrame(() => {
+                el.classList.remove('-translate-y-2', 'opacity-0');
+            });
+
+            setTimeout(() => {
+                el.classList.add('-translate-y-2', 'opacity-0');
+                setTimeout(() => el.remove(), 300);
+            }, 3000);
+        }
+
+        // Event Listeners
+        document.getElementById('date-picker').addEventListener('change', (e) => {
+            if (e.target.value) loadDay(e.target.value);
+        });
+
+        ['wa-modal', 'webhook-modal'].forEach(id => {
+            document.getElementById(id).addEventListener('click', function(e) {
+                if (e.target === this) closeModal(id);
+            });
+        });
+
+        // Init App
+        window.addEventListener('DOMContentLoaded', () => {
+            loadDay(getInitialDate());
+            renderTodayTaskFilterList();
+            switchView('today');
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
