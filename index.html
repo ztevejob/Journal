@@ -363,9 +363,9 @@
 
                         <!-- MAP Segmented Status Control -->
                         <div class="flex items-center gap-1 bg-map-bg p-1 rounded-full border border-map-red/15 self-start">
-                            <button type="button" data-status="Done" onclick="setDefaultStatus('Done')" class="status-btn px-3.5 py-1.5 rounded-full text-xs font-semibold map-gradient-bg text-white shadow-sm transition-all">Done</button>
-                            <button type="button" data-status="Progress" onclick="setDefaultStatus('Progress')" class="status-btn px-3.5 py-1.5 rounded-full text-xs font-medium text-map-muted hover:text-map-ink transition-all">Progress</button>
-                            <button type="button" data-status="Follow Up" onclick="setDefaultStatus('Follow Up')" class="status-btn px-3.5 py-1.5 rounded-full text-xs font-medium text-map-muted hover:text-map-ink transition-all">Follow Up</button>
+                            <button type="button" data-status="Done" onclick="setDefaultStatus('Done')" class="status-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-600 text-white shadow-sm transition-all">Done</button>
+                            <button type="button" data-status="Progress" onclick="setDefaultStatus('Progress')" class="status-btn px-3.5 py-1.5 rounded-full text-xs font-medium text-amber-800 hover:bg-amber-50 transition-all">Progress</button>
+                            <button type="button" data-status="Follow Up" onclick="setDefaultStatus('Follow Up')" class="status-btn px-3.5 py-1.5 rounded-full text-xs font-medium text-sky-800 hover:bg-sky-50 transition-all">Follow Up</button>
                         </div>
                     </div>
 
@@ -1293,14 +1293,33 @@
 
         function setDefaultStatus(status) {
             defaultStatus = status;
+            const activeMap = {
+                'Done': 'status-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-600 text-white shadow-sm transition-all',
+                'Progress': 'status-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-amber-500 text-white shadow-sm transition-all',
+                'Follow Up': 'status-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-sky-600 text-white shadow-sm transition-all'
+            };
+            const inactiveMap = {
+                'Done': 'status-btn px-3.5 py-1.5 rounded-full text-xs font-medium text-emerald-800 hover:bg-emerald-50 transition-all',
+                'Progress': 'status-btn px-3.5 py-1.5 rounded-full text-xs font-medium text-amber-800 hover:bg-amber-50 transition-all',
+                'Follow Up': 'status-btn px-3.5 py-1.5 rounded-full text-xs font-medium text-sky-800 hover:bg-sky-50 transition-all'
+            };
             document.querySelectorAll('.status-btn').forEach(btn => {
                 const st = btn.getAttribute('data-status');
-                if (st === status) {
-                    btn.className = 'status-btn px-3.5 py-1.5 rounded-full text-xs font-semibold map-gradient-bg text-white shadow-sm transition-all';
-                } else {
-                    btn.className = 'status-btn px-3.5 py-1.5 rounded-full text-xs font-medium text-map-muted hover:text-map-ink transition-all';
-                }
+                btn.className = (st === status) ? activeMap[st] : inactiveMap[st];
             });
+        }
+
+        function getStatusBadgeClasses(status) {
+            if (status === 'Done') {
+                return 'bg-emerald-50 text-emerald-800 border border-emerald-300';
+            }
+            if (status === 'Progress') {
+                return 'bg-amber-50 text-amber-800 border border-amber-300';
+            }
+            if (status === 'Follow Up') {
+                return 'bg-sky-50 text-sky-800 border border-sky-300';
+            }
+            return 'bg-map-bg text-map-muted border border-map-border';
         }
 
         /**
@@ -1852,11 +1871,7 @@
             empty.classList.add('hidden');
             grid.innerHTML = items.map(item => {
                 const taskMeta = TASKS.find(t => t.id === item.taskId) || TASKS[6];
-                const statusBadge = item.status === 'Done'
-                    ? 'map-gradient-bg text-white'
-                    : item.status === 'Progress'
-                        ? 'bg-map-red/10 text-map-redDark border border-map-red/30'
-                        : 'bg-map-bg text-map-muted border border-map-border';
+                const statusBadge = getStatusBadgeClasses(item.status);
 
                 const isStore = item.lokasi && item.lokasi !== 'Umum / HO';
                 const locPill = isStore
@@ -2246,7 +2261,7 @@
                         <div style="border-color: ${tMeta.borderHex};" class="rounded-2xl bg-white border-2 p-4 space-y-2 shadow-sm">
                             <div class="flex items-center justify-between gap-2">
                                 <span style="background-color: ${tMeta.borderHex};" class="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full text-white">${escapeHtml(item.task)}</span>
-                                <span class="text-[10px] font-medium px-2.5 py-0.5 rounded-full bg-map-bg text-map-ink border border-map-border">${escapeHtml(item.status)}</span>
+                                <span class="text-[10px] font-semibold px-2.5 py-0.5 rounded-full ${getStatusBadgeClasses(item.status)}">${escapeHtml(item.status)}</span>
                             </div>
                             <p class="text-[11px] font-medium text-map-muted flex items-center gap-1.5 flex-wrap">
                                 <span class="inline-flex items-center gap-1"><i data-lucide="user" class="w-3 h-3 text-map-red"></i> ${escapeHtml((item.trainer || '').trim() || 'Tanpa Nama')}</span>
