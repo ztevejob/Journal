@@ -370,11 +370,13 @@
                             <p class="text-xs text-map-muted mt-0.5">Ketik kode atau nama toko untuk sesi ini, lalu tiap kartu Task tetap bisa diatur terpisah.</p>
                         </div>
 
-                        <!-- MAP Segmented Status Control -->
-                        <div class="flex items-center gap-1 bg-map-bg p-1 rounded-full border border-map-red/15 self-start">
-                            <button type="button" data-status="Done" onclick="setDefaultStatus('Done')" class="status-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-600 text-white shadow-sm transition-all">Done</button>
-                            <button type="button" data-status="Progress" onclick="setDefaultStatus('Progress')" class="status-btn px-3.5 py-1.5 rounded-full text-xs font-medium text-amber-800 hover:bg-amber-50 transition-all">Progress</button>
-                            <button type="button" data-status="Follow Up" onclick="setDefaultStatus('Follow Up')" class="status-btn px-3.5 py-1.5 rounded-full text-xs font-medium text-sky-800 hover:bg-sky-50 transition-all">Follow Up</button>
+                        <div class="flex flex-wrap items-center gap-2 self-start">
+                            <!-- MAP Segmented Status Control -->
+                            <div class="flex items-center gap-1 bg-map-bg p-1 rounded-full border border-map-red/15">
+                                <button type="button" data-status="Done" onclick="setDefaultStatus('Done')" class="status-btn px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-600 text-white shadow-sm transition-all">Done</button>
+                                <button type="button" data-status="Progress" onclick="setDefaultStatus('Progress')" class="status-btn px-3.5 py-1.5 rounded-full text-xs font-medium text-amber-800 hover:bg-amber-50 transition-all">Progress</button>
+                                <button type="button" data-status="Follow Up" onclick="setDefaultStatus('Follow Up')" class="status-btn px-3.5 py-1.5 rounded-full text-xs font-medium text-sky-800 hover:bg-sky-50 transition-all">Follow Up</button>
+                            </div>
                         </div>
                     </div>
 
@@ -402,48 +404,20 @@
                     <!-- Rendered via JS -->
                 </div>
 
-                <!-- Bulk Photo Uploader + Social Media Auto-Compressor -->
-                <div class="map-card rounded-3xl p-5 sm:p-6 space-y-4">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div>
-                            <h3 class="text-sm sm:text-base font-bold text-map-ink flex items-center gap-2">
-                                <i data-lucide="images" class="w-4 h-4 text-map-red"></i>
-                                <span>Lampiran Bulk Foto (Auto-Resize)</span>
-                            </h3>
-                            <p class="text-xs text-map-muted mt-0.5">Otomatis menurunkan ukuran &amp; resolusi sebelum disimpan ke Google Drive.</p>
-                        </div>
+                <!-- Hidden Per-Task Photo Input -->
+                <input type="file" id="task-photo-input" accept="image/*" multiple class="hidden" onchange="handleTaskFilesSelected(this.files)">
 
+                <!-- Shared Compressed Photo Preview Strip (Only visible when photos are attached) -->
+                <div id="photo-queue-wrapper" class="hidden map-card rounded-3xl p-5 space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
                         <div class="flex items-center gap-2">
-                            <label for="compress-preset" class="text-xs text-map-muted">Kualitas:</label>
-                            <select id="compress-preset" onchange="reprocessQueuedPhotos()" class="bg-map-bg border border-map-border rounded-full px-3.5 py-1.5 text-xs font-medium text-map-ink focus:outline-none focus:border-map-red">
-                                <option value="social">Social Standard (1080px • 75% JPEG)</option>
-                                <option value="detail">Detail / Teks Jelas (1440px • 82% JPEG)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Dropzone -->
-                    <label id="photo-dropzone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)"
-                        class="flex flex-col items-center justify-center gap-2 border border-dashed border-map-red/30 hover:border-map-red bg-map-bg/70 hover:bg-map-red/[0.03] rounded-2xl p-6 cursor-pointer transition-all text-center">
-                        <div class="w-10 h-10 rounded-full bg-white border border-map-red/20 flex items-center justify-center text-map-red shadow-sm">
-                            <i data-lucide="upload-cloud" class="w-5 h-5"></i>
-                        </div>
-                        <div>
-                            <p class="text-xs sm:text-sm font-semibold text-map-ink">Klik untuk pilih banyak foto sekaligus atau tarik &amp; lepas di sini</p>
-                            <p class="text-[11px] text-map-muted mt-0.5">Mendukung JPG, PNG, WEBP • Kompresi berjalan otomatis di perangkat Anda</p>
-                        </div>
-                        <input type="file" id="bulk-photo-input" accept="image/*" multiple class="hidden" onchange="handleFilesSelected(this.files)">
-                    </label>
-
-                    <!-- Compressed Photo Queue Preview -->
-                    <div id="photo-queue-wrapper" class="hidden space-y-3">
-                        <div class="flex items-center justify-between text-xs">
+                            <i data-lucide="camera" class="w-4 h-4 text-map-red"></i>
                             <span id="photo-savings-summary" class="font-mono font-semibold text-map-redDark">0 foto siap</span>
-                            <button type="button" onclick="clearQueuedPhotos()" class="text-red-600 hover:underline text-xs font-medium">Hapus Semua Foto</button>
                         </div>
-                        <div id="photo-preview-grid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
-                            <!-- Rendered via JS -->
-                        </div>
+                        <button type="button" onclick="clearQueuedPhotos()" class="text-red-600 hover:underline text-xs font-medium">Hapus Semua</button>
+                    </div>
+                    <div id="photo-preview-grid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                        <!-- Rendered via JS -->
                     </div>
                 </div>
 
@@ -822,15 +796,15 @@
         const INDO_MONTHS_FULL = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
         const TASKS = [
-            { id: 't1', shortCode: 'Task 1', label: 'Training', fullName: 'Task 1 - Training', borderHex: '#dc2626', placeholder: 'Materi training, jumlah staff, atau catatan kelas...' },
-            { id: 't2', shortCode: 'Task 2', label: 'Roleplay', fullName: 'Task 2 - Roleplay', borderHex: '#991b1b', placeholder: 'Skenario roleplay (CARES/NPI/Bundle) & nama staff...' },
-            { id: 't3', shortCode: 'Task 3', label: 'DCOTA + Sales Coach', fullName: 'Task 3 - DCOTA + Sales Coach', borderHex: '#e11d48', placeholder: 'Buka akses DCOTA, pengecekan unit demo, atau coaching...' },
-            { id: 't4', shortCode: 'Task 4', label: 'StreamzAI', fullName: 'Task 4 - StreamzAI', borderHex: '#b91c1c', placeholder: 'Audit modul StreamzAI, progres penyelesaian staff...' },
-            { id: 't5', shortCode: 'Task 5', label: 'Pemadanan Data', fullName: 'Task 5 - Pemadanan Data', borderHex: '#7f1d1d', placeholder: 'Sync headcount, data LOB Champion, atau validasi sheet...' },
-            { id: 't6', shortCode: 'Task 6', label: 'Develope', fullName: 'Task 6 - Develope', borderHex: '#ea580c', placeholder: 'Pengembangan dashboard, formula, automasi, atau materi...' },
-            { id: 't7', shortCode: 'Task 7', label: 'General', fullName: 'Task 7 - General', borderHex: '#57534e', placeholder: 'Administrasi harian, koordinasi operasional, dll...' },
-            { id: 't8', shortCode: 'Task 8', label: 'Meeting', fullName: 'Task 8 - Meeting', borderHex: '#be123c', placeholder: 'Weekly Connect, briefing NPI, interview kandidat...' },
-            { id: 't9', shortCode: 'Task 9', label: 'Store Visit', fullName: 'Task 9 - Store Visit', borderHex: '#9f1239', placeholder: 'Observasi floor, kesiapan opening, display & grooming...' }
+            { id: 't1', shortCode: 'Task 1', label: 'Training', fullName: 'Task 1 - Training', borderHex: '#dc2626', supportsPhoto: true, placeholder: 'Materi training, jumlah staff, atau catatan kelas...' },
+            { id: 't2', shortCode: 'Task 2', label: 'Roleplay', fullName: 'Task 2 - Roleplay', borderHex: '#991b1b', supportsPhoto: true, placeholder: 'Skenario roleplay (CARES/NPI/Bundle) & nama staff...' },
+            { id: 't3', shortCode: 'Task 3', label: 'DCOTA + Sales Coach', fullName: 'Task 3 - DCOTA + Sales Coach', borderHex: '#e11d48', supportsPhoto: true, placeholder: 'Buka akses DCOTA, pengecekan unit demo, atau coaching...' },
+            { id: 't4', shortCode: 'Task 4', label: 'StreamzAI', fullName: 'Task 4 - StreamzAI', borderHex: '#b91c1c', supportsPhoto: false, placeholder: 'Audit modul StreamzAI, progres penyelesaian staff...' },
+            { id: 't5', shortCode: 'Task 5', label: 'Pemadanan Data', fullName: 'Task 5 - Pemadanan Data', borderHex: '#7f1d1d', supportsPhoto: false, placeholder: 'Sync headcount, data LOB Champion, atau validasi sheet...' },
+            { id: 't6', shortCode: 'Task 6', label: 'Develope', fullName: 'Task 6 - Develope', borderHex: '#ea580c', supportsPhoto: false, placeholder: 'Pengembangan dashboard, formula, automasi, atau materi...' },
+            { id: 't7', shortCode: 'Task 7', label: 'General', fullName: 'Task 7 - General', borderHex: '#57534e', supportsPhoto: false, placeholder: 'Administrasi harian, koordinasi operasional, dll...' },
+            { id: 't8', shortCode: 'Task 8', label: 'Meeting', fullName: 'Task 8 - Meeting', borderHex: '#be123c', supportsPhoto: true, placeholder: 'Weekly Connect, briefing NPI, interview kandidat...' },
+            { id: 't9', shortCode: 'Task 9', label: 'Store Visit', fullName: 'Task 9 - Store Visit', borderHex: '#9f1239', supportsPhoto: true, placeholder: 'Observasi floor, kesiapan opening, display & grooming...' }
         ];
 
         const DEFAULT_STORE_PRESETS = [
@@ -859,6 +833,7 @@
         let defaultStatus = 'Done';
         let draftTasks = {};
         let queuedPhotos = [];
+        let activePhotoTargetTaskId = 't1';
         let feedEnabledTasks = new Set(TASKS.map(t => t.id));
         let focusedCalendarLogId = null;
 
@@ -1465,15 +1440,29 @@
                             class="w-full bg-map-bg/80 border border-map-border rounded-2xl px-3.5 py-2.5 text-xs sm:text-sm text-map-ink placeholder:text-map-subtle focus:outline-none focus:bg-white focus:border-map-red resize-none leading-relaxed">${escapeHtml(st.text)}</textarea>
 
                         <div class="flex items-center justify-between gap-2 pt-0.5">
-                            <span class="text-[11px] text-map-muted flex items-center gap-1 shrink-0">
-                                <i data-lucide="map-pin" class="w-3 h-3 text-map-subtle"></i> Lokasi:
-                            </span>
-                            <input type="text" list="master-store-datalist"
-                                value="${escapeAttr(effectiveLoc)}"
-                                placeholder="Ketik kode/toko..."
-                                onchange="overrideTaskLocation('${t.id}', this.value)"
-                                onfocus="this.select()"
-                                class="bg-map-bg border border-map-border rounded-full px-3 py-1 text-[11px] font-medium text-map-ink focus:outline-none focus:bg-white focus:border-map-red max-w-[185px] truncate">
+                            <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                                <i data-lucide="map-pin" class="w-3 h-3 text-map-subtle shrink-0"></i>
+                                <input type="text" list="master-store-datalist"
+                                    value="${escapeAttr(effectiveLoc)}"
+                                    placeholder="Ketik kode/toko..."
+                                    onchange="overrideTaskLocation('${t.id}', this.value)"
+                                    onfocus="this.select()"
+                                    class="bg-map-bg border border-map-border rounded-full px-2.5 py-1 text-[11px] font-medium text-map-ink focus:outline-none focus:bg-white focus:border-map-red w-full ${t.supportsPhoto ? 'max-w-[165px]' : ''} truncate">
+                            </div>
+                            ${t.supportsPhoto ? (() => {
+                                const taskPhotoCount = queuedPhotos.filter(p => p.taskId === t.id).length;
+                                return `
+                                    <button type="button" onclick="triggerTaskPhotoPicker('${t.id}')" title="Lampirkan Foto untuk ${escapeAttr(t.fullName)}"
+                                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-colors shrink-0 ${
+                                            taskPhotoCount > 0
+                                                ? 'bg-map-red/10 text-map-redDark border-map-red/30'
+                                                : 'bg-map-bg text-map-muted border-map-border hover:text-map-ink hover:border-map-red/30'
+                                        }">
+                                        <i data-lucide="camera" class="w-3.5 h-3.5 ${taskPhotoCount > 0 ? 'text-map-red' : ''}"></i>
+                                        <span>${taskPhotoCount > 0 ? taskPhotoCount : '+'}</span>
+                                    </button>
+                                `;
+                            })() : ''}
                         </div>
                     </div>
                 `;
@@ -1558,47 +1547,35 @@
 
         /**
          * =========================================================
-         * SOCIAL-MEDIA-STYLE BULK PHOTO COMPRESSOR (HTML5 CANVAS)
+         * PER-TASK CAMERA PHOTO COMPRESSOR (HTML5 CANVAS)
          * =========================================================
          */
         function getCompressionConfig() {
-            const preset = document.getElementById('compress-preset').value;
-            if (preset === 'detail') {
-                return { maxDim: 1440, quality: 0.82 };
-            }
-            return { maxDim: 1080, quality: 0.75 };
+            return { maxDim: 1280, quality: 0.80 };
         }
 
-        function handleDragOver(e) {
-            e.preventDefault();
-            document.getElementById('photo-dropzone').classList.add('border-map-red', 'bg-map-red/5');
+        function triggerTaskPhotoPicker(taskId) {
+            activePhotoTargetTaskId = taskId;
+            activateTaskCard(taskId, false);
+            const inp = document.getElementById('task-photo-input');
+            if (inp) inp.click();
         }
 
-        function handleDragLeave(e) {
-            e.preventDefault();
-            document.getElementById('photo-dropzone').classList.remove('border-map-red', 'bg-map-red/5');
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            document.getElementById('photo-dropzone').classList.remove('border-map-red', 'bg-map-red/5');
-            if (e.dataTransfer && e.dataTransfer.files) {
-                handleFilesSelected(e.dataTransfer.files);
-            }
-        }
-
-        async function handleFilesSelected(fileList) {
+        async function handleTaskFilesSelected(fileList) {
             const files = Array.from(fileList || []).filter(f => f.type.startsWith('image/'));
             if (files.length === 0) return;
 
+            const targetTask = TASKS.find(t => t.id === activePhotoTargetTaskId) || TASKS[0];
             const config = getCompressionConfig();
-            showToast(`Mengompres ${files.length} foto secara otomatis...`);
+            showToast(`Mengompres ${files.length} foto untuk ${targetTask.shortCode}...`);
 
             for (const file of files) {
                 try {
                     const compressed = await compressImageFile(file, config.maxDim, config.quality);
                     queuedPhotos.push({
                         id: 'ph_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+                        taskId: targetTask.id,
+                        taskLabel: `${targetTask.shortCode} · ${targetTask.label}`,
                         file: file,
                         name: file.name.replace(/\.[^.]+$/, '') + '.jpg',
                         originalSize: file.size,
@@ -1612,25 +1589,10 @@
                 }
             }
 
-            document.getElementById('bulk-photo-input').value = '';
+            const inp = document.getElementById('task-photo-input');
+            if (inp) inp.value = '';
+            renderBentoGrid();
             renderQueuedPhotos();
-        }
-
-        async function reprocessQueuedPhotos() {
-            if (queuedPhotos.length === 0) return;
-            const config = getCompressionConfig();
-            for (let i = 0; i < queuedPhotos.length; i++) {
-                const item = queuedPhotos[i];
-                if (item.file) {
-                    const compressed = await compressImageFile(item.file, config.maxDim, config.quality);
-                    item.compressedSize = compressed.size;
-                    item.width = compressed.width;
-                    item.height = compressed.height;
-                    item.dataUrl = compressed.dataUrl;
-                }
-            }
-            renderQueuedPhotos();
-            showToast('Preset kompresi diperbarui!');
         }
 
         function compressImageFile(file, maxDim, quality) {
@@ -1700,10 +1662,14 @@
 
             grid.innerHTML = queuedPhotos.map((p, idx) => {
                 const pct = p.originalSize > 0 ? Math.max(0, Math.round(((p.originalSize - p.compressedSize) / p.originalSize) * 100)) : 0;
+                const tMeta = TASKS.find(t => t.id === p.taskId) || TASKS[0];
                 return `
                     <div class="relative group rounded-2xl overflow-hidden border border-map-border bg-map-bg">
+                        <span style="background-color: ${tMeta.borderHex};" class="absolute top-1.5 left-1.5 z-10 px-2 py-0.5 rounded-full text-[9px] font-mono font-semibold text-white shadow-sm">
+                            ${escapeHtml(tMeta.shortCode)}
+                        </span>
                         <img src="${p.dataUrl}" alt="${escapeAttr(p.name)}"
-                            onclick="openPhotoModal('${p.dataUrl}', '${escapeAttr(p.name)}', '${p.width}×${p.height}px • ${formatBytes(p.compressedSize)}')"
+                            onclick="openPhotoModal('${p.dataUrl}', '${escapeAttr(p.name)}', '${escapeAttr(tMeta.fullName)} • ${p.width}×${p.height}px (${formatBytes(p.compressedSize)})')"
                             class="w-full h-24 object-cover cursor-pointer group-hover:scale-105 transition-transform">
                         <button type="button" onclick="removeQueuedPhoto(${idx})" title="Hapus Foto"
                             class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-black/75 text-white hover:bg-map-red flex items-center justify-center text-xs font-semibold">
@@ -1720,6 +1686,13 @@
 
         function removeQueuedPhoto(index) {
             queuedPhotos.splice(index, 1);
+            renderBentoGrid();
+            renderQueuedPhotos();
+        }
+
+        function clearQueuedPhotos() {
+            queuedPhotos = [];
+            renderBentoGrid();
             renderQueuedPhotos();
         }
 
@@ -1748,7 +1721,7 @@
          * =========================================================
          */
         async function submitActivityLog() {
-            const filledTasks = TASKS.filter(t => draftTasks[t.id].text.trim().length > 0);
+            const filledTasks = TASKS.filter(t => draftTasks[t.id].text.trim().length > 0 || queuedPhotos.some(p => p.taskId === t.id));
             if (filledTasks.length === 0) {
                 showToast('Isi minimal satu Task terlebih dahulu sebelum menyimpan.', 'error');
                 return;
@@ -1761,19 +1734,20 @@
             lucide.createIcons();
 
             const webhookUrl = getConfiguredWebhookUrl();
-            const batchPhotos = queuedPhotos.map(p => ({
-                name: p.name,
-                width: p.width,
-                height: p.height,
-                compressedSize: p.compressedSize,
-                dataUrl: p.dataUrl
-            }));
 
             const createdEntries = [];
-            filledTasks.forEach((t, index) => {
+            filledTasks.forEach((t) => {
                 const st = draftTasks[t.id];
                 const lokasi = st.locationOverride !== null ? st.locationOverride : defaultLocation;
-                const attachedPhotos = (index === 0) ? batchPhotos : [];
+                const attachedPhotos = queuedPhotos
+                    .filter(p => p.taskId === t.id)
+                    .map(p => ({
+                        name: p.name,
+                        width: p.width,
+                        height: p.height,
+                        compressedSize: p.compressedSize,
+                        dataUrl: p.dataUrl
+                    }));
 
                 const entry = {
                     id: 'log_' + Date.now() + '_' + t.id,
@@ -1782,7 +1756,7 @@
                     trainer: selectedTrainer,
                     taskId: t.id,
                     task: t.fullName,
-                    aktivitas: st.text.trim(),
+                    aktivitas: st.text.trim() || `(Lampiran ${attachedPhotos.length} foto)`,
                     lokasi: lokasi,
                     status: defaultStatus,
                     fotoLink: '',
